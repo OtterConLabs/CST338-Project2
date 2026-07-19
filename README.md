@@ -12,7 +12,7 @@ and PRs. Replace every <placeholder> and delete this comment before you submit.
 
 # <App Name>
 
-<One-line description.> CST 338 Project 2 — Team **<Team Name>**.
+<One-line description.> CST 338 Project 2 — Team *OtterCon Labs*.
 
 ## Team & Slice Ownership
 | Slice | Owner | GitHub username | Issues | Branch(es) | PR(s) | Enhancement chosen | Status |
