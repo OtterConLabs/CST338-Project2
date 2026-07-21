@@ -18,11 +18,11 @@ and PRs. Replace every <placeholder> and delete this comment before you submit.
 Grade / Assignment Tracker
 
 | Slice       | Owner     | GitHub username | Issues | Branch(es)      | PR(s) | Enhancement chosen | Status      |
-|-------------|-----------|-----------------|--------|-----------------|----|--------|-------------|
-| 1 Accounts  | Yoko Mohr |yokocsumb | #3     | yoko/javafx_app |  |  | in-progress |
-| 2 — <Slice> |           | |        |                 | | | in-progress |
-| 3 — <Slice> |           | |        |                 | | | planned     |
-| 4 — <Slice> |           | |        |                 | | | planned     |
+|-------------|-----------|-----------------|--------|-----------------|-------|--------|-------------|
+| 1 Accounts  | Yoko Mohr |yokocsumb | #3     | yoko/javafx_app | #4    |  | in-progress |
+| 2 — <Slice> |           | |        |                 |       | | in-progress |
+| 3 — <Slice> |           | |        |                 |       | | planned     |
+| 4 — <Slice> |           | |        |                 |       | | planned     |
 
 _Status values: planned · in-progress · complete_
 
