@@ -20,7 +20,7 @@ public class User {
     private String password;
     private UserRole role;
 
-    User(int userId, String username, String firstName, String lastName,
+    public User(int userId, String username, String firstName, String lastName,
          String email, String password, UserRole role) {
         this.userId = userId;
         this.username = username;

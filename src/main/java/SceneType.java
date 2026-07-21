@@ -7,12 +7,14 @@
  * @since 7/20/2026
  */
 public enum SceneType {
-//    MAIN,
+    //Yoko
     LOGIN,
     REGISTER,
     DASHBOARD,
+    //Brent
     COURSE_LIST,
     COURSE_EDIT,
+    //Jordan
     ASSIGNMENT_LIST,
     ASSIGNMENT_EDIT
 }

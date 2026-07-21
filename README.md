@@ -12,15 +12,17 @@ and PRs. Replace every <placeholder> and delete this comment before you submit.
 
 # <App Name>
 
-<One-line description.> CST 338 Project 2 — Team *OtterCon Labs*.
+<One-line description.> CST 338 Project 2 — Team member: Jordan Browning, Brent Brewington, Yoko Mohr
 
 ## Team & Slice Ownership
-| Slice | Owner | GitHub username | Issues | Branch(es) | PR(s) | Enhancement chosen | Status |
-|-------|-------|-----------------|--------|------------|-------|--------------------|--------|
-| 1 — Accounts | | | #1 #2 | name/login | #12 | Data binding | complete |
-| 2 — <Slice> | | | | | | | in-progress |
-| 3 — <Slice> | | | | | | | planned |
-| 4 — <Slice> | | | | | | | planned |
+Grade / Assignment Tracker
+
+| Slice       | Owner     | GitHub username | Issues | Branch(es)      | PR(s) | Enhancement chosen | Status      |
+|-------------|-----------|-----------------|--------|-----------------|----|--------|-------------|
+| 1 Accounts  | Yoko Mohr |yokocsumb | #3     | yoko/javafx_app |  |  | in-progress |
+| 2 — <Slice> |           | |        |                 | | | in-progress |
+| 3 — <Slice> |           | |        |                 | | | planned     |
+| 4 — <Slice> |           | |        |                 | | | planned     |
 
 _Status values: planned · in-progress · complete_
 
@@ -28,6 +30,7 @@ _Status values: planned · in-progress · complete_
 _Slices and beyond-scope items we are consciously NOT building. Move an item to a tracked
 Issue if the team later decides to attempt it for extra credit._
 
+- <Slice 1> Beyond: admin role, password reset
 - Slice 5 — <name>: not building (team size).
 - <Slice 2>: <beyond-scope item> — out of scope.
 - <Slice 3>: <beyond-scope item> — out of scope.
