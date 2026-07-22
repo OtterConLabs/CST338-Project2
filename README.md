@@ -15,12 +15,12 @@ and PRs. Replace every <placeholder> and delete this comment before you submit.
 <One-line description.> CST 338 Project 2 — Team *OtterCon Labs*.
 
 ## Team & Slice Ownership
+
 | Slice | Owner | GitHub username | Issues | Branch(es) | PR(s) | Enhancement chosen | Status |
-|-------|-------|-----------------|--------|------------|-------|--------------------|--------|
-| 1 — Accounts | | | #1 #2 | name/login | #12 | Data binding | complete |
-| 2 — <Slice> | | | | | | | in-progress |
-| 3 — <Slice> | | | | | | | planned |
-| 4 — <Slice> | | | | | | | planned |
+|:------|:------|:----------------|:-------|:-----------|:------|:-------------------|:-------|
+| 1 — Accounts | Yoko Mohr | yokocsumb | #1 #2 | name/login | #12 | Data binding | complete |
+| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg | | | | To be determined | planned |
+| 3 — Assignments | Jordan Browning | jbrowning-otter | | | | To be determined | planned |
 
 _Status values: planned · in-progress · complete_
 
@@ -28,9 +28,8 @@ _Status values: planned · in-progress · complete_
 _Slices and beyond-scope items we are consciously NOT building. Move an item to a tracked
 Issue if the team later decides to attempt it for extra credit._
 
-- Slice 5 — <name>: not building (team size).
-- <Slice 2>: <beyond-scope item> — out of scope.
-- <Slice 3>: <beyond-scope item> — out of scope.
+- Slice 5 — <Attendance & Reports>: not building (team size).
+- Slice 4 - <Grades & Statistics>: not building (team size).
 
 ## Code Review Log
 | PR | Author | Human reviewer(s) | AI review (link) | Outcome |
