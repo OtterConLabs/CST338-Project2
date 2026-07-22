@@ -12,7 +12,7 @@
  * @since 7/20/2026
  */
 public class User {
-    private int userId;
+    private int id;
     private String username;
     private String firstName;
     private String lastName;
@@ -20,9 +20,9 @@ public class User {
     private String password;
     private UserRole role;
 
-    public User(int userId, String username, String firstName, String lastName,
+    public User(int id, String username, String firstName, String lastName,
          String email, String password, UserRole role) {
-        this.userId = userId;
+        this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
