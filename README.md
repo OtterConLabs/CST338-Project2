@@ -17,23 +17,19 @@ and PRs. Replace every <placeholder> and delete this comment before you submit.
 ## Team & Slice Ownership
 Grade / Assignment Tracker
 
-| Slice       | Owner     | GitHub username | Issues     | Branch(es)      | PR(s) | Enhancement chosen | Status      |
-|-------------|-----------|-----------------|------------|-----------------|-------|--------|-------------|
-| 1 Accounts  | Yoko Mohr |yokocsumb | #2, #3, #5 | yoko/javafx_app | #4    |  | in-progress |
-| 2 — <Slice> |           | |            |                 |       | | in-progress |
-| 3 — <Slice> |           | |            |                 |       | | planned     |
-| 4 — <Slice> |           | |            |                 |       | | planned     |
-
+| Slice | Owner | GitHub username | Issues | Branch(es) | PR(s) | Enhancement chosen | Status |
+|:------|:------|:----------------|:-------|:-----------|:------|:-------------------|:-------|
+| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5 | yoko/javafx_app | #4 | Data binding | in-progress |
+| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg | | | | To be determined | planned |
+| 3 — Assignments | Jordan Browning | jbrowning-otter | | | | To be determined | planned |
 _Status values: planned · in-progress · complete_
 
 ## WILL NOT DO (declared scope cuts)
-_Slices and beyond-scope items we are consciously NOT building. Move an item to a tracked
-Issue if the team later decides to attempt it for extra credit._
 
-- <Slice 1> Beyond: admin role, password reset
-- Slice 5 — <name>: not building (team size).
-- <Slice 2>: <beyond-scope item> — out of scope.
-- <Slice 3>: <beyond-scope item> — out of scope.
+- Slice 1 Beyond: admin role, password reset.
+- Slice 2 Beyond: due-date reminders, attachments, weighted categories.
+- Slice 4 — Grades & Statistics: not building (team size).
+- Slice 5 — Attendance & Reports: not building (team size).
 
 ## Code Review Log
 | PR | Author | Human reviewer(s) | AI review (link) | Outcome |
