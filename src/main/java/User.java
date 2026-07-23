@@ -1,13 +1,8 @@
-/**
- * [CST338 Brief one-sentence description of what this class does.]
- *
- * @author Yoko Mohr
- * * @since 7/20/2026
- */
 
 /**
  * [CST338 ]
- *
+ * Represents a user account in the Grade & Assignment Tracker.
+ * Stores account information used for registration, login, and user roles.
  * @author Yoko Mohr
  * @since 7/20/2026
  */
@@ -69,4 +64,17 @@ public class User {
         return role;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", role=" + role +
+                ", datetime='" + datetime + '\'' +
+                '}';
+    }
 }

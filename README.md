@@ -17,11 +17,11 @@ and PRs. Replace every <placeholder> and delete this comment before you submit.
 ## Team & Slice Ownership
 Grade & Assignment Tracker
 
-| Slice | Owner | GitHub username | Issues         | Branch(es)        | PR(s) | Enhancement chosen | Status |
-|:------|:------|:----------------|:---------------|:------------------|:------|:-------------------|:-------|
-| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6 | yoko/javafx_app, yoko/SQLite_database_structure | #4 |Notifications / alerts on app events   | in-progress |
-| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg |                |                   | | To be determined   | planned |
-| 3 — Assignments | Jordan Browning | jbrowning-otter |                |                   | | To be determined   | planned |
+| Slice | Owner | GitHub username | Issues             | Branch(es)        | PR(s) | Enhancement chosen | Status |
+|:------|:------|:----------------|:-------------------|:------------------|:------|:-------------------|:-------|
+| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8 | yoko/javafx_app, yoko/SQLite_database_structure | #4 |Notifications / alerts on app events   | in-progress |
+| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg |                    |                   | | To be determined   | planned |
+| 3 — Assignments | Jordan Browning | jbrowning-otter |                    |                   | | To be determined   | planned |
 _Status values: planned · in-progress · complete_
 
 ## WILL NOT DO (declared scope cuts)
