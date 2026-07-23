@@ -140,6 +140,7 @@ public class DatabaseManager {
             // ???
             System.out.println("Invalid login" + e.getMessage());
         }
+        // TODO: YOKO
         // query the db
         // if row count == 0 user does not  exist
         // if row count == 1 user does exist
@@ -151,7 +152,7 @@ public class DatabaseManager {
     }
 
 
-//
+//      TODO: YOKO
 //    //CRUD - Read (SELECT)
 //    public List<String > getAllItems() {
 //        List<String > items = new ArrayList<>();

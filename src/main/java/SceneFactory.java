@@ -27,7 +27,6 @@ public class SceneFactory {
 
     public static Scene create(SceneType type, Stage stage, DatabaseManager db) {
         return switch (type) {
-//            case MAIN -> buildMainScene(stage);
             case LOGIN -> buildLoginScene(stage, db);
             case REGISTER -> buildRegisterScene(stage, db);
             case DASHBOARD -> buildDashboardScene(stage, db);
@@ -37,24 +36,6 @@ public class SceneFactory {
             case ASSIGNMENT_EDIT -> buildAssignmentEditScene(stage, db);
         };
     }
-
-//    private static Scene buildMainScene(Stage stage) {
-//        //TODO: YOKO
-//        Label org = new Label(ORG);
-//        Label title = new Label(TITLE);
-//        org.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
-//        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
-//
-//        Button goBtn = new Button("Open Dashboard");
-//        goBtn.setOnAction(event -> {
-//            stage.setScene(create(SceneType.DASHBOARD, stage));
-//        });
-//
-//        VBox layout = new VBox(16, org, title, goBtn);
-//        layout.setAlignment(Pos.CENTER);
-//
-//        return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
-//    }
 
     private static Scene buildLoginScene(Stage stage, DatabaseManager db) {
         //TODO YOKO:
@@ -111,7 +92,7 @@ public class SceneFactory {
 
         return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
 
-
+//              TODO: YOKO
 //        loginButton.setOnAction(event -> {
 //            User user = accountService.login(
 //                    usernameField.getText(),
