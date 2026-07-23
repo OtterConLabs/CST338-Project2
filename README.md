@@ -19,9 +19,9 @@ Grade / Assignment Tracker
 
 | Slice | Owner | GitHub username | Issues | Branch(es) | PR(s) | Enhancement chosen | Status |
 |:------|:------|:----------------|:-------|:-----------|:------|:-------------------|:-------|
-| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5 | yoko/javafx_app | #4 | Data binding | in-progress |
-| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg | | | | To be determined | planned |
-| 3 — Assignments | Jordan Browning | jbrowning-otter | | | | To be determined | planned |
+| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5 | yoko/javafx_app | #4 | To be determined   | in-progress |
+| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg | | | | To be determined   | planned |
+| 3 — Assignments | Jordan Browning | jbrowning-otter | | | | To be determined   | planned |
 _Status values: planned · in-progress · complete_
 
 ## WILL NOT DO (declared scope cuts)

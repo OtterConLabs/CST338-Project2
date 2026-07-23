@@ -16,12 +16,12 @@ public class Main extends Application {
         db = new DatabaseManager();
 
         User user = new User(
-                "mike",
-                "Mike",
+                "yoko",
+                "Yoko",
                 "Mohr",
-                "m@csumb.edu",
-                "234",
-                UserRole.TEACHER
+                "ymohr@csumb.edu",
+                "1234",
+                UserRole.STUDENT
         );
 
 //        db.insertUser(user);

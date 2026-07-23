@@ -1,6 +1,4 @@
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * [CST338 Create DatabaseManager]
@@ -36,7 +34,7 @@ public class DatabaseManager {
     }
 
     /**
-     *     private int userId;
+     *     private int id;
      *     private String username;
      *     private String firstName;
      *     private String lastName;
@@ -98,9 +96,22 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     *      CREATE TABLE IF NOT EXISTS users (
+     *      id INTEGER PRIMARY KEY AUTOINCREMENT,
+     *      username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+     *      first_name TEXT NOT NULL,
+     *      last_name TEXT NOT NULL,
+     *      email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+     *      password TEXT NOT NULL,
+     *      role TEXT NOT NULL
+     *      CHECK (role IN ('STUDENT', 'TEACHER')),
+     *      created TEXT DEFAULT (datetime('now'))
+     */
     //check login validate username
-    public String checkLogin(String username, String password) {
+    public User checkLogin(String username, String password) {
         // this is for prepareStatement. later ask  a specific username, the want to get its password
+        // use * to receive all information
         String sql = """
                 SELECT * FROM users WHERE username = ?
                 """;
@@ -111,13 +122,23 @@ public class DatabaseManager {
             if (rs.next()) {
                 String pw = rs.getString("password");
                 if(pw.equals(password)) {
-                    return sql;
+                    return new User(
+                            rs.getInt("id"),
+                            rs.getString("username"),
+                            rs.getString("first_name"),
+                            rs.getString("last_name"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            UserRole.valueOf(
+                                    rs.getString("role")
+                            ),
+                            rs.getString("created")
+                    );
                 }
-                return "Incorrect Password";
             }
         } catch (SQLException e) {
             // ???
-            return "Unable to find the account";
+            System.out.println("Invalid login" + e.getMessage());
         }
         // query the db
         // if row count == 0 user does not  exist

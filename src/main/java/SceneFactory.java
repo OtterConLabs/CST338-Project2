@@ -61,6 +61,7 @@ public class SceneFactory {
         Label org = new Label(ORG);
         Label title = new Label(TITLE);
         Label userNameOrEmail = new Label(USERNAME);
+        Label loginMsg = new Label("Please enter your username and password.");
         userNameOrEmail.setPrefWidth(140);
         Label password = new Label(PASSWORD);
         password.setPrefWidth(140);
@@ -84,7 +85,19 @@ public class SceneFactory {
 
         Button logBtn = new Button("Log in");
         logBtn.setOnAction(event -> {
-            stage.setScene(create(SceneType.DASHBOARD, stage, db));
+            String username = usernameInput.getText().trim();
+            String passwordTxt = passwordInput.getText().trim();
+            if (username.isEmpty() || passwordTxt.isEmpty()) {
+                loginMsg.setText("Please enter your username and password.");
+                return;
+            }
+            User loggedInUser = db.checkLogin(username,passwordTxt);
+            if (loggedInUser != null) {
+                stage.setScene(create(SceneType.DASHBOARD, stage, db)
+                );
+            } else {
+                loginMsg.setText("Incorrect username or password");
+            }
         });
 
         Button regBtn = new Button("Register");
@@ -92,7 +105,7 @@ public class SceneFactory {
             stage.setScene(create(SceneType.REGISTER, stage, db));
         });
 
-        VBox layout = new VBox(16, org, title, usernameField, passwordField, logBtn, newMember, regBtn);
+        VBox layout = new VBox(16, org, title, loginMsg, usernameField, passwordField, logBtn, newMember, regBtn);
         layout.setPadding(new Insets(30));
         layout.setAlignment(Pos.TOP_CENTER);
 
