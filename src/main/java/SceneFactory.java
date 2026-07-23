@@ -122,19 +122,23 @@ public class SceneFactory {
     private static Scene buildRegisterScene(Stage stage, DatabaseManager db) {
         //TODO YOKO:
         Label register= new Label(REGISTER);
+        register.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         Label msg = new Label("Please enter your information.");
+        msg.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
         Label username = new Label(USERNAME);
         username.setPrefWidth(80);
-        usernameInput.setPromptText(USERNAME);
-        usernameInput.setMaxWidth(200);
-        HBox usernameField = new HBox(15, username, usernameInput);
+        TextField registerUsernameInput = new TextField();
+        registerUsernameInput.setPromptText(USERNAME);
+        registerUsernameInput.setMaxWidth(200);
+        HBox usernameField = new HBox(15, username, registerUsernameInput);
         usernameField.setAlignment(Pos.CENTER);
 
         Label password = new Label(PASSWORD);
         password.setPrefWidth(80);
-        passwordInput.setPromptText(PASSWORD);
-        passwordInput.setMaxWidth(200);
-        HBox passwordField = new HBox(15, password, passwordInput);
+        PasswordField registerPasswordInput = new PasswordField();
+        registerPasswordInput.setPromptText(PASSWORD);
+        registerPasswordInput.setMaxWidth(200);
+        HBox passwordField = new HBox(15, password, registerPasswordInput);
         passwordField.setAlignment(Pos.CENTER);
 
 //        TextField userInput = new TextField();
@@ -163,17 +167,32 @@ public class SceneFactory {
         HBox emailField = new HBox(15, email, emailInput);
         emailField.setAlignment(Pos.CENTER);
 
-        Label role  = new Label(ROLE);
+        Label role  = new Label("Select Role:");
         role.setPrefWidth(80);
         ComboBox<UserRole> roleInput = new ComboBox<>();
         roleInput.getItems().addAll(UserRole.values());
-        roleInput.setPromptText(ROLE);
-        roleInput.setMaxWidth(200);
+        roleInput.setPromptText("Role");
+//        roleInput.setMaxWidth(100);
         HBox roleField = new HBox(15, role, roleInput);
         roleField.setAlignment(Pos.CENTER);
 
-        VBox layout = new VBox(16, register, msg, usernameField, passwordField, firstNameField, lastNameField, emailField, roleField);
-        layout.setPadding(new Insets(30));
+        Button regBtn = new Button("Register");
+        regBtn.setOnAction(event -> {
+            //TODO YOKO
+//            stage.setScene(create(SceneType.LOGIN, stage, db));
+        });
+
+        Button backBtn = new Button("Back");
+        regBtn.setOnAction(event -> {
+            //TODO YOKO
+            stage.setScene(create(SceneType.LOGIN, stage, db));
+        });
+
+        HBox regBackBtn = new HBox(200, regBtn, backBtn);
+        regBackBtn.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(15, register, msg, usernameField, passwordField, firstNameField, lastNameField, emailField, roleField, regBackBtn);
+        layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.TOP_CENTER);
 
         return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
