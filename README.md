@@ -25,9 +25,9 @@ Grade / Assignment Tracker
 _Status values: planned · in-progress · complete_
 
 ## WILL NOT DO (declared scope cuts)
-_Slices and beyond-scope items we are consciously NOT building. Move an item to a tracked
-Issue if the team later decides to attempt it for extra credit._
 
+- Slice 1 Beyond: admin role, password reset.
+- Slice 2 Beyond: due-date reminders, attachments, weighted categories.
 - Slice 4 — Grades & Statistics: not building (team size).
 - Slice 5 — Attendance & Reports: not building (team size).
 
