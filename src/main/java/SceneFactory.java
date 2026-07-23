@@ -20,8 +20,8 @@ public class SceneFactory {
     private static final int SCENE_HEIGHT = 400;
 
     private static final String ORG = "Welcome to OtterCon Labs!";
-    private static final String TITLE = "Grade / Assignment Tracker";
-    private static final String USERNAME = "Username or Email: ";
+    private static final String TITLE = "Grade & Assignment Tracker";
+    private static final String USERNAME = "Username: ";
     private static final String PASSWORD = "Password: ";
     private static final String NEW_MEMBER = "New Member?";
 
@@ -60,11 +60,11 @@ public class SceneFactory {
         //TODO YOKO:
         Label org = new Label(ORG);
         Label title = new Label(TITLE);
-        Label userNameOrEmail = new Label(USERNAME);
+        Label userName = new Label(USERNAME);
         Label loginMsg = new Label("Please enter your username and password.");
-        userNameOrEmail.setPrefWidth(140);
+        userName.setPrefWidth(80);
         Label password = new Label(PASSWORD);
-        password.setPrefWidth(140);
+        password.setPrefWidth(80);
         Label newMember = new Label(NEW_MEMBER);
         org.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
         title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
@@ -73,7 +73,7 @@ public class SceneFactory {
         usernameInput.setPromptText(USERNAME);
         usernameInput.setMaxWidth(200);
 
-        HBox usernameField = new HBox(15, userNameOrEmail,usernameInput);
+        HBox usernameField = new HBox(15, userName,usernameInput);
         usernameField.setAlignment(Pos.CENTER);
 
         PasswordField  passwordInput = new PasswordField();
@@ -141,12 +141,12 @@ public class SceneFactory {
         Label role = new Label("Role: ");
         Label name = new Label("Name: ");
 
-        Button course = new Button("Course");
+        Button course = new Button("Courses & Enrollment");
         course.setOnAction(event -> {
             stage.setScene(create(SceneType.COURSE_LIST, stage, db));
         });
 
-        Button assignment = new Button("Assignment");
+        Button assignment = new Button("Assignments");
         assignment.setOnAction(event -> {
             stage.setScene(create(SceneType.ASSIGNMENT_LIST, stage, db));
         });
