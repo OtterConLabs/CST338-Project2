@@ -19,10 +19,10 @@ public class User {
     private String email;
     private String password;
     private UserRole role;
+    private String datetime;
 
-    public User(int id, String username, String firstName, String lastName,
-         String email, String password, UserRole role) {
-        this.id = id;
+    public User(String username, String firstName, String lastName,
+                String email, String password, UserRole role) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,5 +32,29 @@ public class User {
     }
 
     //methods will be coming soon....
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
 
 }

@@ -25,16 +25,16 @@ public class SceneFactory {
     private static final String PASSWORD = "Password: ";
     private static final String NEW_MEMBER = "New Member?";
 
-    public static Scene create(SceneType type, Stage stage) {
+    public static Scene create(SceneType type, Stage stage, DatabaseManager db) {
         return switch (type) {
 //            case MAIN -> buildMainScene(stage);
-            case LOGIN -> buildLoginScene(stage);
-            case REGISTER -> buildRegisterScene(stage);
-            case DASHBOARD -> buildDashboardScene(stage);
-            case COURSE_LIST -> buildCourseListScene(stage);
-            case COURSE_EDIT -> buildCourseEditScene(stage);
-            case ASSIGNMENT_LIST -> buildAssignmentListScene(stage);
-            case ASSIGNMENT_EDIT -> buildAssignmentEditScene(stage);
+            case LOGIN -> buildLoginScene(stage, db);
+            case REGISTER -> buildRegisterScene(stage, db);
+            case DASHBOARD -> buildDashboardScene(stage, db);
+            case COURSE_LIST -> buildCourseListScene(stage, db);
+            case COURSE_EDIT -> buildCourseEditScene(stage, db);
+            case ASSIGNMENT_LIST -> buildAssignmentListScene(stage, db);
+            case ASSIGNMENT_EDIT -> buildAssignmentEditScene(stage, db);
         };
     }
 
@@ -56,7 +56,7 @@ public class SceneFactory {
 //        return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
 //    }
 
-    private static Scene buildLoginScene(Stage stage) {
+    private static Scene buildLoginScene(Stage stage, DatabaseManager db) {
         //TODO YOKO:
         Label org = new Label(ORG);
         Label title = new Label(TITLE);
@@ -75,7 +75,7 @@ public class SceneFactory {
         HBox usernameField = new HBox(15, userNameOrEmail,usernameInput);
         usernameField.setAlignment(Pos.CENTER);
 
-        TextField passwordInput = new PasswordField();
+        PasswordField  passwordInput = new PasswordField();
         passwordInput.setPromptText(PASSWORD);
         passwordInput.setMaxWidth(200);
 
@@ -84,12 +84,12 @@ public class SceneFactory {
 
         Button logBtn = new Button("Log in");
         logBtn.setOnAction(event -> {
-            stage.setScene(create(SceneType.DASHBOARD, stage));
+            stage.setScene(create(SceneType.DASHBOARD, stage, db));
         });
 
         Button regBtn = new Button("Register");
         regBtn.setOnAction(event -> {
-            stage.setScene(create(SceneType.REGISTER, stage));
+            stage.setScene(create(SceneType.REGISTER, stage, db));
         });
 
         VBox layout = new VBox(16, org, title, usernameField, passwordField, logBtn, newMember, regBtn);
@@ -117,12 +117,12 @@ public class SceneFactory {
 //        return buildPlaceholderScene("Login", stage);
     }
 
-    private static Scene buildRegisterScene(Stage stage) {
+    private static Scene buildRegisterScene(Stage stage, DatabaseManager db) {
         //TODO YOKO:
-        return buildPlaceholderScene("Register", stage);
+        return buildPlaceholderScene("Register", stage, db);
     }
 
-    private static Scene buildDashboardScene(Stage stage) {
+    private static Scene buildDashboardScene(Stage stage, DatabaseManager db) {
         //TODO YOKO:
         Label title = new Label("Dashboard");
         Label role = new Label("Role: ");
@@ -130,12 +130,12 @@ public class SceneFactory {
 
         Button course = new Button("Course");
         course.setOnAction(event -> {
-            stage.setScene(create(SceneType.COURSE_LIST, stage));
+            stage.setScene(create(SceneType.COURSE_LIST, stage, db));
         });
 
         Button assignment = new Button("Assignment");
         assignment.setOnAction(event -> {
-            stage.setScene(create(SceneType.ASSIGNMENT_LIST, stage));
+            stage.setScene(create(SceneType.ASSIGNMENT_LIST, stage, db));
         });
 
         VBox layout = new VBox(16, title,role,name, course,assignment);
@@ -145,32 +145,32 @@ public class SceneFactory {
         return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
     }
 
-    private static Scene buildCourseListScene(Stage stage) {
+    private static Scene buildCourseListScene(Stage stage, DatabaseManager db) {
         //TODO Brent:
-        return buildPlaceholderScene("Course List", stage);
+        return buildPlaceholderScene("Course List", stage, db);
     }
 
-    private static Scene buildCourseEditScene(Stage stage) {
+    private static Scene buildCourseEditScene(Stage stage, DatabaseManager db) {
         //TODO Brent:
-        return buildPlaceholderScene("Course Edit", stage);
+        return buildPlaceholderScene("Course Edit", stage, db);
     }
 
-    private static Scene buildAssignmentListScene(Stage stage) {
+    private static Scene buildAssignmentListScene(Stage stage, DatabaseManager db) {
         //TODO Jordan:
-        return buildPlaceholderScene("Assignment List", stage);
+        return buildPlaceholderScene("Assignment List", stage, db);
     }
 
-    private static Scene buildAssignmentEditScene(Stage stage) {
+    private static Scene buildAssignmentEditScene(Stage stage, DatabaseManager db) {
         //TODO Jordan:
-        return buildPlaceholderScene("Assignment Edit", stage);
+        return buildPlaceholderScene("Assignment Edit", stage, db);
     }
 
-    private static Scene buildPlaceholderScene(String sceneTitle, Stage stage) {
+    private static Scene buildPlaceholderScene(String sceneTitle, Stage stage, DatabaseManager db) {
         Label label = new Label(sceneTitle);
         Button backButton = new Button("Back to Login");
 
         backButton.setOnAction(event ->
-                stage.setScene(create(SceneType.LOGIN, stage))
+                stage.setScene(create(SceneType.LOGIN, stage, db))
         );
 
         VBox layout = new VBox(16, label, backButton);
