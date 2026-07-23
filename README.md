@@ -27,7 +27,7 @@ _Status values: planned · in-progress · complete_
 ## WILL NOT DO (declared scope cuts)
 
 - Slice 1 Beyond: admin role, password reset.
-- Slice 2 Beyond: due-date reminders, attachments, weighted categories.
+- Slice 3 Beyond: due-date reminders, attachments, weighted categories.
 - Slice 4 — Grades & Statistics: not building (team size).
 - Slice 5 — Attendance & Reports: not building (team size).
 
