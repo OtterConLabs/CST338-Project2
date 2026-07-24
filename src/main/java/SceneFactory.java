@@ -125,6 +125,8 @@ public class SceneFactory {
         register.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         Label msg = new Label("Please enter your information.");
         msg.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+
+        //TODO YOKO: Make this more modular... create a function
         Label username = new Label(USERNAME);
         username.setPrefWidth(80);
         TextField registerUsernameInput = new TextField();
