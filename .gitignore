@@ -1,6 +1,7 @@
 .idea/
 .gradle/
 build/
+*.db
 
 # Compiled class file
 *.class
@@ -23,6 +24,15 @@ build/
 *.tar.gz
 *.rar
 *.iml
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Linux / editors
+*~
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

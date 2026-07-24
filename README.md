@@ -15,13 +15,13 @@ and PRs. Replace every <placeholder> and delete this comment before you submit.
 <One-line description.> CST 338 Project 2 — Team member: Jordan Browning, Brent Brewington, Yoko Mohr
 
 ## Team & Slice Ownership
-Grade / Assignment Tracker
+Grade & Assignment Tracker
 
-| Slice | Owner | GitHub username | Issues | Branch(es) | PR(s) | Enhancement chosen | Status |
-|:------|:------|:----------------|:-------|:-----------|:------|:-------------------|:-------|
-| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5 | yoko/javafx_app | #4 | Data binding | in-progress |
-| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg | | | | To be determined | planned |
-| 3 — Assignments | Jordan Browning | jbrowning-otter | | | | To be determined | planned |
+| Slice | Owner | GitHub username | Issues             | Branch(es)        | PR(s)   | Enhancement chosen | Status |
+|:------|:------|:----------------|:-------------------|:------------------|:--------|:-------------------|:-------|
+| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8 | yoko/javafx_app, yoko/SQLite_database_structure | #4, #12 |Notifications / alerts on app events   | in-progress |
+| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg |                    |                   |         | To be determined   | planned |
+| 3 — Assignments | Jordan Browning | jbrowning-otter |                    |                   |         | To be determined   | planned |
 _Status values: planned · in-progress · complete_
 
 ## WILL NOT DO (declared scope cuts)
@@ -32,9 +32,10 @@ _Status values: planned · in-progress · complete_
 - Slice 5 — Attendance & Reports: not building (team size).
 
 ## Code Review Log
-| PR | Author | Human reviewer(s) | AI review (link) | Outcome |
-|----|--------|-------------------|------------------|---------|
-| #12 | | | <link or commit> | merged |
+| PR  | Author | Human reviewer(s) | AI review (link) | Outcome |
+|-----|--------|-------------------|------------------|---------|
+| #10 |Jordan Browning | Yoko Mohr         | N/A              | Approved and merged |
+| #11 |Jordan Browning | Yoko Mohr         | N/A              | Approved and merged |
 
 ## AI Usage Log
 - **AI-drafted tests:** <link to TESTING.md / commit> — per owner.
