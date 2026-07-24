@@ -3,11 +3,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.security.PrivateKey;
 
 /**
  * [CST338 P2 SceneFactory]
@@ -33,20 +30,22 @@ public class SceneFactory {
     public static TextField usernameInput = new TextField();
     public static PasswordField  passwordInput = new PasswordField();
 
-    public static Scene create(SceneType type, Stage stage, DatabaseManager db) {
+    public static Scene create(SceneType type, Stage stage) {
         return switch (type) {
-            case LOGIN -> buildLoginScene(stage, db);
-            case REGISTER -> buildRegisterScene(stage, db);
-            case DASHBOARD -> buildDashboardScene(stage, db);
-            case COURSE_LIST -> buildCourseListScene(stage, db);
-            case COURSE_EDIT -> buildCourseEditScene(stage, db);
-            case ASSIGNMENT_LIST -> buildAssignmentListScene(stage, db);
-            case ASSIGNMENT_EDIT -> buildAssignmentEditScene(stage, db);
+            case LOGIN -> buildLoginScene(stage);
+            case REGISTER -> buildRegisterScene(stage);
+            case DASHBOARD -> buildDashboardScene(stage);
+            case COURSE_LIST -> buildCourseListScene(stage);
+            case COURSE_EDIT -> buildCourseEditScene(stage);
+            case ASSIGNMENT_LIST -> buildAssignmentListScene(stage);
+            case ASSIGNMENT_EDIT -> buildAssignmentEditScene(stage);
         };
     }
 
-    private static Scene buildLoginScene(Stage stage, DatabaseManager db) {
+    private static Scene buildLoginScene(Stage stage) {
         //TODO YOKO:
+        DatabaseManager db = DatabaseManager.getInstance();
+
         Label org = new Label(ORG);
         Label title = new Label(TITLE);
         Label userName = new Label(USERNAME);
@@ -82,7 +81,7 @@ public class SceneFactory {
             }
             User loggedInUser = db.checkLogin(username,passwordTxt);
             if (loggedInUser != null) {
-                stage.setScene(create(SceneType.DASHBOARD, stage, db)
+                stage.setScene(create(SceneType.DASHBOARD, stage)
                 );
             } else {
                 loginMsg.setText("Incorrect username or password");
@@ -91,7 +90,7 @@ public class SceneFactory {
 
         Button regBtn = new Button("Register");
         regBtn.setOnAction(event -> {
-            stage.setScene(create(SceneType.REGISTER, stage, db));
+            stage.setScene(create(SceneType.REGISTER, stage));
         });
 
         VBox layout = new VBox(16, org, title, loginMsg, usernameField, passwordField, logBtn, newMember, regBtn);
@@ -119,12 +118,15 @@ public class SceneFactory {
 //        return buildPlaceholderScene("Login", stage);
     }
 
-    private static Scene buildRegisterScene(Stage stage, DatabaseManager db) {
+    private static Scene buildRegisterScene(Stage stage) {
         //TODO YOKO:
+        DatabaseManager db = DatabaseManager.getInstance();
         Label register= new Label(REGISTER);
         register.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         Label msg = new Label("Please enter your information.");
         msg.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+
+        //TODO YOKO: Make this more modular... create a function
         Label username = new Label(USERNAME);
         username.setPrefWidth(80);
         TextField registerUsernameInput = new TextField();
@@ -183,9 +185,9 @@ public class SceneFactory {
         });
 
         Button backBtn = new Button("Back");
-        regBtn.setOnAction(event -> {
+        backBtn.setOnAction(event -> {
             //TODO YOKO
-            stage.setScene(create(SceneType.LOGIN, stage, db));
+            stage.setScene(create(SceneType.LOGIN, stage));
         });
 
         HBox regBackBtn = new HBox(200, regBtn, backBtn);
@@ -198,8 +200,13 @@ public class SceneFactory {
         return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
     }
 
-    private static Scene buildDashboardScene(Stage stage, DatabaseManager db) {
+    private static Scene buildDashboardScene(Stage stage) {
         //TODO YOKO:
+        DatabaseManager db = DatabaseManager.getInstance();
+        // fetched here, not passed in
+//        ListView<String> list = new ListView<>();
+//        list.getItems().addAll(db.checkLogin());
+
         Label title = new Label("Dashboard");
         Label role = new Label(ROLE);
         Label name = new Label("Name: ");
@@ -216,12 +223,12 @@ public class SceneFactory {
 
         Button courseAndEnrollment = new Button("Courses & Enrollment");
         courseAndEnrollment.setOnAction(event -> {
-            stage.setScene(create(SceneType.COURSE_LIST, stage, db));
+            stage.setScene(create(SceneType.COURSE_LIST, stage));
         });
 
         Button assignment = new Button("Assignments");
         assignment.setOnAction(event -> {
-            stage.setScene(create(SceneType.ASSIGNMENT_LIST, stage, db));
+            stage.setScene(create(SceneType.ASSIGNMENT_LIST, stage));
         });
 
         VBox layout = new VBox(16,title, usernameField, userRoleField, courseAndEnrollment, assignment);
@@ -231,32 +238,32 @@ public class SceneFactory {
         return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
     }
 
-    private static Scene buildCourseListScene(Stage stage, DatabaseManager db) {
+    private static Scene buildCourseListScene(Stage stage) {
         //TODO Brent:
-        return buildPlaceholderScene("Course List", stage, db);
+        return buildPlaceholderScene("Course List", stage);
     }
 
-    private static Scene buildCourseEditScene(Stage stage, DatabaseManager db) {
+    private static Scene buildCourseEditScene(Stage stage) {
         //TODO Brent:
-        return buildPlaceholderScene("Course Edit", stage, db);
+        return buildPlaceholderScene("Course Edit", stage);
     }
 
-    private static Scene buildAssignmentListScene(Stage stage, DatabaseManager db) {
+    private static Scene buildAssignmentListScene(Stage stage) {
         //TODO Jordan:
-        return buildPlaceholderScene("Assignment List", stage, db);
+        return buildPlaceholderScene("Assignment List", stage);
     }
 
-    private static Scene buildAssignmentEditScene(Stage stage, DatabaseManager db) {
+    private static Scene buildAssignmentEditScene(Stage stage) {
         //TODO Jordan:
-        return buildPlaceholderScene("Assignment Edit", stage, db);
+        return buildPlaceholderScene("Assignment Edit", stage);
     }
 
-    private static Scene buildPlaceholderScene(String sceneTitle, Stage stage, DatabaseManager db) {
+    private static Scene buildPlaceholderScene(String sceneTitle, Stage stage) {
         Label label = new Label(sceneTitle);
         Button backButton = new Button("Back to Login");
 
         backButton.setOnAction(event ->
-                stage.setScene(create(SceneType.LOGIN, stage, db))
+                stage.setScene(create(SceneType.LOGIN, stage))
         );
 
         VBox layout = new VBox(16, label, backButton);

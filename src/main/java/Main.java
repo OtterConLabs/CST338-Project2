@@ -13,35 +13,47 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-
-        db = new DatabaseManager();
-
-        /*
-         * Optional sample data for local testing.
-         * Uncomment db.insertUser(user) once to add this user to your local app.db.
-         * Comment it out again afterward because username and email must be unique.
-         */
-        User user = new User(
-                "teststudent",
-                "Test",
-                "Student",
-                "teststudent@csumb.edu",
-                "1234",
-                UserRole.STUDENT
-        );
-//        db.insertUser(user);
-
+        // After (singleton):
         stage.setTitle("OtterCon Labs");
-        stage.setScene(SceneFactory.create(SceneType.LOGIN, stage, db));
+        stage.setScene(SceneFactory.create(SceneType.LOGIN, stage));
         stage.show();
     }
-
     @Override
-    public void stop() {
-        if (db != null) {
-            db.close();
-        }
+    public void stop () {
+        DatabaseManager.getInstance().close();
     }
+
+       // Before (singleton):
+//        db = new DatabaseManager();
+//
+//        /*
+//         * Optional sample data for local testing.
+//         * Uncomment db.insertUser(user) once to add this user to your local app.db.
+//         * Comment it out again afterward because username and email must be unique.
+//         */
+//        User user = new User(
+//                "teststudent",
+//                "Test",
+//                "Student",
+//                "teststudent@csumb.edu",
+//                "1234",
+//                UserRole.STUDENT
+//        );
+////        db.insertUser(user);
+//
+//        stage.setTitle("OtterCon Labs");
+//        stage.setScene(SceneFactory.create(SceneType.LOGIN, stage, db));
+//        stage.show();
+//
+//    }
+//
+//    @Override
+//    public void stop() {
+//        if (db != null) {
+//            db.close();
+//        }
+
+//    }
 
 
     /**

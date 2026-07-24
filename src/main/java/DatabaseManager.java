@@ -10,10 +10,14 @@ import java.sql.*;
 
 public class DatabaseManager {
     private static final String DB_URL = "jdbc:sqlite:app.db";
-
+    // Singleton
+    // the one instance
+    private static DatabaseManager instance;
     private Connection connection;
 
-    public DatabaseManager() {
+    // Private constructor - no outside code can call new DatabaseManager()
+    // Same as before but it is PRIVATE now
+    private DatabaseManager() {
         try {
             connection = DriverManager.getConnection(DB_URL);
             System.out.println("Database connected.");
@@ -21,6 +25,14 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.out.println("Connection failed: " + e.getMessage());
         }
+    }
+
+    // returns the single instance, creating it on first call.
+    public static DatabaseManager getInstance() {
+        if (instance == null) {
+            instance = new DatabaseManager();
+        }
+        return instance;
     }
 
     public void close() {
