@@ -5,6 +5,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import java.io.IOException;
 
 /**
  * [CST338 P2 SceneFactory]
@@ -27,8 +29,18 @@ public class SceneFactory {
     private static final String NEW_MEMBER = "New Member?";
     private static final String REGISTER = "Registration Form";
 
-    public static TextField usernameInput = new TextField();
-    public static PasswordField  passwordInput = new PasswordField();
+//    public static TextField usernameInput = new TextField();
+//    public static PasswordField  passwordInput = new PasswordField();
+
+    private static User loggedInUser;
+
+    public static void setLoggedInUser(User user) {
+        loggedInUser = user;
+    }
+
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
 
     public static Scene create(SceneType type, Stage stage) {
         return switch (type) {
@@ -44,60 +56,87 @@ public class SceneFactory {
 
     private static Scene buildLoginScene(Stage stage) {
         //TODO YOKO:
-        DatabaseManager db = DatabaseManager.getInstance();
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource("/LoginScene.fxml")
+            );
 
-        Label org = new Label(ORG);
-        Label title = new Label(TITLE);
-        Label userName = new Label(USERNAME);
-        Label loginMsg = new Label("Please enter your username and password.");
-        userName.setPrefWidth(80);
-        Label password = new Label(PASSWORD);
-        password.setPrefWidth(80);
-        Label newMember = new Label(NEW_MEMBER);
-        org.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
-        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+            Scene scene = new Scene(
+                    loader.load(),
+                    SCENE_WIDTH,
+                    SCENE_HEIGHT
+            );
 
-//        TextField usernameInput = new TextField();
-        usernameInput.setPromptText(USERNAME);
-        usernameInput.setMaxWidth(200);
+            LoginController controller = loader.getController();
+            controller.setStage(stage);
 
-        HBox usernameField = new HBox(15, userName,usernameInput);
-        usernameField.setAlignment(Pos.CENTER);
+            return scene;
 
-//        PasswordField  passwordInput = new PasswordField();
-        passwordInput.setPromptText(PASSWORD);
-        passwordInput.setMaxWidth(200);
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "Failed to load LoginScene.fxml",
+                    e
+            );
+        }
 
-        HBox passwordField = new HBox(15, password, passwordInput);
-        passwordField.setAlignment(Pos.CENTER);
 
-        Button logBtn = new Button("Log in");
-        logBtn.setOnAction(event -> {
-            String username = usernameInput.getText().trim();
-            String passwordTxt = passwordInput.getText().trim();
-            if (username.isEmpty() || passwordTxt.isEmpty()) {
-                loginMsg.setText("Please enter your username and password.");
-                return;
-            }
-            User loggedInUser = db.checkLogin(username,passwordTxt);
-            if (loggedInUser != null) {
-                stage.setScene(create(SceneType.DASHBOARD, stage)
-                );
-            } else {
-                loginMsg.setText("Incorrect username or password");
-            }
-        });
-
-        Button regBtn = new Button("Register");
-        regBtn.setOnAction(event -> {
-            stage.setScene(create(SceneType.REGISTER, stage));
-        });
-
-        VBox layout = new VBox(16, org, title, loginMsg, usernameField, passwordField, logBtn, newMember, regBtn);
-        layout.setPadding(new Insets(30));
-        layout.setAlignment(Pos.TOP_CENTER);
-
-        return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
+//
+//
+//
+//        DatabaseManager db = DatabaseManager.getInstance();
+//
+//        Label org = new Label(ORG);
+//        Label title = new Label(TITLE);
+//        Label userName = new Label(USERNAME);
+//        Label loginMsg = new Label("Please enter your username and password.");
+//        userName.setPrefWidth(80);
+//        Label password = new Label(PASSWORD);
+//        password.setPrefWidth(80);
+//        Label newMember = new Label(NEW_MEMBER);
+//        org.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
+//        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+//
+////        TextField usernameInput = new TextField();
+//        usernameInput.setPromptText(USERNAME);
+//        usernameInput.setMaxWidth(200);
+//
+//        HBox usernameField = new HBox(15, userName,usernameInput);
+//        usernameField.setAlignment(Pos.CENTER);
+//
+////        PasswordField  passwordInput = new PasswordField();
+//        passwordInput.setPromptText(PASSWORD);
+//        passwordInput.setMaxWidth(200);
+//
+//        HBox passwordField = new HBox(15, password, passwordInput);
+//        passwordField.setAlignment(Pos.CENTER);
+//
+//        Button logBtn = new Button("Log in");
+//        logBtn.setOnAction(event -> {
+//            String username = usernameInput.getText().trim();
+//            String passwordTxt = passwordInput.getText().trim();
+//            if (username.isEmpty() || passwordTxt.isEmpty()) {
+//                loginMsg.setText("Please enter your username and password.");
+//                return;
+//            }
+//            User loggedInUser = db.checkLogin(username,passwordTxt);
+//            if (loggedInUser != null) {
+//                stage.setScene(create(SceneType.DASHBOARD, stage)
+//                );
+//            } else {
+//                loginMsg.setText("Incorrect username or password");
+//            }
+//        });
+//
+//        Button regBtn = new Button("Register");
+//        regBtn.setOnAction(event -> {
+//            stage.setScene(create(SceneType.REGISTER, stage));
+//        });
+//
+//        VBox layout = new VBox(16, org, title, loginMsg, usernameField, passwordField, logBtn, newMember, regBtn);
+//        layout.setPadding(new Insets(30));
+//        layout.setAlignment(Pos.TOP_CENTER);
+//
+//        return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
 
 //              TODO: YOKO
 //        loginButton.setOnAction(event -> {
@@ -202,40 +241,122 @@ public class SceneFactory {
 
     private static Scene buildDashboardScene(Stage stage) {
         //TODO YOKO:
-        DatabaseManager db = DatabaseManager.getInstance();
-        // fetched here, not passed in
-//        ListView<String> list = new ListView<>();
-//        list.getItems().addAll(db.checkLogin());
+        User userInfo = getLoggedInUser();
+
+        if (userInfo == null) {
+            return buildLoginScene(stage);
+        }
 
         Label title = new Label("Dashboard");
-        Label role = new Label(ROLE);
-        Label name = new Label("Name: ");
+        Label name = new Label("Name:");
+        Label role = new Label("Role:");
 
-        User userInfo = db.checkLogin(usernameInput.getText(), passwordInput.getText());
+        Label userDisplayName = new Label(
+                userInfo.getFirstName() + " " + userInfo.getLastName()
+        );
 
-        Label userDisplayName = new Label(userInfo.getFirstName() + " " + userInfo.getLastName());
-        HBox usernameField = new HBox(3, name, userDisplayName);
+        HBox usernameField = new HBox(
+                3,
+                name,
+                userDisplayName
+        );
         usernameField.setAlignment(Pos.CENTER);
 
-        Label userRole = new Label(userInfo.getRole().toString());
-        HBox userRoleField = new HBox(3, role, userRole);
+        Label userRole = new Label(
+                userInfo.getRole().name()
+        );
+
+        HBox userRoleField = new HBox(
+                3,
+                role,
+                userRole
+        );
         userRoleField.setAlignment(Pos.CENTER);
 
-        Button courseAndEnrollment = new Button("Courses & Enrollment");
-        courseAndEnrollment.setOnAction(event -> {
-            stage.setScene(create(SceneType.COURSE_LIST, stage));
-        });
+        Button courseAndEnrollment =
+                new Button("Courses & Enrollment");
+
+        courseAndEnrollment.setOnAction(event ->
+                stage.setScene(
+                        create(SceneType.COURSE_LIST, stage)
+                )
+        );
 
         Button assignment = new Button("Assignments");
-        assignment.setOnAction(event -> {
-            stage.setScene(create(SceneType.ASSIGNMENT_LIST, stage));
-        });
 
-        VBox layout = new VBox(16,title, usernameField, userRoleField, courseAndEnrollment, assignment);
+        assignment.setOnAction(event ->
+                stage.setScene(
+                        create(SceneType.ASSIGNMENT_LIST, stage)
+                )
+        );
+
+        VBox layout = new VBox(
+                16,
+                title,
+                usernameField,
+                userRoleField,
+                courseAndEnrollment,
+                assignment
+        );
+
         layout.setPadding(new Insets(30));
         layout.setAlignment(Pos.CENTER);
 
-        return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
+        return new Scene(
+                layout,
+                SCENE_WIDTH,
+                SCENE_HEIGHT
+        );
+
+//
+//        DatabaseManager db = DatabaseManager.getInstance();
+//        // fetched here, not passed in
+////        ListView<String> list = new ListView<>();
+////        list.getItems().addAll(db.checkLogin());
+//
+//        User userInfo = getLoggedInUser();
+//
+//        if (userInfo == null) {
+//            return buildLoginScene(stage);
+//        }
+//
+//        Label userDisplayName = new Label(
+//                userInfo.getFirstName() + " " + userInfo.getLastName()
+//        );
+//
+//        Label userRole = new Label(
+//                userInfo.getRole().name()
+//        );
+//
+//        Label title = new Label("Dashboard");
+//        Label role = new Label(ROLE);
+//        Label name = new Label("Name: ");
+//
+//        userInfo = db.checkLogin(usernameInput.getText(), passwordInput.getText());
+//
+//        userDisplayName = new Label(userInfo.getFirstName() + " " + userInfo.getLastName());
+//        HBox usernameField = new HBox(3, name, userDisplayName);
+//        usernameField.setAlignment(Pos.CENTER);
+//
+//        userRole = new Label(userInfo.getRole().toString());
+//        HBox userRoleField = new HBox(3, role, userRole);
+//        userRoleField.setAlignment(Pos.CENTER);
+//
+//        Button courseAndEnrollment = new Button("Courses & Enrollment");
+//        courseAndEnrollment.setOnAction(event -> {
+//            stage.setScene(create(SceneType.COURSE_LIST, stage));
+//        });
+//
+//        Button assignment = new Button("Assignments");
+//        assignment.setOnAction(event -> {
+//            stage.setScene(create(SceneType.ASSIGNMENT_LIST, stage));
+//        });
+//
+//        VBox layout = new VBox(16,title, usernameField, userRoleField, courseAndEnrollment, assignment);
+//        layout.setPadding(new Insets(30));
+//        layout.setAlignment(Pos.CENTER);
+//
+//        return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
     }
 
     private static Scene buildCourseListScene(Stage stage) {

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="LoginController"
+      alignment="TOP_CENTER"
+      spacing="16"
+      prefHeight="400.0"
+      prefWidth="600.0">
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <Label text="Welcome to OtterCon Labs!"
+           style="-fx-font-size: 30px; -fx-font-weight: bold;"/>
+
+    <Label text="Grade &amp; Assignment Tracker"
+           style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <Label fx:id="loginMessageLabel"
+           text="Please enter your username and password."/>
+
+    <HBox alignment="CENTER" spacing="15">
+        <Label text="Username:" prefWidth="80"/>
+        <TextField fx:id="usernameField"
+                   promptText="Username"
+                   maxWidth="200"/>
+    </HBox>
+
+    <HBox alignment="CENTER" spacing="15">
+        <Label text="Password:" prefWidth="80"/>
+        <PasswordField fx:id="passwordField"
+                       promptText="Password"
+                       maxWidth="200"/>
+    </HBox>
+
+    <Button text="Log in"
+            onAction="#handleLogin"/>
+
+    <Label text="New Member?"/>
+
+    <Button text="Register"
+            onAction="#handleRegister"/>
+
+</VBox>
