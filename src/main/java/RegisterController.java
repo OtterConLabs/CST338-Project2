@@ -39,6 +39,7 @@ public class RegisterController {
         this.stage = stage;
     }
 
+    // setting the dropdown items
     @FXML
     private void initialize() {
         roleInput.setItems(
@@ -46,13 +47,14 @@ public class RegisterController {
         );
     }
 
+    // Register button to insert user profile
     @FXML
     private void handleRegister() {
         String username = registerUsernameInput.getText().trim();
         String firstName = firstNameInput.getText().trim();
         String lastName = lastNameInput.getText().trim();
         String email = emailInput.getText().trim();
-        String password = registerPasswordInput.getText();
+        String password = registerPasswordInput.getText().trim();
         UserRole role = roleInput.getValue();
 
         if (username.isEmpty()
@@ -64,6 +66,7 @@ public class RegisterController {
             System.out.println("Please complete all fields.");
             return;
         }
+        // create a new user object
         User newUser = new User(
             username,
             firstName,
@@ -73,10 +76,12 @@ public class RegisterController {
             role
         );
         DatabaseManager db = DatabaseManager.getInstance();
+        // create a new user profile
         db.insertUser(newUser);
         System.out.println("Register button clicked.");
     }
 
+    // back to Log in page
     @FXML
     private void handleBack() {
         stage.setScene(

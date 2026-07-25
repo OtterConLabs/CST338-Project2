@@ -40,6 +40,11 @@ public class User {
 
     //methods will be coming soon....
 
+
+    public int getId() {
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -77,4 +82,6 @@ public class User {
                 ", datetime='" + datetime + '\'' +
                 '}';
     }
+
+
 }
