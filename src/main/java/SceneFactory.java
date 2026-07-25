@@ -252,9 +252,9 @@ public class SceneFactory {
 
 //
 //        DatabaseManager db = DatabaseManager.getInstance();
-//        // fetched here, not passed in
-////        ListView<String> list = new ListView<>();
-////        list.getItems().addAll(db.checkLogin());
+//        fetched here, not passed in
+//        ListView<String> list = new ListView<>();
+//        list.getItems().addAll(db.checkLogin());
 //
 //        User userInfo = getLoggedInUser();
 //

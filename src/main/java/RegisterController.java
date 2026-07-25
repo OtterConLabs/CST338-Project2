@@ -48,6 +48,16 @@ public class RegisterController {
 
     @FXML
     private void handleRegister() {
+        User newUser = new User(
+            registerUsernameInput.getText(),
+            firstNameInput.getText(),
+            lastNameInput.getText(),
+            emailInput.getText(),
+            registerPasswordInput.getText(),
+            roleInput.getValue()
+        );
+        DatabaseManager db = DatabaseManager.getInstance();
+        db.insertUser(newUser);
         System.out.println("Register button clicked.");
     }
 
