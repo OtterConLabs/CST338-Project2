@@ -48,13 +48,29 @@ public class RegisterController {
 
     @FXML
     private void handleRegister() {
+        String username = registerUsernameInput.getText().trim();
+        String firstName = firstNameInput.getText().trim();
+        String lastName = lastNameInput.getText().trim();
+        String email = emailInput.getText().trim();
+        String password = registerPasswordInput.getText();
+        UserRole role = roleInput.getValue();
+
+        if (username.isEmpty()
+                || firstName.isEmpty()
+                || lastName.isEmpty()
+                || email.isEmpty()
+                || password.isEmpty()
+                || role == null) {
+            System.out.println("Please complete all fields.");
+            return;
+        }
         User newUser = new User(
-            registerUsernameInput.getText(),
-            firstNameInput.getText(),
-            lastNameInput.getText(),
-            emailInput.getText(),
-            registerPasswordInput.getText(),
-            roleInput.getValue()
+            username,
+            firstName,
+            lastName,
+            email,
+            password,
+            role
         );
         DatabaseManager db = DatabaseManager.getInstance();
         db.insertUser(newUser);
