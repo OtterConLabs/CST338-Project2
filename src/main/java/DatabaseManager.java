@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * [CST338 Create DatabaseManager]
@@ -130,11 +132,11 @@ public class DatabaseManager {
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, username);
             // select password and email columns from all rows in the database where <<username column>> == <<username variable>>
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                String pw = rs.getString("password");
-                if(pw.equals(password)) {
-                    return new User(
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String pw = rs.getString("password");
+                    if (pw.equals(password)) {
+                        return new User(
                             rs.getInt("id"),
                             rs.getString("username"),
                             rs.getString("first_name"),
@@ -142,66 +144,109 @@ public class DatabaseManager {
                             rs.getString("email"),
                             rs.getString("password"),
                             UserRole.valueOf(
-                                    rs.getString("role")
+                                rs.getString("role")
                             ),
                             rs.getString("created")
-                    );
+                        );
+                    }
                 }
             }
         } catch (SQLException e) {
-            // ???
-            System.out.println("Invalid login" + e.getMessage());
+            System.out.println("checkLogin failed: " + e.getMessage());
         }
-        // TODO: YOKO
-        // query the db
-        // if row count == 0 user does not  exist
-        // if row count == 1 user does exist
-        // row count cannot be anything else
-        // if row count = 1 then extract password frpm response
-        // comparepw from db with pw from user
-        // if equal return true else false
         return null;
     }
 
 
-//      TODO: YOKO
-//    //CRUD - Read (SELECT)
-//    public List<String > getAllItems() {
-//        List<String > items = new ArrayList<>();
-//        String sql = "SELECT name FROM items WHERE done = 0 ORDER BY created DESC";
-//
-//        try (Statement stmt = connection.createStatement();
-//             ResultSet rs   = stmt.executeQuery(sql)) {
-//            while (rs.next()) {
-//                items.add(rs.getString("name"));
-//            }
-//        } catch (SQLException e) {
-//            System.out.println("getALLITEMS failed: " + e.getMessage());
-//        }
-//        return items;
-//    }
-//
-//    //CRUD - Update
-//    public void markDone(int id) {
-//        String sql = "UPDATE items SET done = 1 WHERE id = ?";
-//        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-//            pstmt.setInt(1, id);
-//            pstmt.executeUpdate();
-//        } catch (SQLException e) {
-//            System.out.println("markDone failed: + e.getMessage()");
-//        }
-//    }
-//
-//    //CRUD - Delete
-//    public void deleteItem(int id) {
-//        String sql = "DELETE FROM items WHERE id = ?";
-//        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-//            pstmt.setInt(1, id);
-//            pstmt.executeUpdate();
-//        } catch (SQLException e) {
-//            System.out.println("daleteItem failed: " + e.getMessage());
-//        }
-//
-//    }
+    //TODO: YOKO
+    /**
+     *      CREATE TABLE IF NOT EXISTS users (
+     *      id INTEGER PRIMARY KEY AUTOINCREMENT,
+     *      username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+     *      first_name TEXT NOT NULL,
+     *      last_name TEXT NOT NULL,
+     *      email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+     *      password TEXT NOT NULL,
+     *      role TEXT NOT NULL
+     *      CHECK (role IN ('STUDENT', 'TEACHER')),
+     *      created TEXT DEFAULT (datetime('now'))
+     */
+    //CRUD - Read (SELECT)
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users ORDER BY created DESC";
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs   = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                User user = new User(
+                    rs.getInt("id"),
+                    rs.getString("username"),
+                    rs.getString("first_name"),
+                    rs.getString("last_name"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    UserRole.valueOf(rs.getString("role")),
+                    rs.getString("created")
+                );
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            System.out.println("getALLUsers failed: " + e.getMessage());
+        }
+        return users;
+    }
+
+    //CRUD - Update user profile
+    //TODO YOKO
+    public void updateUser(User user) {
+        String sql = """
+            UPDATE users
+            SET username = ?,
+                first_name = ?,
+                last_name = ?,
+                email = ?,
+                password = ?
+            WHERE id = ?
+            """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, user.getUsername().trim());
+            pstmt.setString(2, user.getFirstName().trim());
+            pstmt.setString(3, user.getLastName().trim());
+            pstmt.setString(4, user.getEmail().trim());
+            pstmt.setString(5, user.getPassword());
+            pstmt.setInt(6, user.getId());
+
+            int updateProfile = pstmt.executeUpdate();
+            if (updateProfile == 1) {
+                System.out.println("User profile updated successfully.");
+            } else {
+                System.out.println("No matching user found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("updateUser failed: " + e.getMessage());
+        }
+    }
+
+
+    //CRUD - Delete user profile
+    // TODO YOKO
+    public void deleteUser(User user) {
+        String sql = "DELETE FROM users WHERE id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, user.getId());
+            int deleteProfile = pstmt.executeUpdate();
+            if (deleteProfile == 1) {
+                System.out.println("User profile deleted successfully.");
+            } else {
+                System.out.println("No matching user found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("daleteUser failed: " + e.getMessage());
+        }
+
+    }
 
 }
