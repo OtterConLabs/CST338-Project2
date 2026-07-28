@@ -12,24 +12,27 @@ and PRs. Replace every <placeholder> and delete this comment before you submit.
 
 # <App Name>
 
-<One-line description.> CST 338 Project 2 — Team member: Jordan Browning, Brent Brewington, Yoko Mohr
+<One-line description.> CST 338 Project 2 — Team member: Jordan Browning, Brent Brewington, Yoko Mohr, Jit Tran
 
 ## Team & Slice Ownership
 Grade & Assignment Tracker
 
-| Slice | Owner | GitHub username | Issues                 | Branch(es)                                                                                  | PR(s)               | Enhancement chosen | Status |
-|:------|:------|:----------------|:-----------------------|:--------------------------------------------------------------------------------------------|:--------------------|:-------------------|:-------|
-| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8 #14 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud | #4, #12, #15, #19, #20 |Notifications / alerts on app events   | in-progress |
-| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg |                        |                                                                                             |                     | To be determined   | planned |
-| 3 — Assignments | Jordan Browning | jbrowning-otter | #13, #16, #17                 |                                                                                             |                     | Data Binding   | in-progress |
+| Slice | Owner | GitHub username | Issues | Branch(es) | PR(s) | Enhancement chosen | Status |
+|:------|:------|:----------------|:-------|:-----------|:------|:-------------------|:-------|
+| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8 #14 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud | #4, #12, #15, #19, #20 | Notifications / alerts on app events | in-progress |
+| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg | | | | To be determined | planned |
+| 3 — Assignments | Jordan Browning | jbrowning-otter | #13, #16, #17 | | | Data Binding | in-progress |
+| 4 — Grades | Jit Tran | jtcsumb | | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics | | Data binding using ObservableList and JavaFX properties | planned |
+| 5 — Attendance | Jit Tran | jtcsumb | | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report | | Notifications for overwrite confirmation, saves, and CSV export results | planned |
+
 _Status values: planned · in-progress · complete_
 
 ## WILL NOT DO (declared scope cuts)
 
 - Slice 1 Beyond: admin role, password reset.
 - Slice 3 Beyond: due-date reminders, attachments, weighted categories.
-- Slice 4 — Grades & Statistics: not building (team size).
-- Slice 5 — Attendance & Reports: not building (team size).
+- Slice 4 — Grades & Statistics: weighted categories or GPA calculation.
+- Slice 5 — Attendance & Reports: calendar view or email notifications.
 
 ## Code Review Log
 | PR  | Author | Human reviewer(s) | AI review (link) | Outcome |
