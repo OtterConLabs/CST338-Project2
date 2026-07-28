@@ -65,18 +65,12 @@ public class DatabaseManager {
     }
 
     /**
-     *     private int id;
-     *     private String username;
-     *     private String firstName;
-     *     private String lastName;
-     *     private String email;
-     *     private String password;
-     *     private UserRole role;
+     * createTables() runs when the shared database connection is first created.
+     * It uses CREATE TABLE IF NOT EXISTS, so the users table is created only when it is missing.
+     * The id is an auto-generated primary key. Username and email are required, unique,
+     * and case-insensitive. The role column is restricted to STUDENT or TEACHER,
+     * and SQLite automatically stores the account creation time.
      */
-
-    // Creates the users table.
-    // The username and email columns are case-insensitive and must be unique.
-    // The role column accepts only STUDENT or TEACHER.
     private void createTables() {
         String sql = """
                 CREATE TABLE IF NOT EXISTS users (
@@ -99,7 +93,16 @@ public class DatabaseManager {
         }
     }
 
-    // Inserts a new user into the users table.
+    /**
+     * insertUser() receives a User object and inserts its account data into the users table.
+     * The SQL uses six placeholders, and the PreparedStatement assigns each User field
+     * to the matching placeholder.
+     * The database generates the user ID and creation timestamp automatically.
+     * executeUpdate() performs the insert, while the database constraints prevent
+     * duplicate usernames or emails and reject invalid roles.
+     *
+     * @param user
+     */
     public void insertUser(User user) {
         String sql = """
                  INSERT INTO users (
@@ -124,25 +127,29 @@ public class DatabaseManager {
             pstmt.setString(6, user.getRole().name());
 
             // actual insertion happens here.
-            pstmt.executeUpdate();
-
-            System.out.println("User inserted.");
+            int rowsInserted = pstmt.executeUpdate();
+            // 1 is success
+            if (rowsInserted == 1) {
+                System.out.println("User inserted.");
+            } else {
+                System.out.println("insertUser failed.");
+            }
         } catch (SQLException e) {
-            System.err.println("insertUser failed: " + e.getMessage());
+            System.out.println("insertUser failed: " + e.getMessage());
         }
     }
 
     /**
-     *      CREATE TABLE IF NOT EXISTS users (
-     *      id INTEGER PRIMARY KEY AUTOINCREMENT,
-     *      username TEXT NOT NULL UNIQUE COLLATE NOCASE,
-     *      first_name TEXT NOT NULL,
-     *      last_name TEXT NOT NULL,
-     *      email TEXT NOT NULL UNIQUE COLLATE NOCASE,
-     *      password TEXT NOT NULL,
-     *      role TEXT NOT NULL
-     *      CHECK (role IN ('STUDENT', 'TEACHER')),
-     *      created TEXT DEFAULT (datetime('now'))
+     * checkLogin() searches the users table for the supplied username
+     * using a prepared SELECT statement. If a row is found,
+     * it compares the stored password with the password entered by the user.
+     * When both credentials match, the method reconstructs and returns a complete
+     * User object from the database row.
+     * If the username is missing or the password does not match, it returns null.
+     *
+     * @param username
+     * @param password
+     * @return
      */
     // Checks whether the supplied username and password match a stored user.
     public User checkLogin(String username, String password) {
@@ -182,18 +189,17 @@ public class DatabaseManager {
 
 
     //TODO: YOKO
+
     /**
-     *      CREATE TABLE IF NOT EXISTS users (
-     *      id INTEGER PRIMARY KEY AUTOINCREMENT,
-     *      username TEXT NOT NULL UNIQUE COLLATE NOCASE,
-     *      first_name TEXT NOT NULL,
-     *      last_name TEXT NOT NULL,
-     *      email TEXT NOT NULL UNIQUE COLLATE NOCASE,
-     *      password TEXT NOT NULL,
-     *      role TEXT NOT NULL
-     *      CHECK (role IN ('STUDENT', 'TEACHER')),
-     *      created TEXT DEFAULT (datetime('now'))
+     * getAllUsers() retrieves every row from the users table and
+     * orders the results from newest to oldest.
+     * It uses a while loop because the query may return multiple rows.
+     * Each row in the ResultSet is converted into a User object and added to a list.
+     * If the table has no users, the method returns an empty list rather than null.
+     *
+     * @return
      */
+
     // Retrieves all users from the users table.
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
@@ -222,9 +228,19 @@ public class DatabaseManager {
         return users;
     }
 
+    /**
+     * updateUser() modifies an existing row in the users table.
+     * The SET clause lists the editable profile fields,
+     * while WHERE id = ? identifies the exact user to update.
+     * The ID is used because it remains stable even when the username changes.
+     * executeUpdate() returns the number of affected rows,
+     * so a result of one means the profile was updated,
+     * while zero means no matching user was found.
+     * @param user
+     */
     // Updates the editable profile information for an existing user
     //TODO YOKO
-    public void updateUser(User user) {
+    public boolean updateUser(User user) {
         String sql = """
             UPDATE users
             SET username = ?,
@@ -240,36 +256,50 @@ public class DatabaseManager {
             pstmt.setString(2, user.getFirstName().trim());
             pstmt.setString(3, user.getLastName().trim());
             pstmt.setString(4, user.getEmail().trim());
-            pstmt.setString(5, user.getPassword());
-            pstmt.setInt(6, user.getId());
+            pstmt.setString(5, user.getPassword()); // no need to trim here
+            pstmt.setInt(6, user.getId()); // WHERE id
 
             int updateProfile = pstmt.executeUpdate();
-            if (updateProfile == 1) {
-                System.out.println("User profile updated successfully.");
-            } else {
-                System.out.println("No matching user found.");
-            }
+            return updateProfile == 1;
+//            if (updateProfile == 1) {
+//                System.out.println("User profile updated successfully.");
+//            } else {
+//                System.out.println("No matching user found.");
+//            }
         } catch (SQLException e) {
             System.out.println("updateUser failed: " + e.getMessage());
+            return false;
         }
     }
 
-
+    /**
+     * deleteUser() removes one user row from the users table.
+     * The WHERE id = ? clause is essential because it limits the deletion
+     * to the exact user identified by the primary key.
+     * executeUpdate() returns the number of deleted rows,
+     * so one means the account was deleted and zero means no matching account existed.
+     * After a successful deletion, the application should clear
+     * the logged-in user and return to the Login screen.
+     * @param user
+     * @return
+     */
     // Deletes the database row belonging to the specified user.
     // TODO YOKO
-    public void deleteUser(User user) {
+    public boolean deleteUser(User user) {
         String sql = "DELETE FROM users WHERE id = ?";
 
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, user.getId());
             int deleteProfile = pstmt.executeUpdate();
-            if (deleteProfile == 1) {
-                System.out.println("User profile deleted successfully.");
-            } else {
-                System.out.println("No matching user found.");
-            }
+            return deleteProfile == 1;
+//            if (deleteProfile == 1) {
+//                System.out.println("User profile deleted successfully.");
+//            } else {
+//                System.out.println("No matching user found.");
+//            }
         } catch (SQLException e) {
             System.out.println("daleteUser failed: " + e.getMessage());
+            return false;
         }
 
     }
