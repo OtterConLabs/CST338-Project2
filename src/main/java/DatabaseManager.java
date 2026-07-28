@@ -4,21 +4,27 @@ import java.util.List;
 
 /**
  * [CST338 Create DatabaseManager]
- * "jdbc:sqlite:" tells JDBC which driver to use.
- * The path after it is the database file location
+ * Manages the shared SQLite database connection and creates the application's
+ * database tables.
+ * The class currently also contains user-related CRUD operations. These
+ * operations will later be moved to a separate UserDao class
+ *
  * @author Yoko Mohr
  * @since 7/21/2026
  */
 
 public class DatabaseManager {
+    // JDBC URL for the local SQLite database file.
     private static final String DB_URL = "jdbc:sqlite:app.db";
-    // Singleton
-    // the one instance
+
+    // Stores the single DatabaseManager instance used by the application.
     private static DatabaseManager instance;
+    // Shared database connection used throughout the application.
     private Connection connection;
 
-    // Private constructor - no outside code can call new DatabaseManager()
-    // Same as before but it is PRIVATE now
+    // Opens the SQLite connection and creates the required tables.
+    // The constructor is private so outside classes cannot create additional
+    // DatabaseManager objects.
     private DatabaseManager() {
         try {
             connection = DriverManager.getConnection(DB_URL);
@@ -29,7 +35,8 @@ public class DatabaseManager {
         }
     }
 
-    // returns the single instance, creating it on first call.
+    // Returns the shared DatabaseManager instance.
+    // The instance is created only the first time this method is called.
     public static DatabaseManager getInstance() {
         if (instance == null) {
             instance = new DatabaseManager();
@@ -37,14 +44,24 @@ public class DatabaseManager {
         return instance;
     }
 
+    // Closes the shared database connection.
+    // The Singleton instance is reset after the connection is closed so a
+    // new instance can be created later if necessary.
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
+                instance = null;
             }
         } catch (SQLException e) {
             System.out.println("Failed to close: " + e.getMessage());
         }
+    }
+
+    // TODO: Create UserDao and move user CRUD operations out of DatabaseManager.
+    //  UserDao will access this shared connection through getConnection().
+    public Connection getConnection() {
+        return connection;
     }
 
     /**
@@ -57,7 +74,9 @@ public class DatabaseManager {
      *     private UserRole role;
      */
 
-    // Table name is users
+    // Creates the users table.
+    // The username and email columns are case-insensitive and must be unique.
+    // The role column accepts only STUDENT or TEACHER.
     private void createTables() {
         String sql = """
                 CREATE TABLE IF NOT EXISTS users (
@@ -80,7 +99,7 @@ public class DatabaseManager {
         }
     }
 
-    //CRUD - Create (INSERT)
+    // Inserts a new user into the users table.
     public void insertUser(User user) {
         String sql = """
                  INSERT INTO users (
@@ -94,7 +113,7 @@ public class DatabaseManager {
                  VALUES (?, ?, ?, ?, ?, ?) 
                  """;
 
-        //fill in ?s from 1 to 6
+        // Replace the six SQL placeholders ? with values from the User.
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getFirstName());
@@ -122,7 +141,7 @@ public class DatabaseManager {
      *      CHECK (role IN ('STUDENT', 'TEACHER')),
      *      created TEXT DEFAULT (datetime('now'))
      */
-    //check login validate username
+    // Checks whether the supplied username and password match a stored user.
     public User checkLogin(String username, String password) {
         // this is for prepareStatement. later ask  a specific username, the want to get its password
         // use * to receive all information
@@ -130,12 +149,13 @@ public class DatabaseManager {
                 SELECT * FROM users WHERE username = ?
                 """;
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            // Search for the specific username entered by the user.
             pstmt.setString(1, username);
-            // select password and email columns from all rows in the database where <<username column>> == <<username variable>>
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     String pw = rs.getString("password");
                     if (pw.equals(password)) {
+                        // Return a complete User object when the password matches.
                         return new User(
                             rs.getInt("id"),
                             rs.getString("username"),
@@ -171,13 +191,15 @@ public class DatabaseManager {
      *      CHECK (role IN ('STUDENT', 'TEACHER')),
      *      created TEXT DEFAULT (datetime('now'))
      */
-    //CRUD - Read (SELECT)
+    // Retrieves all users from the users table.
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users ORDER BY created DESC";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs   = stmt.executeQuery(sql)) {
+
+            // Convert each database row into a User object.
             while (rs.next()) {
                 User user = new User(
                     rs.getInt("id"),
@@ -197,7 +219,7 @@ public class DatabaseManager {
         return users;
     }
 
-    //CRUD - Update user profile
+    // Updates the editable profile information for an existing user
     //TODO YOKO
     public void updateUser(User user) {
         String sql = """
@@ -230,7 +252,7 @@ public class DatabaseManager {
     }
 
 
-    //CRUD - Delete user profile
+    // Deletes the database row belonging to the specified user.
     // TODO YOKO
     public void deleteUser(User user) {
         String sql = "DELETE FROM users WHERE id = ?";

@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="8.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="RegisterController">
    <children>
       <Label alignment="CENTER" contentDisplay="TOP" text="Registration Form" textAlignment="CENTER">
@@ -18,7 +17,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label text="Please enter your information">
+      <Label fx:id="registerMessageLabel" text="Please enter your information">
          <font>
             <Font size="14.0" />
          </font>
