@@ -1,3 +1,4 @@
+import java.util.Objects;
 
 /**
  * [CST338 ]
@@ -38,9 +39,6 @@ public class User {
         this.datetime = datetime;
     }
 
-    //methods will be coming soon....
-
-
     public int getId() {
         return id;
     }
@@ -70,6 +68,32 @@ public class User {
     }
 
     @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof User user)) {
+            return false;
+        }
+
+      return getId() == user.getId() && Objects.equals(getUsername(), user.getUsername())
+            && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(
+            getLastName(), user.getLastName()) && Objects.equals(getEmail(), user.getEmail())
+            && Objects.equals(getPassword(), user.getPassword()) && getRole() == user.getRole()
+            && Objects.equals(datetime, user.datetime);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + Objects.hashCode(getUsername());
+        result = 31 * result + Objects.hashCode(getFirstName());
+        result = 31 * result + Objects.hashCode(getLastName());
+        result = 31 * result + Objects.hashCode(getEmail());
+        result = 31 * result + Objects.hashCode(getPassword());
+        result = 31 * result + Objects.hashCode(getRole());
+        result = 31 * result + Objects.hashCode(datetime);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
@@ -82,6 +106,4 @@ public class User {
                 ", datetime='" + datetime + '\'' +
                 '}';
     }
-
-
 }

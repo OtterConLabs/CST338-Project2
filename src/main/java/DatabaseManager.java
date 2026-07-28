@@ -115,6 +115,7 @@ public class DatabaseManager {
 
         // Replace the six SQL placeholders ? with values from the User.
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            // setting for all the ?s
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getFirstName());
             pstmt.setString(3, user.getLastName());
@@ -122,7 +123,9 @@ public class DatabaseManager {
             pstmt.setString(5, user.getPassword());
             pstmt.setString(6, user.getRole().name());
 
+            // actual insertion happens here.
             pstmt.executeUpdate();
+
             System.out.println("User inserted.");
         } catch (SQLException e) {
             System.err.println("insertUser failed: " + e.getMessage());
