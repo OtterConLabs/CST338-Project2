@@ -53,7 +53,6 @@ public class RegisterController {
         this.stage = stage;
     }
 
-    // setting the dropdown items
     // Initializes the role ComboBox after the FXML file is loaded.
     // All values from the UserRole enum are added to the dropdown menu.
     @FXML
@@ -73,7 +72,7 @@ public class RegisterController {
         String firstName = firstNameInput.getText().trim();
         String lastName = lastNameInput.getText().trim();
         String email = emailInput.getText().trim();
-        String password = registerPasswordInput.getText().trim();
+        String password = registerPasswordInput.getText(); // no trim needed
         UserRole role = roleInput.getValue();
 
         // Stop the registration process if any required field is empty.
@@ -96,12 +95,18 @@ public class RegisterController {
             password,
             role
         );
-        // Retrieve the shared DatabaseManager Singleton.
-        DatabaseManager db = DatabaseManager.getInstance();
-        // Insert the new user's account information into the users table.
-        db.insertUser(newUser);
-        registerMessageLabel.setText("Account created successfully.");
-//        System.out.println("User registration submitted.");
+        UserDao userDao = new UserDao();
+        boolean inserted = userDao.insertUser(newUser);
+        if (inserted) {
+            registerMessageLabel.setText(
+                "Account created successfully."
+            );
+        } else {
+            registerMessageLabel.setText(
+                "Unable to create account. "
+                    + "The username or email may already be in use."
+            );
+        }
     }
 
     // Handles the Back button action and returns to the Login screen.

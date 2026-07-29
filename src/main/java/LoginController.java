@@ -51,12 +51,8 @@ public class LoginController {
             );
             return;
         }
-
-        // Retrieve the shared DatabaseManager Singleton.
-        DatabaseManager db = DatabaseManager.getInstance();
-        // Search the users table for matching login credentials.
-        // A valid User is returned when the login succeeds.
-        User loggedInUser = db.checkLogin(username, password);
+        UserDao userDao = new UserDao();
+        User loggedInUser = userDao.checkLogin(username, password);
 
         if (loggedInUser != null) {
             // Store the authenticated User so other scenes can access it.
