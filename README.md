@@ -29,10 +29,13 @@ _Status values: planned · in-progress · complete_
 
 ## WILL NOT DO (declared scope cuts)
 
-- Slice 1 Beyond: admin role, password reset.
-- Slice 3 Beyond: due-date reminders, attachments, weighted categories.
-- Slice 4 — Grades & Statistics: weighted categories or GPA calculation.
-- Slice 5 — Attendance & Reports: calendar view or email notifications.
+| Slice | Features (Will Not Implement) |
+|:------|:-------------------------------------------------------------|
+| 1 — Accounts | Admin role, Password reset |
+| 2 — Courses & Enrollment | Course sections, Enrollment waitlists, Course capacity limits |
+| 3 — Assignments | Due-date reminders, File attachments, Weighted assignment categories |
+| 4 — Grades & Statistics | Weighted-category grade calculations, GPA calculation |
+| 5 — Attendance & Reports | Calendar view, Email notifications |
 
 ## Code Review Log
 | PR  | Author | Human reviewer(s) | AI review (link) | Outcome |
