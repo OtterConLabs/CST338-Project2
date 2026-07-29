@@ -12,15 +12,12 @@ import java.util.Optional;
  */
 public class AssignmentDao
 {
-    private final Connection conn;
-
     /**
      * store the connection
      */
     public AssignmentDao(Connection conn)
     {
-        if (conn == null)
-        {
+        if (conn == null) {
             throw new IllegalArgumentException("null error.");
         }
 
@@ -39,49 +36,51 @@ public class AssignmentDao
     public int insert(Assignment assignment) throws SQLException
     {
         //Screens the Assignment
-        reqAssignment(assignment);
+        requireAssignment(assignment);
 
         //Builds the SQL statement
         String sql = """
 
-            INSERT INTO assignments (
+        INSERT INTO assignments (
         course_id,
         title,
         description,
         due_date,
         points_possible
-                    )
-                    VALUES (?, ?, ?
-            , ?, ?)
-    """;
+        )
+        VALUES (?, ?, ?, ?, ?)""";
 
         //Creates the SQL Command and executes SQL
         try (PreparedStatement statement = conn.prepareStatement(
                 sql,
                 Statement.RETURN_GENERATED_KEYS
-        )) {
+        ))
+        {
 
             //Fill in the placeholders
             setStatementValues(statement, assignment);
 
             //Verify SQL
-            int modRows = statement.executeUpdate();
+            int affectedRows = statement.executeUpdate();
 
-            if (modRows != 1) {
+            if (affectedRows != 1)
+            {
                 throw new SQLException(
-                        "Assignment insertion mod "
-                                + modRows
+                        "Assignment insertion affected "
+                                + affectedRows
                                 + " rows."
                 );
             }
 
             //After inserting the row, ask for the new primary key
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+            try (ResultSet generatedKeys = statement.getGeneratedKeys())
+            {
 
                 //Verify that an ID was returned
-                if (!generatedKeys.next()) {
+                if (!generatedKeys.next())
+                {
                     throw new SQLException(
-                            "insertion did not return ID."
+                            "Assignment insertion did not return an ID."
                     );
                 }
 
@@ -95,52 +94,4 @@ public class AssignmentDao
                 return generatedId;
             }
         }
-        public Optional<Assignment> findById ( int assignmentId)
-        throws SQLException {
-            //assignment cannot be negative, return nothing if negative
-            if (assignmentId <= 0) {
-                return Optional.empty();
-            }
-
-            //SQL query statements
-            String sql = """
-            
-                    SELECT
-                assignment_id,
-                course_id,
-                title,
-                description,
-                due_date,
-                points_possible
-            FROM assignments
-            WHERE assignment_id = ?
-   
-
-            "";
-
-        //create placeholders for the assignment before 
-            d in
-        try (PreparedStatement statement =
-                     conn.prepareStatement(sql)) {
-
-            //fill in the placeholder with the assignment ID
-            statement.setInt(1, assignmentId);
-
-            //sends the SQL to the database.
-            try (ResultSet resultSet = statement.executeQuery()) {
-
-                //checks if the database returned an assignment
-                if (resultSet.next()) {
-
-                    //turns the database information into an Assignment and returns it
-                    return Optional.of(
-                            mapAssignment(resultSet)
-                    );
-                }
-
-                //return nothing if the assignment was not found
-                return Optional.empty();
-            }
-        }
     }
-}
