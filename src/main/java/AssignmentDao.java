@@ -95,7 +95,14 @@ public class AssignmentDao
             }
         }
     }
-
+    /**
+     * Searches the database for an Assignment using its assignment ID.
+     *
+     * @param assignmentId The ID of the Assignment to look up.
+     * @return An Optional containing the Assignment if it exists,
+     *         otherwise an empty Optional.
+     * @throws SQLException If a database error occurs while searching.
+     */
     public Optional<Assignment> findById(int assignmentId)
             throws SQLException
     {
