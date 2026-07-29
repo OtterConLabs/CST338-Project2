@@ -50,14 +50,14 @@
             </HBox>
             <HBox alignment="BOTTOM_CENTER" prefHeight="83.0" prefWidth="400.0" spacing="15.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#handleCourses" prefHeight="40.0" prefWidth="170.0" text="Courses &amp; Enrollment" />
-                  <Button mnemonicParsing="false" onAction="#handleAssignments" prefHeight="40.0" prefWidth="170.0" text="Assignments" />
+                  <Button mnemonicParsing="false" onAction="#handleCourses" prefHeight="30.0" prefWidth="170.0" text="Courses &amp; Enrollment" />
+                  <Button mnemonicParsing="false" onAction="#handleAssignments" prefHeight="30.0" prefWidth="170.0" text="Assignments" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="400.0" spacing="15.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#handleGrades" prefHeight="40.0" prefWidth="170.0" text="Grades" />
-                  <Button mnemonicParsing="false" onAction="#handleAttendance" prefHeight="40.0" prefWidth="170.0" text="Attendance" />
+                  <Button mnemonicParsing="false" onAction="#handleGrades" prefHeight="30.0" prefWidth="170.0" text="Grades" />
+                  <Button mnemonicParsing="false" onAction="#handleAttendance" prefHeight="30.0" prefWidth="170.0" text="Attendance" />
                </children>
                <VBox.margin>
                   <Insets />
@@ -65,8 +65,8 @@
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="400.0" spacing="15.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#handleProfile" prefHeight="40.0" prefWidth="170.0" text="Profile" />
-                  <Button mnemonicParsing="false" onAction="#handleBack" prefHeight="40.0" prefWidth="170.0" text="Back" />
+                  <Button mnemonicParsing="false" onAction="#handleProfile" prefHeight="30.0" prefWidth="170.0" text="Profile" />
+                  <Button mnemonicParsing="false" onAction="#handleBack" prefHeight="30.0" prefWidth="170.0" text="Back" />
                </children>
             </HBox>
          </children>

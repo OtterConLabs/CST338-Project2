@@ -17,13 +17,13 @@ and PRs. Replace every <placeholder> and delete this comment before you submit.
 ## Team & Slice Ownership
 Grade & Assignment Tracker
 
-| Slice | Owner | GitHub username | Issues                     | Branch(es)                                                                                                        | PR(s)                      | Enhancement chosen | Status |
-|:------|:------|:----------------|:---------------------------|:------------------------------------------------------------------------------------------------------------------|:---------------------------|:-------------------|:-------|
-| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8 #14 #30 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud | #4, #12, #15, #19, #20 #31 | Notifications / alerts on app events | in-progress |
-| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg |                            |                                                                                                                   |                            | To be determined | planned |
-| 3 — Assignments | Jordan Browning | jbrowning-otter | #13, #16, #17              | jordan/assignment-dao                                                                                             |                            | Data Binding | in-progress |
-| 4 — Grades | Jit Tran | jtcsumb |                            | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics                                            |                            | Data binding using ObservableList and JavaFX properties | planned |
-| 5 — Attendance | Jit Tran | jtcsumb |                            | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report                                      |                            | Notifications for overwrite confirmation, saves, and CSV export results | planned |
+| Slice | Owner | GitHub username | Issues                                  | Branch(es)                                                                                                          | PR(s)                      | Enhancement chosen | Status |
+|:------|:------|:----------------|:----------------------------------------|:--------------------------------------------------------------------------------------------------------------------|:---------------------------|:-------------------|:-------|
+| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, &7, #8, #9, #14 #30, #37 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud, FXML-dashboard-setup | #4, #12, #15, #19, #20 #31 | Notifications / alerts on app events | in-progress |
+| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg |                                         |                                                                                                                     |                            | To be determined | planned |
+| 3 — Assignments | Jordan Browning | jbrowning-otter | #13, #16, #17                           | jordan/assignment-dao                                                                                               |                            | Data Binding | in-progress |
+| 4 — Grades | Jit Tran | jtcsumb |                                         | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics                                              |                            | Data binding using ObservableList and JavaFX properties | planned |
+| 5 — Attendance | Jit Tran | jtcsumb |                                         | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report                                        |                            | Notifications for overwrite confirmation, saves, and CSV export results | planned |
 
 _Status values: planned · in-progress · complete_
 
@@ -39,7 +39,7 @@ _Status values: planned · in-progress · complete_
 |-----|--------|-------------------|------------------|---------|
 | #10 |Jordan Browning | Yoko Mohr         | N/A              | Approved and merged |
 | #11 |Jordan Browning | Yoko Mohr         | N/A              | Approved and merged |
-
+| #36 |Jordan Browning | Yoko Mohr         | N/A              | Approved and merged |
 ## AI Usage Log
 - **AI-drafted tests:** <link to TESTING.md / commit> — per owner.
 - **AI code reviews:** <PR link + adjudication note> — per owner.
