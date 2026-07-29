@@ -122,7 +122,23 @@ public class SceneFactory {
 
     private static Scene buildProfileScene(Stage stage) {
         // TODO Yoko
-        return buildPlaceholderScene("Profile", stage);
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                SceneFactory.class.getResource("/ProfileScene.fxml")
+            );
+            Parent root = loader.load();
+            Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
+
+            ProfileController controller = loader.getController();
+            controller.setStage(stage);
+            return scene;
+
+        } catch (IOException e) {
+            throw new RuntimeException(
+                "Failed to load ProfileScene.fxml",
+                e
+            );
+        }
     }
 
     private static Scene buildCoursesScene(Stage stage) {
