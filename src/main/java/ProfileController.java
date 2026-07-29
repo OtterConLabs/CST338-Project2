@@ -51,7 +51,6 @@ public class ProfileController {
 
   private void displayLoggedInUser() {
     User user = SceneFactory.getLoggedInUser();
-
     if (user != null) {
       profileUsernameInput.setText(user.getUsername());
       profilePasswordInput.setText(user.getPassword());
@@ -68,11 +67,40 @@ public class ProfileController {
   // Handles the save action and returns to the log in screen.
   @FXML
   private void handleSave() {
-    System.out.println("Save Changes clicked.");
-    // Replace the current Profile Scene with the Login Scene.
-    stage.setScene(
-        SceneFactory.create(SceneType.LOGIN, stage)
+    String username = profileUsernameInput.getText().trim();
+    String password = profilePasswordInput.getText();
+    String firstName = profileFirstNameInput.getText().trim();
+    String lastName = profileLastNameInput.getText().trim();
+    String email = profileEmailInput.getText().trim();
+
+    if (username.isEmpty() ||
+        password.isEmpty() ||
+        firstName.isEmpty() ||
+        lastName.isEmpty() ||
+        email.isEmpty()) {
+      profileMessageLabel.setText("Please complete all fields.");
+      return;
+    }
+    User currentUser = SceneFactory.getLoggedInUser();
+    User user = new User(
+          currentUser.getId(),
+          username,
+          firstName,
+          lastName,
+          email,
+          password,
+          currentUser.getRole(),
+          currentUser.getDatetime()
     );
+    UserDao userDao = new UserDao();
+    boolean result = userDao.updateUser(user);
+    if (result) {
+      profileMessageLabel.setText("Profile updated successfully.");
+      SceneFactory.setLoggedInUser(user);
+    } else {
+      profileMessageLabel.setText("The username or email may already be in use. "
+          + "Please try again.");
+    }
   }
 
   // Handles the delete action and returns to the log in screen.
