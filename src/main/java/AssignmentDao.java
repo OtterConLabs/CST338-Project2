@@ -95,3 +95,52 @@ public class AssignmentDao
             }
         }
     }
+
+    public Optional<Assignment> findById(int assignmentId)
+            throws SQLException
+    {
+        //assignment cannot be negative, return nothing if negative
+        if (assignmentId <= 0)
+        {
+            return Optional.empty();
+        }
+
+        //SQL query statements
+        String sql = """
+            SELECT
+                assignment_id,
+                course_id,
+                title,
+                description,
+                due_date,
+                points_possible
+            FROM assignments
+            WHERE assignment_id = ?
+            """;
+
+        //create placeholders for the assignment before its filled in
+        try (PreparedStatement statement =
+                     conn.prepareStatement(sql))
+        {
+
+            //fill in the placeholder with the assignment ID
+            statement.setInt(1, assignmentId);
+
+            //sends the SQL to the database.
+            try (ResultSet resultSet = statement.executeQuery())
+            {
+
+                //checks if the database returned an assignment
+                if (resultSet.next()) {
+
+                    //turns the database information into an Assignment and returns it
+                    return Optional.of(
+                            mapAssignment(resultSet)
+                    );
+                }
+
+                //return nothing if the assignment was not found
+                return Optional.empty();
+            }
+        }
+    }
