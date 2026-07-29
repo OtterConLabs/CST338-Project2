@@ -47,7 +47,7 @@ _Status values: planned · in-progress · complete_
 ## Extra Credit Log
 | Item | Who | Evidence (Issue/PR) |
 |------|-----|---------------------|
-| Built Slice 5 | | #34 |
+| Built Slice 5 | Jit Tran | #27, #28, #29 |
 
 ## Build & Run
 ```
