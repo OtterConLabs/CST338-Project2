@@ -10,52 +10,62 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="DashboardController">
    <children>
-      <VBox alignment="CENTER" layoutX="-3.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0" spacing="16.0">
+      <VBox alignment="CENTER" layoutX="-3.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0" spacing="20.0">
          <children>
             <Label text="Dashboard">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER" prefHeight="47.0" prefWidth="600.0" spacing="20.0">
+            <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="47.0" spacing="20.0">
                <children>
-                  <Label text="Name:">
+                  <Label alignment="TOP_RIGHT" prefWidth="80.0" text="Name:">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label fx:id="userDisplayName" prefHeight="27.0" prefWidth="95.0" text="User Name">
+                  <Label fx:id="userDisplayName" prefHeight="27.0" prefWidth="180.0" text="User Name">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="44.0" prefWidth="600.0" spacing="20.0">
+            <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="44.0" spacing="20.0">
                <children>
-                  <Label text="Role:">
+                  <Label alignment="TOP_RIGHT" prefWidth="90.0" text="Role:">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Label text="User Role">
+                  <Label fx:id="userRoleName" prefWidth="180.0" text="User Role">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="83.0" prefWidth="600.0" spacing="30.0">
+            <HBox alignment="BOTTOM_CENTER" prefHeight="83.0" prefWidth="400.0" spacing="30.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#handleProfile" text="Profile" />
-                  <Button mnemonicParsing="false" onAction="#handleCourses" text="Courses &amp; Enrollment" />
-                  <Button mnemonicParsing="false" onAction="#handleAssignments" text="Assignments" />
+                  <Button mnemonicParsing="false" onAction="#handleCourses" prefWidth="170.0" text="Courses &amp; Enrollment" />
+                  <Button mnemonicParsing="false" onAction="#handleAssignments" prefWidth="170.0" text="Assignments" />
                </children>
             </HBox>
-            <Button mnemonicParsing="false" text="Back" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="400.0" spacing="30.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#handleGrades" prefWidth="170.0" text="Grades" />
+                  <Button mnemonicParsing="false" onAction="#handleAttendance" prefWidth="170.0" text="Attendance" />
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="400.0" spacing="30.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#handleProfile" prefWidth="170.0" text="Profile" />
+                  <Button mnemonicParsing="false" onAction="#handleBack" prefWidth="170.0" text="Back" />
+               </children>
+            </HBox>
          </children>
          <padding>
-            <Insets top="30.0" />
+            <Insets top="20.0" />
          </padding>
       </VBox>
    </children>

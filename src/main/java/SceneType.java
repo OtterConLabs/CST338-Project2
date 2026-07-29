@@ -11,11 +11,12 @@ public enum SceneType {
     LOGIN,
     REGISTER,
     DASHBOARD,
+    PROFILE,
     //Brent
-    COURSE_LIST,
-    COURSE_EDIT,
+    COURSES,
     //Jordan
-    ASSIGNMENT_LIST,
-    ASSIGNMENT_EDIT
+    ASSIGNMENTS,
     //Jit
+    GRADES,
+    ATTENDANCE
 }

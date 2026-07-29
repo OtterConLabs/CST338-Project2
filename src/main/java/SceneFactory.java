@@ -1,9 +1,7 @@
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
@@ -40,10 +38,11 @@ public class SceneFactory {
             case LOGIN -> buildLoginScene(stage);
             case REGISTER -> buildRegisterScene(stage);
             case DASHBOARD -> buildDashboardScene(stage);
-            case COURSE_LIST -> buildCourseListScene(stage);
-            case COURSE_EDIT -> buildCourseEditScene(stage);
-            case ASSIGNMENT_LIST -> buildAssignmentListScene(stage);
-            case ASSIGNMENT_EDIT -> buildAssignmentEditScene(stage);
+            case PROFILE -> buildProfileScene(stage);
+            case COURSES -> buildCoursesScene(stage);
+            case ASSIGNMENTS -> buildAssignmentsScene(stage);
+            case GRADES -> buildGradesScene(stage);
+            case ATTENDANCE -> buildAttendanceScene(stage);
         };
     }
 
@@ -84,7 +83,6 @@ public class SceneFactory {
             );
             Parent root = loader.load();
             Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
-//            Scene scene = new Scene(loader.load(), SCENE_WIDTH, SCENE_HEIGHT);
 
             RegisterController controller = loader.getController();
             controller.setStage(stage);
@@ -102,81 +100,57 @@ public class SceneFactory {
     // Creates the Dashboard scene for the currently logged-in user.
     private static Scene buildDashboardScene(Stage stage) {
         //TODO YOKO:
-        User userInfo = getLoggedInUser();
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                SceneFactory.class.getResource("/DashboardScene.fxml")
+            );
+            Parent root = loader.load();
+            Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
 
-        if (userInfo == null) {
-            return buildLoginScene(stage);
+            DashboardController controller = loader.getController();
+            controller.setStage(stage);
+
+            return scene;
+
+        } catch (IOException e) {
+            throw new RuntimeException(
+                "Failed to load DashboardScene.fxml",
+                e
+            );
         }
-
-        Label title = new Label("Dashboard");
-        Label name = new Label("Name:");
-        Label role = new Label("Role:");
-
-        Label userDisplayName = new Label(
-                userInfo.getFirstName() + " " + userInfo.getLastName()
-        );
-
-        HBox usernameField = new HBox(3, name, userDisplayName);
-        usernameField.setAlignment(Pos.CENTER);
-
-        Label userRole = new Label(
-                userInfo.getRole().name()
-        );
-
-        HBox userRoleField = new HBox(3, role, userRole);
-        userRoleField.setAlignment(Pos.CENTER);
-
-        Button courseAndEnrollment =
-                new Button("Courses & Enrollment");
-
-        courseAndEnrollment.setOnAction(event ->
-                stage.setScene(
-                        create(SceneType.COURSE_LIST, stage)
-                )
-        );
-
-        Button assignment = new Button("Assignments");
-
-        assignment.setOnAction(event ->
-                stage.setScene(
-                        create(SceneType.ASSIGNMENT_LIST, stage)
-                )
-        );
-
-        VBox layout = new VBox(16, title, usernameField, userRoleField, courseAndEnrollment, assignment);
-
-        layout.setPadding(new Insets(30));
-        layout.setAlignment(Pos.CENTER);
-
-        return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
     }
 
-    private static Scene buildCourseListScene(Stage stage) {
+    private static Scene buildProfileScene(Stage stage) {
+        // TODO Yoko
+        return buildPlaceholderScene("Profile", stage);
+    }
+
+    private static Scene buildCoursesScene(Stage stage) {
         //TODO Brent:
-        return buildPlaceholderScene("Course List", stage);
+        return buildPlaceholderScene("Courses", stage);
     }
 
-    private static Scene buildCourseEditScene(Stage stage) {
-        //TODO Brent:
-        return buildPlaceholderScene("Course Edit", stage);
-    }
-
-    private static Scene buildAssignmentListScene(Stage stage) {
+    private static Scene buildAssignmentsScene(Stage stage) {
         //TODO Jordan:
-        return buildPlaceholderScene("Assignment List", stage);
+        return buildPlaceholderScene("Assignments", stage);
     }
 
-    private static Scene buildAssignmentEditScene(Stage stage) {
-        //TODO Jordan:
-        return buildPlaceholderScene("Assignment Edit", stage);
+    private static Scene buildGradesScene(Stage stage) {
+        //TODO Jit:
+        return buildPlaceholderScene("Grades", stage);
+    }
+
+    private static Scene buildAttendanceScene(Stage stage) {
+        //TODO Jit:
+        return buildPlaceholderScene("Attendance", stage);
     }
 
     private static Scene buildPlaceholderScene(String sceneTitle, Stage stage) {
         Label label = new Label(sceneTitle);
-        Button backButton = new Button("Back to Login");
+        Button backButton = new Button("Back to Dashboard");
 
         backButton.setOnAction(event ->
-                stage.setScene(create(SceneType.LOGIN, stage))
+                stage.setScene(create(SceneType.DASHBOARD, stage))
         );
 
         VBox layout = new VBox(16, label, backButton);
