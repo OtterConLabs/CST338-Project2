@@ -17,4 +17,5 @@ public enum SceneType {
     //Jordan
     ASSIGNMENT_LIST,
     ASSIGNMENT_EDIT
+    //Jit
 }
