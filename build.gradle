@@ -12,12 +12,12 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 javafx {
-    version = '21.0.2'
+    version = '25.0.4'
     modules = ['javafx.controls', 'javafx.fxml']
 }
 

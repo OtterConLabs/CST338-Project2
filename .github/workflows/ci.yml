@@ -1,0 +1,52 @@
+name: CI
+
+# Runs on every pull request, and on pushes to main so the branch's
+# health is always visible. The job fails if the code does not compile
+# or if any unit test fails.
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build & Test (JDK 25)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      # gradlew is committed without the executable bit, which breaks
+      # ./gradlew on Linux runners. Make it executable here.
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      # The TestFX/JavaFX tests need a display server, but GitHub's
+      # ubuntu runners are headless. xvfb provides a virtual X display
+      # so the real JavaFX toolkit can start.
+      - name: Install xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
+      # `build` compiles main + test sources AND runs the unit tests,
+      # so it covers both "does it compile" and "do the tests pass".
+      # Run it under a virtual display so the TestFX tests can launch.
+      - name: Build and run tests
+        run: xvfb-run --auto-servernum ./gradlew build --no-daemon --console=plain
+
+      # Publish the JUnit report even when the build fails, so reviewers
+      # can see which tests broke without digging through logs.
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test
+          if-no-files-found: ignore
