@@ -254,6 +254,38 @@ public class AssignmentDao
     }
 
     /**
+     * Deletes an Assignment from the database using its assignment ID.
+     *
+     * @param assignmentId The assignment ID to delete.
+     * @return True if the assignment was deleted, otherwise false.
+     * @throws SQLException If a database error occurs.
+     */
+    public boolean deleteById(int assignmentId) throws SQLException
+    {
+        //if less than or equal to zero return false
+        if (assignmentId <= 0)
+        {
+            return false;
+        }
+
+        //sql statements
+        String sql = """
+            DELETE FROM assignments
+            WHERE assignment_id = ?
+            """;
+
+        //attempt to create placeholders for the assignment before its filled in
+        try (PreparedStatement statement = conn.prepareStatement(sql))
+        {
+            //fill in the placeholder with the assignment ID
+            statement.setInt(1, assignmentId);
+
+            //send the SQL to the database and return true if one row was deleted
+            return statement.executeUpdate() == 1;
+        }
+    }
+
+    /**
      * PLACEHOLDERS BELOW
      * Screens the Assignment and throws an error if it is null.
      *
