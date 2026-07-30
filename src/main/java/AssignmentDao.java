@@ -35,7 +35,7 @@ public class AssignmentDao {
      */
     public int insert(Assignment assignment) throws SQLException {
         //Screens the Assignment
-        requireAssignment(assignment);
+        reqAssignment(assignment);
 
         //Builds the SQL statement
         String sql = """
@@ -164,8 +164,9 @@ public class AssignmentDao {
                 description,
                 due_date,
                 points_possible
-            FROM assignments
-            ORDER BY due_date, assignment_id
+                            FROM assignments
+                            ORDER BY due_date,
+                assignment_id
             """;
 
         //create a list to store all of the assignments
@@ -206,7 +207,7 @@ public class AssignmentDao {
             throws SQLException
     {
 
-        //courseId cannot be negative, throw an error if negative
+        //courseId cannot be negative, thrw an error if negative
         if ( courseId <= 0)
         {
             throw new IllegalArgumentException(
@@ -215,19 +216,21 @@ public class AssignmentDao {
         }
 
         //SQL statements
-                String sql =
+                        String sql =
                 """
        
-                            assignment_id,
-                course_id,
+                                    assignment_id,
+                                    course_id,
                 
                           des
                              due_da
                        points_po
-                      FROM assignme
-                   WHERE course_id = ?
-            ORDER BY
-                due_date, assignment_id
+                                    FROM assignme
+                   WHERE
+                        course_id
+                        = ?
+           
+                                     due_date, assignment_id
             """;
 
         //create a list to store all of the assignments
@@ -237,9 +240,7 @@ public class AssignmentDao {
         try (PreparedStatement statement = conn.prepareStatement(sql))
         {
             //fill in the placeholder with the courseId
-            statement.setInt(1, courseId);
-
-            //sends the SQL to the database
+            statement.setInt(1, courseId);//sends the SQL to the database
             try ( ResultSet resultSet = statement.executeQuery())
             {
                 //keep going until there a ments left
@@ -262,24 +263,25 @@ public class AssignmentDao {
      *
      * @param assignmentId The assignment ID to delete.
      * @return True if the assignment was deleted, otherwise false.
-     * @throws SQLException If a database error occurs.
+     * @throws
+    SQLException If a database error occurs.
      */ public boolean deleteById(int assignmentId) throws SQLException
     {
-        //if le r equal to zero return false
+        //if le r equal return false
         if (assignmentId <= 0)
         {
             return false;
         }
-
-        //sql statements
+                //sql statements
         String sql = """
-            
-                DELETE FROM assignments
+ 
+                               DELETE FROM
+                assignments
             WHERE assignment_id = ?
             """;
 
         //attempt to create placeholders for the assignment before its n
-        try (PreparedStatement statement = conn.prepareStatement(sql))
+        try ( PreparedStatement statement = conn.prepareStatement(sql))
         {
             //fill in the placeholder with the assignment ID
             statement.setInt(1, assignmentId);
@@ -317,6 +319,59 @@ public class AssignmentDao {
         //fill in the points possib placeholder
         statement.setInt(5, assignment.getPointsPossible());
     }
+
+    /**
+     * Takes the information returned from the database and creates
+     * an Assignment object from it.
+     *
+     * @param resultSet The database result containing the Assignment information.
+     * @return The Assignment object created from the database values.
+     * @throws SQLException If a database error occurs while reading the values.
+     */
+    private Assignment mapAssignment(ResultSet resultSet)
+            throws SQLException
+    {
+        //Takes the database values and creates an Assignment object
+        return new Assignment(
+                //Gets the assignment ID
+                resultSet.getInt("assignment_id"),
+
+                //Gets the course ID
+                resultSet.getInt("course_id"),
+
+                //Gets the assignment title
+                resultSet.getString("title"),
+
+                //Gets the assignment description
+                resultSet.getString("description"),
+
+                //Gets the due date and converts it into a LocalDate
+                LocalDate.parse(
+                        resultSet.getString("due_date")
+                ),
+
+                //Gets the maximum points possible
+                resultSet.getInt("points_possible")
+        );
     }
+
+    /**
+     * Checks that the Assignment exists before using it in a database method.
+     *
+     * @param assignment The Assignment being checked.
+     * @throws IllegalArgumentException If the Assignmen null.
+     */
+    private void reqAssignment(Assignment assignment)
+    { //Checks if the Assignment exists
+        if (assignment == null)
+        {
+            //Stops the method if the Assignment does not exist
+            throw new IllegalArgumentException(
+                    "Assignment cannot be null."
+            );
+        }
+    }
+}
+
 
 
