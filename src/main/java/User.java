@@ -67,6 +67,10 @@ public class User {
         return role;
     }
 
+    public String getDatetime() {
+        return datetime;
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (!(o instanceof User user)) {

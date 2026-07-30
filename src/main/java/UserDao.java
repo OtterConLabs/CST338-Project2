@@ -145,19 +145,20 @@ public class UserDao {
     String sql = """
             UPDATE users
             SET username = ?,
+                password = ?,
                 first_name = ?,
                 last_name = ?,
-                email = ?,
-                password = ?
+                email = ?                
             WHERE id = ?
             """;
 
     try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
       pstmt.setString(1, user.getUsername().trim());
-      pstmt.setString(2, user.getFirstName().trim());
-      pstmt.setString(3, user.getLastName().trim());
-      pstmt.setString(4, user.getEmail().trim());
-      pstmt.setString(5, user.getPassword()); // no need to trim here
+      pstmt.setString(2, user.getPassword()); // no need to trim here
+      pstmt.setString(3, user.getFirstName().trim());
+      pstmt.setString(4, user.getLastName().trim());
+      pstmt.setString(5, user.getEmail().trim());
+
       pstmt.setInt(6, user.getId()); // WHERE id
 
       int rowsUpdated = pstmt.executeUpdate();
