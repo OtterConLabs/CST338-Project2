@@ -33,9 +33,12 @@ class UserDaoTest {
 
   @AfterEach
   void tearDown() {
-    User testUser = userDao.checkLogin(user.getUsername(), user.getPassword());
-    if (testUser != null) {
-      userDao.deleteUser(testUser);
+    User savedUser = userDao.checkLogin("updated_username", "updated_password");
+    if (savedUser == null) {
+      savedUser = userDao.checkLogin(user.getUsername(), user.getPassword());
+    }
+    if (savedUser != null) {
+      userDao.deleteUser(savedUser);
     }
   }
 
@@ -73,6 +76,32 @@ class UserDaoTest {
 
   @Test
   void updateUser() {
+    userDao.insertUser(user);
+    User checkedIn = userDao.checkLogin(user.getUsername(), user.getPassword());
+
+    assertNotNull(checkedIn);
+
+    User updated = new User(
+        checkedIn.getId(),
+        "updated_username",
+        "updated_firstName",
+        "updatedLastName",
+        "updated@email.com",
+        "updated_password",
+        checkedIn.getRole(),
+        checkedIn.getDatetime()
+    );
+    boolean result = userDao.updateUser(updated);
+    assertTrue(result);
+
+    User updatedUser = userDao.checkLogin(updated.getUsername(), updated.getPassword());
+    assertNotNull(updatedUser);
+
+    assertEquals(updated.getUsername(), updatedUser.getUsername());
+    assertEquals(updated.getFirstName(), updatedUser.getFirstName());
+    assertEquals(updated.getLastName(), updatedUser.getLastName());
+    assertEquals(updated.getEmail(), updatedUser.getEmail());
+    assertEquals(updated.getPassword(), updatedUser.getPassword());
   }
 
   @Test
