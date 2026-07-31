@@ -20,7 +20,7 @@ Grade & Assignment Tracker
 | Slice | Owner | GitHub username | Issues                       | Branch(es)                                                                                                        | PR(s)                      | Enhancement chosen | Status |
 |:------|:------|:----------------|:---------------------------|:------------------------------------------------------------------------------------------------------------------|:---------------------------|:-------------------|:-------|
 | 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8 #14 #30 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud | #4, #12, #15, #19, #20 #31 | Notifications / alerts on app events | in-progress |
-| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg |                            |                                                                                                                   |                            | To be determined | planned |
+| 2 — Course & Enrollment | Brent Brewington | Brewsdawg |                            |                                                                                                                   |                            | To be determined | planned |
 | 3 — Assignments | Jordan Browning | jbrowning-otter | #13, #16, #17              | jordan/assignment-dao                                                                                             |                            | Data Binding | in-progress |
 | 4 — Grades | Jit Tran | jtcsumb | #24, #25, #26              | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics                                            |                            | Data binding using ObservableList and JavaFX properties | planned |
 | 5 — Attendance | Jit Tran | jtcsumb | #27, #28, #29              | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report                                      |                            | Notifications for overwrite confirmation, saves, and CSV export results | planned |
@@ -32,7 +32,7 @@ _Status values: planned · in-progress · complete_
 | Slice | Features (Will Not Implement) |
 |:------|:-------------------------------------------------------------|
 | 1 — Accounts | Admin role, Password reset |
-| 2 — Courses & Enrollment | Course sections, Enrollment waitlists, Course capacity limits |
+| 2 — Course & Enrollment | Course sections, Enrollment waitlists, Course capacity limits |
 | 3 — Assignments | Due-date reminders, File attachments, Weighted assignment categories |
 | 4 — Grades & Statistics | Weighted-category grade calculations, GPA calculation |
 | 5 — Attendance & Reports | Calendar view, Email notifications |

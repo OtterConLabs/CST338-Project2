@@ -48,7 +48,7 @@
             <HBox alignment="CENTER" prefHeight="83.0" prefWidth="600.0" spacing="30.0">
                <children>
                   <Button mnemonicParsing="false" onAction="#handleProfile" text="Profile" />
-                  <Button mnemonicParsing="false" onAction="#handleCourses" text="Courses &amp; Enrollment" />
+                  <Button mnemonicParsing="false" onAction="#handleCourses" text="Course &amp; Enrollment" />
                   <Button mnemonicParsing="false" onAction="#handleAssignments" text="Assignments" />
                </children>
             </HBox>
