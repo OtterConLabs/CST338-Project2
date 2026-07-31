@@ -40,9 +40,7 @@ public class DatabaseManager {
         return instance;
     }
 
-    // Closes the shared database connection.
-    // The Singleton instance is reset after the connection is closed so a
-    // new instance can be created later if necessary.
+    // Closes the shared database connection and resets the Singleton instance.
     public void close() {
         try {
             if (connection != null && !connection.isClosed()) {
@@ -51,6 +49,10 @@ public class DatabaseManager {
             }
         } catch (SQLException e) {
             System.out.println("Failed to close: " + e.getMessage());
+        }
+        finally {
+            connection = null;
+            instance = null;
         }
     }
 
