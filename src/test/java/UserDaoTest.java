@@ -150,4 +150,9 @@ class UserDaoTest {
     User deletedUser = userDao.checkLogin(user.getUsername(), user.getPassword());
     assertNull(deletedUser);
   }
+
+  // TODO duplicate email addresses
+  // TODO searching for a user who does not exist
+  // TODO invalid username
+  // TODO invalid password
 }
