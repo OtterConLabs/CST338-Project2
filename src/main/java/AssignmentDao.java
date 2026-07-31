@@ -216,7 +216,7 @@ public class AssignmentDao {
         }
 
         //SQL statements
-        String sql =
+                        String sql =
                 """
        
                                     assignment_id,
@@ -272,7 +272,7 @@ public class AssignmentDao {
         {
             return false;
         }
-        //sql statements
+                //sql statements
         String sql = """
  
                                DELETE FROM
