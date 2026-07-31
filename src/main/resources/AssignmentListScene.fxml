@@ -24,9 +24,9 @@
                 </Label>
                 <TableView fx:id="assignmentTable" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="titleColumn" prefWidth="75.0" text="Title" />
-                        <TableColumn fx:id="dueDateColumn" prefWidth="75.0" text="Due Date" />
-                        <TableColumn fx:id="pointsColumn" prefWidth="75.0" text="Points" />
+                        <TableColumn fx:id="titleColumn" prefWidth="300.0" text="Title" />
+                        <TableColumn fx:id="dueDateColumn" prefWidth="150.0" text="Due Date" />
+                        <TableColumn fx:id="pointsColumn" prefWidth="120.0" text="Points" />
                     </columns>
                 </TableView>
                 <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
