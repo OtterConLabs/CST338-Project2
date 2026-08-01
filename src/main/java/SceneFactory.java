@@ -146,9 +146,40 @@ public class SceneFactory {
         return buildPlaceholderScene("Courses", stage);
     }
 
-    private static Scene buildAssignmentsScene(Stage stage) {
-        //TODO Jordan:
-        return buildPlaceholderScene("Assignments", stage);
+    // Loads the Assignment list scene from its FXML file
+// and connects its controller.
+    private static Scene buildAssignmentsScene(Stage stage)
+    {
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource(
+                            "/AssignmentListScene.fxml"
+                    )
+            );
+
+            Parent root = loader.load();
+
+            Scene scene = new Scene(
+                    root,
+                    SCENE_WIDTH,
+                    SCENE_HEIGHT
+            );
+
+            AssignmentListController controller =
+                    loader.getController();
+
+            controller.setStage(stage);
+
+            return scene;
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(
+                    "Failed to load AssignmentListScene.fxml",
+                    e
+            );
+        }
     }
 
     private static Scene buildGradesScene(Stage stage) {

@@ -72,7 +72,7 @@ public class DatabaseManager {
 //        createCoursesTable();
 
         // Jordan
-//        createAssignmentsTable();
+        createAssignmentsTable();
 
         // Jit
 //        createGradesTable();
@@ -110,9 +110,33 @@ public class DatabaseManager {
 //        // Brent's SQL
 //    }
 //
-//    private void createAssignmentsTable() {
-//        // Jordan's SQL
-//    }
+private void createAssignmentsTable()
+{
+    String sql = """
+            CREATE TABLE IF NOT EXISTS assignments (
+                assignment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                course_id INTEGER NOT NULL,
+                title TEXT NOT NULL,
+                description TEXT,
+                due_date TEXT NOT NULL,
+                points_possible INTEGER NOT NULL
+                    CHECK (points_possible >= 0)
+            )
+            """;
+
+    try (Statement stmt = connection.createStatement())
+    {
+        stmt.execute(sql);
+        System.out.println("Assignments table ready.");
+    }
+    catch (SQLException e)
+    {
+        System.out.println(
+                "createAssignmentsTable failed: "
+                        + e.getMessage()
+        );
+    }
+}
 //
 //    private void createGradesTable() {
 //        // Jit's SQL
