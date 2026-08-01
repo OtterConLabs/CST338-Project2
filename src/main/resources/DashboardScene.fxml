@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="DashboardController">
    <children>
-      <VBox alignment="CENTER" layoutX="-3.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0" spacing="20.0">
+      <VBox fx:id="dashboardRoot" id="dashboardRoot" alignment="CENTER" layoutX="-3.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0" spacing="20.0">
          <children>
             <Label text="Dashboard" textAlignment="CENTER">
                <font>
