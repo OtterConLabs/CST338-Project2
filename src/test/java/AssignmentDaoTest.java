@@ -213,4 +213,61 @@ class AssignmentDaoTest
         // Prevent tearDown from attempting to delete it again
         assignment.setAssignmentId(0);
     }
+
+    // Verifies that update saves the modified Assignment information
+    // and that the updated values can be retrieved from the database.
+    @Test
+    void updateAssignment() throws SQLException
+    {
+        //Insert the test Assignment so it receives a database ID
+        assignmentDao.insert(assignment);
+
+        //Change the Assignment information
+        assignment.setTitle("Updated Unit Test Assignment");
+        assignment.setDescription("Updated description for testing");
+        assignment.setDueDate(
+                LocalDate.of(2026, 8, 20)
+        );
+        assignment.setPointsPossible(150);
+
+        //Update the matching database row
+        boolean updated = assignmentDao.update(assignment);
+
+        //Verify that one Assignment was updated
+        assertTrue(updated);
+
+        //Retrieve the updated Assignment using its database ID
+        Optional<Assignment> foundAssignment =
+                assignmentDao.findById(
+                        assignment.getAssignmentId()
+                );
+
+        //Verify that the Assignment still exists
+        assertTrue(foundAssignment.isPresent());
+
+        //Get the updated Assignment from the Optional
+        Assignment retrievedAssignment =
+                foundAssignment.get();
+
+        //Verify that the updated values were saved
+        assertEquals(
+                assignment.getTitle(),
+                retrievedAssignment.getTitle()
+        );
+
+        assertEquals(
+                assignment.getDescription(),
+                retrievedAssignment.getDescription()
+        );
+
+        assertEquals(
+                assignment.getDueDate(),
+                retrievedAssignment.getDueDate()
+        );
+
+        assertEquals(
+                assignment.getPointsPossible(),
+                retrievedAssignment.getPointsPossible()
+        );
+    }
 }
