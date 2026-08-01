@@ -31,13 +31,17 @@
         <PasswordField fx:id="passwordField" maxWidth="220.0" minWidth="220.0" prefWidth="220.0" promptText="Password" />
     </HBox>
 
-    <Button onAction="#handleLogin" text="Log in" />
+    <Button fx:id="loginButton"
+      onAction="#handleLogin"
+      text="Log in" />
 
     <Label text="New Member?">
       <font>
          <Font name="System Bold" size="18.0" />
       </font></Label>
 
-    <Button onAction="#handleRegister" text="Register" />
+    <Button fx:id="registerButton"
+      onAction="#handleRegister"
+      text="Register" />
 
 </VBox>
