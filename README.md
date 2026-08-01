@@ -40,9 +40,7 @@ _Status values: planned · in-progress · complete_
 ## Code Review Log
 | PR  | Author | Human reviewer(s) | AI review (link) | Outcome |
 |-----|--------|-------------------|------------------|---------|
-| #10 |Jordan Browning | Yoko Mohr         | N/A              | Approved and merged |
-| #11 |Jordan Browning | Yoko Mohr         | N/A              | Approved and merged |
-| #36 |Jordan Browning | Yoko Mohr         | N/A              | Approved and merged |
+| #40 |Jordan Browning | Yoko Mohr         | N/A              | Approved and merged |
 
 ## AI Usage Log
 - **AI-drafted tests:** <link to TESTING.md / commit> — per owner.
