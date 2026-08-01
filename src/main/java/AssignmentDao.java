@@ -264,6 +264,57 @@ public class AssignmentDao
     }
 
     /**
+     * Screens the Assignment, builds the SQL statement and creates the SQL Command,
+     * fills in the placeholders, and updates the matching Assignment in the database.
+     *
+     * @param assignment The Assignment containing the updated information.
+     * @return True if the Assignment was updated, otherwise false.
+     * @throws IllegalArgumentException If the Assignment does not have a valid ID.
+     * @throws SQLException If a database error occurs.
+     */
+    public boolean update(Assignment assignment) throws SQLException
+    {
+        //Screen the Assignment
+        reqAssignment(assignment);
+
+        //The Assignment must already have a database ID before it can be updated
+        if (assignment.getAssignmentId() <= 0)
+        {
+            throw new IllegalArgumentException(
+                    "Assignment must have an ID before it can be updated."
+            );
+        }
+
+        //Build the SQL statement
+        String sql = """
+            UPDATE assignments
+            SET
+                course_id = ?,
+                title = ?,
+                description = ?,
+                due_date = ?,
+                points_possible = ?
+            WHERE assignment_id = ?
+            """;
+
+        //Create the SQL Command
+        try (PreparedStatement statement = conn.prepareStatement(sql))
+        {
+            //Fill in the first five placeholders with the Assignment values
+            setStatementValues(statement, assignment);
+
+            //Fill in the last placeholder with the Assignment ID
+            statement.setInt(
+                    6,
+                    assignment.getAssignmentId()
+            );
+
+            //Send the SQL to the database and return true if one row was updated
+            return statement.executeUpdate() == 1;
+        }
+    }
+
+    /**
      * Deletes an Assignment from the database using its assignment ID.
      *
      * @param assignmentId The assignment ID to delete.
