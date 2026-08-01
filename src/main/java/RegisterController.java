@@ -75,15 +75,11 @@ public class RegisterController {
         String password = registerPasswordInput.getText(); // no trim needed
         UserRole role = roleInput.getValue();
 
-        // Stop the registration process if any required field is empty.
-        if (username.isEmpty()
-                || firstName.isEmpty()
-                || lastName.isEmpty()
-                || email.isEmpty()
-                || password.isEmpty()
-                || role == null) {
+        AccountValidation accountValidation = new AccountValidation();
+
+        if (!accountValidation.areRegistrationFieldsValid(username,password,firstName,lastName,email,role)) {
             registerMessageLabel.setText("Please complete all fields.");
-//            System.out.println("Please complete all fields.");
+            System.out.println("Please complete all fields.");
             return;
         }
         // Create a User object using the values entered in the form.
