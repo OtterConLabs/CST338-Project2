@@ -49,7 +49,7 @@ public class SceneFactory {
 
             // Jourdan
             case ASSIGNMENTS -> buildAssignmentsScene(stage);
-
+            case ASSIGNMENT_FORM -> buildAssignmentFormScene(stage);
             // Jit
             case GRADES -> buildGradesScene(stage);
             case ATTENDANCE -> buildAttendanceScene(stage);
@@ -198,6 +198,111 @@ public class SceneFactory {
         {
             throw new RuntimeException(
                     "Failed to load AssignmentListScene.fxml",
+                    e
+            );
+        }
+    }
+
+    // Loads the Assignment form scene from its FXML file
+    // and connects its controller.
+    private static Scene buildAssignmentFormScene(Stage stage)
+    {
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource(
+                            "/AssignmentFormScene.fxml"
+                    )
+            );
+
+            Parent root = loader.load();
+
+            Scene scene = new Scene(
+                    root,
+                    SCENE_WIDTH,
+                    SCENE_HEIGHT
+            );
+
+            AssignmentFormController controller =
+                    loader.getController();
+
+            controller.setStage(stage);
+
+            return scene;
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(
+                    "Failed to load AssignmentFormScene.fxml",
+                    e
+            );
+        }
+    }
+
+    public static Scene createAssignmentFormForAdd(Stage stage, int courseId)
+    {
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource(
+                            "/AssignmentFormScene.fxml"
+                    )
+            );
+
+            Parent root = loader.load();
+
+            AssignmentFormController controller =
+                    loader.getController();
+
+            controller.setStage(stage);
+            controller.prepareForAdd(courseId);
+
+            return new Scene(
+                    root,
+                    SCENE_WIDTH,
+                    SCENE_HEIGHT
+            );
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(
+                    "Failed to load AssignmentFormScene.fxml",
+                    e
+            );
+        }
+    }
+
+    public static Scene createAssignmentFormForEdit(
+            Stage stage,
+            Assignment assignment
+    )
+    {
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource(
+                            "/AssignmentFormScene.fxml"
+                    )
+            );
+
+            Parent root = loader.load();
+
+            AssignmentFormController controller =
+                    loader.getController();
+
+            controller.setStage(stage);
+            controller.prepareForEdit(assignment);
+
+            return new Scene(
+                    root,
+                    SCENE_WIDTH,
+                    SCENE_HEIGHT
+            );
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(
+                    "Failed to load AssignmentFormScene.fxml",
                     e
             );
         }

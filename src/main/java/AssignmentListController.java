@@ -125,7 +125,12 @@ public class AssignmentListController
     @FXML
     private void handleAdd()
     {
-        // The Assignment form navigation will be added next.
+        stage.setScene(
+                SceneFactory.createAssignmentFormForAdd(
+                        stage,
+                        1
+                )
+        );
     }
 
     /**
@@ -148,6 +153,11 @@ public class AssignmentListController
             return;
         }
 
-        // The selected Assignment will be passed to the form next.
+        stage.setScene(
+                SceneFactory.createAssignmentFormForEdit(
+                        stage,
+                        selectedAssignment
+                )
+        );
     }
 }
