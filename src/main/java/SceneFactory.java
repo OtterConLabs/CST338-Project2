@@ -35,12 +35,22 @@ public class SceneFactory {
     // Creates the requested scene based on the provided SceneType.
     public static Scene create(SceneType type, Stage stage) {
         return switch (type) {
+
+            // Yoko
             case LOGIN -> buildLoginScene(stage);
             case REGISTER -> buildRegisterScene(stage);
             case DASHBOARD -> buildDashboardScene(stage);
             case PROFILE -> buildProfileScene(stage);
+
+            // Brent
             case COURSES -> buildCoursesScene(stage);
+            case COURSE_EDIT -> buildCourseEditScene(stage);
+            case ENROLLMENT -> buildEnrollmentScene(stage);
+
+            // Jourdan
             case ASSIGNMENTS -> buildAssignmentsScene(stage);
+
+            // Jit
             case GRADES -> buildGradesScene(stage);
             case ATTENDANCE -> buildAttendanceScene(stage);
         };
@@ -141,13 +151,24 @@ public class SceneFactory {
         }
     }
 
+    private static Scene buildCourseEditScene(Stage stage) {
+        //TODO Brent: replace with CourseEditScene.fxml
+        return buildPlaceholderScene("Course Edit", stage);
+    }
+
     private static Scene buildCoursesScene(Stage stage) {
-        //TODO Brent:
-        return buildPlaceholderScene("Courses", stage);
+        //TODO Brent: replace with CourseListScene.fxml
+        return buildPlaceholderScene("Course List", stage);
+    }
+
+    private static Scene buildEnrollmentScene(Stage stage) {
+        //TODO Brent: replace with EnrollmentScene.fxml
+        return buildPlaceholderScene("Manage Enrollment", stage);
+
     }
 
     // Loads the Assignment list scene from its FXML file
-// and connects its controller.
+    // and connects its controller.
     private static Scene buildAssignmentsScene(Stage stage)
     {
         try
