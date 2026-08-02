@@ -22,6 +22,16 @@ public class UserDao {
         DatabaseManager.getInstance().getConnection();
   }
 
+  // For test
+  public UserDao(Connection connection) {
+    if (connection == null) {
+      throw new IllegalArgumentException(
+          "UserDao requires an open connection."
+      );
+    }
+    this.connection = connection;
+  }
+
   /**
    * Inserts a new User into the users table.
    *
