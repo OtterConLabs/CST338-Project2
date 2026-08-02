@@ -13,7 +13,9 @@ public enum SceneType {
     DASHBOARD,
     PROFILE,
     //Brent
-    COURSES,
+    COURSES, // Course list (TableView of all courses)
+    COURSE_EDIT, // Add/Edit course form
+    ENROLLMENT, // Manage enrollment (available vs. enrolled students)
     //Jordan
     ASSIGNMENTS,
     //Jit

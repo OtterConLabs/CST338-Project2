@@ -131,7 +131,7 @@ start with **Slice 1 Accounts** (`users` table with `userId`, `username`, `passw
 
 ### Grade / Assignment Tracker
 1. **Accounts** *(required)* — `users` (+ role: student/teacher). *Beyond:* admin role, password reset.
-2. **Courses & Enrollment** — `courses`; assign teachers/enroll. *Beyond:* sections, waitlists, capacity limits.
+2. **Course & Enrollment** — `courses`; assign teachers/enroll. *Beyond:* sections, waitlists, capacity limits.
 3. **Assignments** — `assignments`; create/edit/list. *Beyond:* due-date reminders, attachments, weighted categories.
 4. **Grades & Statistics** — `grades`; entry + class stats. *Beyond:* weighted categories, GPA calc, distribution charts.
 5. **Attendance & Reports** — attendance records; report view. *Beyond:* CSV export, calendar view, email notifications.

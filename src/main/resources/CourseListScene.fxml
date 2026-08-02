@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+    CST338 Project2 - Slice 2: Courses & Enrollment
+    Course List screen: a TableView of courses with the row actions below it.
+    Author: Brent Brewington
+-->
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="CourseListController"
+      spacing="12.0">
+
+    <padding>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+    </padding>
+
+    <children>
+        <Label text="Courses" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+        <TableView fx:id="courseTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="codeColumn" text="Code" prefWidth="110.0"/>
+                <TableColumn fx:id="nameColumn" text="Name" prefWidth="250.0"/>
+                <TableColumn fx:id="teacherColumn" text="Teacher" prefWidth="170.0"/>
+            </columns>
+        </TableView>
+
+        <HBox spacing="10.0">
+            <children>
+                <Button fx:id="addButton" text="Add" onAction="#handleAdd"/>
+                <Button fx:id="editButton" text="Edit" onAction="#handleEdit"/>
+                <Button fx:id="deleteButton" text="Delete" onAction="#handleDelete"/>
+                <Button fx:id="manageEnrollmentButton" text="Manage Enrollment"
+                        onAction="#handleManageEnrollment"/>
+                <Button fx:id="refreshButton" text="Refresh" onAction="#handleRefresh"/>
+                <Button fx:id="backButton" text="Back" onAction="#handleBack"/>
+            </children>
+        </HBox>
+
+        <Label fx:id="courseMessageLabel"/>
+    </children>
+</VBox>
