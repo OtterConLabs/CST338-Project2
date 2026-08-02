@@ -78,12 +78,9 @@ public class ProfileController {
     String lastName = profileLastNameInput.getText().trim();
     String email = profileEmailInput.getText().trim();
 
-    // Stop the update if any required field is empty.
-    if (username.isEmpty() ||
-        password.isEmpty() ||
-        firstName.isEmpty() ||
-        lastName.isEmpty() ||
-        email.isEmpty()) {
+    AccountValidation accountValidation = new AccountValidation();
+
+    if (!accountValidation.areProfileFieldsValid(username, password, firstName, lastName, email)) {
       profileMessageLabel.setText("Please complete all fields.");
       return;
     }

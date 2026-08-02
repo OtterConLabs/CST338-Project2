@@ -150,4 +150,48 @@ class UserDaoTest {
     User deletedUser = userDao.checkLogin(user.getUsername(), user.getPassword());
     assertNull(deletedUser);
   }
+
+  // Verify that duplicate usernames are rejected.
+  @Test
+  void duplicateUsername_isRejected() {
+    User duplicate = new User(
+        "unit_test",
+        "Unit",
+        "Test",
+        "duplicate@csumb.edu",
+        "unit_test1",
+        UserRole.STUDENT
+    );
+    assertTrue(userDao.insertUser(user));
+    assertFalse(userDao.insertUser(duplicate));
+  }
+
+  @Test
+  void duplicateEmail_isRejected() {
+    assertTrue(userDao.insertUser(user));
+    User duplicate = new User(
+        "duplicate",
+        "Unit",
+        "Test",
+        "unit_test@csumb.edu",
+        "unit_test1",
+        UserRole.STUDENT
+    );
+    assertFalse(userDao.insertUser(duplicate));
+  }
+
+  @Test
+  void loginWithInvalidUsername_isRejected() {
+    assertTrue(userDao.insertUser(user));
+
+    User result = userDao.checkLogin("invalid_username", user.getPassword());
+    assertNull(result);
+  }
+
+  @Test
+  void loginWithInvalidPassword_isRejected() {
+    assertTrue(userDao.insertUser(user));
+    User result = userDao.checkLogin(user.getUsername(), "wrong_password");
+    assertNull(result);
+  }
 }
