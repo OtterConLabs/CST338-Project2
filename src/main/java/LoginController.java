@@ -49,6 +49,7 @@ public class LoginController {
             loginMessageLabel.setText(
                     "Please enter your username and password."
             );
+            loginMessageLabel.setStyle("-fx-text-fill: black;");
             return;
         }
         UserDao userDao = new UserDao();
@@ -66,6 +67,7 @@ public class LoginController {
             loginMessageLabel.setText(
                     "Incorrect username or password."
             );
+            loginMessageLabel.setStyle("-fx-text-fill: red;");
         }
     }
 

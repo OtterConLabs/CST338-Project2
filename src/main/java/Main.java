@@ -9,8 +9,6 @@ import javafx.stage.Stage;
  */
 public class Main extends Application {
 
-//    private DatabaseManager db;
-
     @Override
     public void start(Stage stage) {
         // After (singleton):

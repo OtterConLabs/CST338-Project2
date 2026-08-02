@@ -22,7 +22,8 @@ public class UserDao {
         DatabaseManager.getInstance().getConnection();
   }
 
-  // For test
+  // Uses a caller-provided database connection.
+  // This allows tests to use an in-memory database.
   public UserDao(Connection connection) {
     if (connection == null) {
       throw new IllegalArgumentException(

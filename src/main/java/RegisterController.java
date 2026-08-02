@@ -80,6 +80,7 @@ public class RegisterController {
         if (!accountValidation.areRegistrationFieldsValid(username,password,firstName,lastName,email,role)) {
             registerMessageLabel.setText("Please complete all fields.");
             System.out.println("Please complete all fields.");
+            registerMessageLabel.setStyle("-fx-text-fill: red;");
             return;
         }
         // Create a User object using the values entered in the form.
@@ -97,11 +98,13 @@ public class RegisterController {
             registerMessageLabel.setText(
                 "Account created successfully."
             );
+            registerMessageLabel.setStyle("-fx-text-fill: black;");
         } else {
             registerMessageLabel.setText(
                 "Unable to create account. "
                     + "The username or email may already be in use."
             );
+            registerMessageLabel.setStyle("-fx-text-fill: red;");
         }
     }
 

@@ -60,8 +60,15 @@
       </HBox>
       <HBox alignment="CENTER" minWidth="100.0" prefHeight="40.0" prefWidth="100.0" spacing="130.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#handleRegister" text="Register" />
-            <Button mnemonicParsing="false" onAction="#handleBack" text="Back" />
+            <Button fx:id="registerSubmitButton"
+              mnemonicParsing="false"
+              onAction="#handleRegister"
+              text="Register" />
+
+            <Button fx:id="registerBackButton"
+              mnemonicParsing="false"
+              onAction="#handleBack"
+              text="Back" />
          </children>
       </HBox>
    </children>
