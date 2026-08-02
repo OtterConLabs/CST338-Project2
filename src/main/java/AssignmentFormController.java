@@ -5,6 +5,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
+import java.time.LocalDate;
+
 /**
  * Controls the Assignment form screen and handles creating
  * or editing an Assignment.
@@ -175,22 +178,143 @@ public class AssignmentFormController
 
     /**
      * Handles the Save button action.
-     * The completed logic will validate the fields and either insert
-     * a new Assignment or update the existing Assignment.
+     * Validates the fields and either inserts a new Assignment
+     * or updates the existing Assignment.
      */
     @FXML
     private void handleSave()
     {
-        //Read and validate the form values
+        //Read the values entered into the form
+        String title = titleField.getText().trim();
+        String description = descriptionArea.getText().trim();
+        LocalDate dueDate = dueDatePicker.getValue();
+        String pointsText = pointsField.getText().trim();
 
-        //Create a new Assignment when assignment is null
+        //Stop if the Assignment title was not entered
+        if (title.isEmpty())
+        {
+            formMessageLabel.setText(
+                    "Assignment title is required."
+            );
+            return;
+        }
 
-        //Update the existing Assignment when assignment is not null
+        //Stop if the Assignment due date was not selected
+        if (dueDate == null)
+        {
+            formMessageLabel.setText(
+                    "Assignment due date is required."
+            );
+            return;
+        }
 
-        //Return to the Assignment list after the database operation succeeds
-        formMessageLabel.setText(
-                "Save logic will be added next."
-        );
+        //Stop if the points possible value was not entered
+        if (pointsText.isEmpty())
+        {
+            formMessageLabel.setText(
+                    "Points possible is required."
+            );
+            return;
+        }
+
+        int pointsPossible;
+
+        //Convert the points possible text into an integer
+        try
+        {
+            pointsPossible = Integer.parseInt(pointsText);
+        }
+        catch (NumberFormatException e)
+        {
+            formMessageLabel.setText(
+                    "Points possible must be a whole number."
+            );
+            return;
+        }
+
+        //Stop if the points possible value is negative
+        if (pointsPossible < 0)
+        {
+            formMessageLabel.setText(
+                    "Points possible cannot be negative."
+            );
+            return;
+        }
+
+        //Stop if the form does not have a valid course ID
+        if (courseId <= 0)
+        {
+            formMessageLabel.setText(
+                    "Unable to save because the course ID is invalid."
+            );
+            return;
+        }
+
+        try
+        {
+            //Create the DAO used to insert or update the Assignment
+            AssignmentDao assignmentDao = new AssignmentDao(
+                    DatabaseManager.getInstance().getConnection()
+            );
+
+            if (assignment == null)
+            {
+                //Create a new Assignment when the form is in Add mode
+                Assignment newAssignment = new Assignment(
+                        courseId,
+                        title,
+                        description,
+                        dueDate,
+                        pointsPossible
+                );
+
+                //Insert the new Assignment into the database
+                assignmentDao.insert(newAssignment);
+            }
+            else
+            {
+                //Create the updated Assignment while keeping its original ID
+                Assignment updatedAssignment = new Assignment(
+                        assignment.getAssignmentId(),
+                        courseId,
+                        title,
+                        description,
+                        dueDate,
+                        pointsPossible
+                );
+
+                //Update the matching database row
+                boolean updated = assignmentDao.update(updatedAssignment);
+
+                //Stop if the database did not update the Assignment
+                if (!updated)
+                {
+                    formMessageLabel.setText(
+                            "Unable to update the Assignment."
+                    );
+                    return;
+                }
+
+                //Store the updated values after the database operation succeeds
+                assignment = updatedAssignment;
+            }
+
+            //Return to the Assignment list after the database operation succeeds
+            returnToAssignmentList();
+        }
+        catch (IllegalArgumentException e)
+        {
+            //Display validation messages produced by the Assignment class
+            formMessageLabel.setText(e.getMessage());
+        }
+        catch (SQLException e)
+        {
+            //Keep the form open and display the database error
+            formMessageLabel.setText(
+                    "Unable to save the Assignment: "
+                            + e.getMessage()
+            );
+        }
     }
 
     /**
@@ -201,6 +325,14 @@ public class AssignmentFormController
     private void handleCancel()
     {
         //Return to the Assignment list without changing the database
+        returnToAssignmentList();
+    }
+
+    /**
+     * Returns to the Assignment list when the Stage is available.
+     */
+    private void returnToAssignmentList()
+    {
         if (stage != null)
         {
             stage.setScene(

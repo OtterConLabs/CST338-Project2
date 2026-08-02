@@ -18,6 +18,7 @@ public enum SceneType {
     ENROLLMENT, // Manage enrollment (available vs. enrolled students)
     //Jordan
     ASSIGNMENTS,
+    ASSIGNMENT_FORM,
     //Jit
     GRADES,
     ATTENDANCE
