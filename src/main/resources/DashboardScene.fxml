@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -10,42 +11,36 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="DashboardController">
    <children>
-      <VBox fx:id="dashboardRoot" id="dashboardRoot" alignment="CENTER" layoutX="-3.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0" spacing="20.0">
+      <VBox id="dashboardRoot" fx:id="dashboardRoot" alignment="CENTER" layoutX="-3.0" layoutY="-1.0" prefHeight="400.0" prefWidth="600.0" spacing="15.0">
          <children>
+            <ImageView fx:id="dashboardLogoImageView" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
             <Label text="Dashboard" textAlignment="CENTER">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
-               <padding>
-                  <Insets top="20.0" />
-               </padding>
             </Label>
             <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="47.0" spacing="20.0">
                <children>
-                  <Label alignment="TOP_RIGHT" prefWidth="80.0" text="Name:">
+                  <Label alignment="TOP_RIGHT" prefWidth="150.0" text="Welcome">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                   <Label fx:id="userDisplayName" prefHeight="27.0" prefWidth="180.0" text="User Name">
                      <font>
-                        <Font size="14.0" />
+                        <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
                </children>
             </HBox>
             <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="44.0" spacing="20.0">
                <children>
-                  <Label alignment="TOP_RIGHT" prefWidth="90.0" text="Role:">
+                  <Label alignment="TOP_RIGHT" prefWidth="150.0" text="Role:">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="userRoleName" prefWidth="180.0" text="User Role">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </Label>
+                  <Label fx:id="userRoleName" prefWidth="180.0" text="User Role" />
                </children>
             </HBox>
             <HBox alignment="BOTTOM_CENTER" prefHeight="83.0" prefWidth="400.0" spacing="15.0">
@@ -71,7 +66,7 @@
             </HBox>
          </children>
          <padding>
-            <Insets top="20.0" />
+            <Insets bottom="5.0" top="20.0" />
          </padding>
       </VBox>
    </children>

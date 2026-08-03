@@ -1,6 +1,8 @@
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  * Controls the Dashboard screen, displays the logged-in user's information,
@@ -14,6 +16,20 @@ public class DashboardController {
   // Stores the primary Stage passed from SceneFactory.
   // The controller uses this Stage to switch between scenes.
   private Stage stage;
+
+  @FXML
+  private ImageView dashboardLogoImageView;
+
+  @FXML
+  private void initialize() {
+    Image logo = new Image(
+        getClass().getResourceAsStream(
+            "/images/ottercon-logo.png"
+        )
+    );
+
+    dashboardLogoImageView.setImage(logo);
+  }
 
   // Stores the primary application Stage for scene navigation.
   public void setStage(Stage stage) {
@@ -35,7 +51,10 @@ public class DashboardController {
 
     if (user != null) {
       userDisplayName.setText(user.getFirstName() + " " + user.getLastName());
-      userRoleName.setText(user.getRole().name());
+      String role = user.getRole().name().toLowerCase();
+      role = role.substring(0, 1).toUpperCase()
+          + role.substring(1);
+      userRoleName.setText(role);
     } else {
       userDisplayName.setText("User information unavailable.");
       userRoleName.setText("");
