@@ -3,6 +3,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  * Controls the Login screen, validates user input, and handles navigation
@@ -26,6 +28,9 @@ public class LoginController {
     @FXML
     private Label loginMessageLabel;
 
+    @FXML
+    private ImageView logoImageView;
+
     // Stores the primary Stage passed from SceneFactory.
     // The controller uses this Stage to switch between scenes.
     private Stage stage;
@@ -33,6 +38,14 @@ public class LoginController {
     // Stores the primary application Stage for scene navigation.
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    @FXML
+    public void initialize() {
+        Image image = new Image(
+            getClass().getResourceAsStream("/images/ottercon-logo.png")
+        );
+        logoImageView.setImage(image);
     }
 
     // Handles the Login button action.
