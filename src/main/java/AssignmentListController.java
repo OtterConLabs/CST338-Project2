@@ -2,14 +2,13 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controls the Assignment list screen and displays the assignments
@@ -160,4 +159,111 @@ public class AssignmentListController
                 )
         );
     }
+
+    /**
+     * Handles the Delete button action using the Assignment selected
+     * from the table.
+     */
+    @FXML
+    private void handleDelete()
+    {
+        //Get the Assignment selected from the table
+        Assignment selectedAssignment =
+                assignmentTable.getSelectionModel().getSelectedItem();
+
+        //Stop if no Assignment was selected
+        if (selectedAssignment == null)
+        {
+            Alert alert = new Alert(
+                    Alert.AlertType.WARNING
+            );
+
+            alert.setTitle("No Assignment Selected");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Select an assignment before clicking Delete."
+            );
+
+            alert.showAndWait();
+            return;
+        }
+
+        //Ask the user to confirm before deleting the Assignment
+        Alert confirmation = new Alert(
+                Alert.AlertType.CONFIRMATION
+        );
+
+        confirmation.setTitle("Delete Assignment");
+        confirmation.setHeaderText(
+                "Delete " + selectedAssignment.getTitle() + "?"
+        );
+        confirmation.setContentText(
+                "This assignment will be permanently deleted."
+        );
+
+        Optional<ButtonType> result =
+                confirmation.showAndWait();
+
+        //Stop if the user closes the alert or selects Cancel
+        if (result.isEmpty()
+                || result.get() != ButtonType.OK)
+        {
+            return;
+        }
+
+        try
+        {
+            //Connect the DAO to the shared database connection
+            AssignmentDao assignmentDao =
+                    new AssignmentDao(
+                            DatabaseManager
+                                    .getInstance()
+                                    .getConnection()
+                    );
+
+            //Delete the selected Assignment using its ID
+            boolean deleted =
+                    assignmentDao.deleteById(
+                            selectedAssignment.getAssignmentId()
+                    );
+
+            //Refresh the table after the Assignment is deleted
+            if (deleted)
+            {
+                loadAssignments();
+            }
+            else
+            {
+                Alert alert = new Alert(
+                        Alert.AlertType.ERROR
+                );
+
+                alert.setTitle("Delete Failed");
+                alert.setHeaderText(null);
+                alert.setContentText(
+                        "The assignment could not be deleted."
+                );
+
+                alert.showAndWait();
+            }
+        }
+        catch (SQLException e)
+        {
+            //Display the database error without closing the application
+            Alert alert = new Alert(
+                    Alert.AlertType.ERROR
+            );
+
+            alert.setTitle("Database Error");
+            alert.setHeaderText(
+                    "Unable to delete the assignment."
+            );
+            alert.setContentText(
+                    e.getMessage()
+            );
+
+            alert.showAndWait();
+        }
+    }
+
 }

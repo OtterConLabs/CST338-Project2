@@ -32,6 +32,7 @@
                 <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Button mnemonicParsing="false" text="Add" onAction="#handleAdd" />
+                        <Button text="Delete" onAction="#handleDelete" />
                         <Button mnemonicParsing="false" text="Edit" onAction="#handleEdit" />
                     </children>
                 </HBox>
