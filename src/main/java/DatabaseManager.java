@@ -1,7 +1,6 @@
 import java.sql.*;
 
 /**
- * [CST338 Create DatabaseManager]
  * Manages the shared SQLite database connection and creates
  * the application's database tables.
  *

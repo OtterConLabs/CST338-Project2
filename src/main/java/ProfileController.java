@@ -117,7 +117,6 @@ public class ProfileController {
   // and returns to the Login screen.
   @FXML
   private void handleDelete() {
-    // TODO: Add a confirmation dialog before deleting the account.
     User user = SceneFactory.getLoggedInUser();
     UserDao userDao = new UserDao();
     boolean result = userDao.deleteUser(user);

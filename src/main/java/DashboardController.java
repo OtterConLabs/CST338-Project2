@@ -78,9 +78,10 @@ public class DashboardController {
     );
   }
 
-  // Handles the Back button action and returns to the Login screen.
+  // Handles the Logout button action and returns to the Login screen.
   @FXML
-  private void handleBack() {
+  private void handleLogout() {
+    SceneFactory.setLoggedInUser(null);
     stage.setScene(
         SceneFactory.create(SceneType.LOGIN, stage)
     );
