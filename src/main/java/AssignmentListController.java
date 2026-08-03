@@ -4,7 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
+import javafx.scene.control.TextArea;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -38,8 +38,13 @@ public class AssignmentListController
     @FXML
     private TableColumn<Assignment, Integer> pointsColumn;
 
+    // Displays the description of the Assignment selected from the table.
+    @FXML
+    private TextArea descriptionArea;
+
     /**
-     * Prepares the Assignment table after the FXML file is loaded.
+     * Prepares the Assignment table and description area after
+     * the FXML file is loaded.
      */
     @FXML
     private void initialize()
@@ -74,6 +79,27 @@ public class AssignmentListController
                         "No assignments yet — click Add to create one"
                 )
         );
+
+        // Watches the Assignment selected from the table and displays
+        // its description underneath the table.
+        assignmentTable.getSelectionModel()
+                .selectedItemProperty()
+                .addListener(
+                        (observable, oldAssignment, newAssignment) ->
+                        {
+                            // Remove the description when no Assignment is selected.
+                            if (newAssignment == null)
+                            {
+                                descriptionArea.clear();
+                                return;
+                            }
+
+                            // Display the selected Assignment description.
+                            descriptionArea.setText(
+                                    newAssignment.getDescription()
+                            );
+                        }
+                );
     }
 
     /**
@@ -106,6 +132,10 @@ public class AssignmentListController
             assignmentTable.setItems(
                     FXCollections.observableArrayList(assignments)
             );
+
+            // Remove the previous selection and description after reloading.
+            assignmentTable.getSelectionModel().clearSelection();
+            descriptionArea.clear();
         }
         catch (SQLException e)
         {
