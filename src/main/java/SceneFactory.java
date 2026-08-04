@@ -80,9 +80,8 @@ public class SceneFactory {
 
     // Loads the Login scene from its FXML file and connects its controller.
     private static Scene buildLoginScene(Stage stage) {
-        //TODO YOKO:
         try {
-            // Load the Login screen layout from the resources folder.
+            // Load the Login screen layout from the resources' folder.
             FXMLLoader loader = new FXMLLoader(
                 SceneFactory.class.getResource("/LoginScene.fxml")
             );
@@ -131,7 +130,6 @@ public class SceneFactory {
 
     // Creates the Dashboard scene for the currently logged-in user.
     private static Scene buildDashboardScene(Stage stage) {
-        //TODO YOKO:
         try {
             FXMLLoader loader = new FXMLLoader(
                 SceneFactory.class.getResource("/DashboardScene.fxml")
@@ -153,7 +151,6 @@ public class SceneFactory {
     }
 
     private static Scene buildProfileScene(Stage stage) {
-        // TODO Yoko
         try {
             FXMLLoader loader = new FXMLLoader(
                 SceneFactory.class.getResource("/ProfileScene.fxml")
