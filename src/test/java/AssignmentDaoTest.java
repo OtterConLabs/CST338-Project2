@@ -31,7 +31,7 @@ class AssignmentDaoTest
         );
 
         assignment = new Assignment(
-                1,
+                2,
                 "Unit Test Assignment",
                 "Assignment created for testing",
                 LocalDate.of(2026, 8, 15),
@@ -186,6 +186,89 @@ class AssignmentDaoTest
 
         // Verify that the matching Assignment was returned
         assertTrue(wasAssignmentFound);
+    }
+
+    // Verifies that findByCourseId keeps Assignments separated
+    // when more than one course ID is used.
+    @Test
+    void findByCourseIdWithDifferentCourseIds() throws SQLException
+    {
+        Assignment secondAssignment = new Assignment(
+                3,
+                "Second Course Assignment",
+                "Assignment created for another course",
+                LocalDate.of(2026, 8, 18),
+                75
+        );
+
+        try
+        {
+            //Insert Assignments that belong to two different courses
+            assignmentDao.insert(assignment);
+            assignmentDao.insert(secondAssignment);
+
+            //Retrieve the Assignments connected to course ID 2
+            List<Assignment> firstCourseAssignments =
+                    assignmentDao.findByCourseId(2);
+
+            //Retrieve the Assignments connected to course ID 3
+            List<Assignment> secondCourseAssignments =
+                    assignmentDao.findByCourseId(3);
+
+            //Track which Assignment IDs were returned for course ID 2
+            boolean firstCourseHasFirstAssignment = false;
+            boolean firstCourseHasSecondAssignment = false;
+
+            for (Assignment currentAssignment : firstCourseAssignments)
+            {
+                if (currentAssignment.getAssignmentId()
+                        == assignment.getAssignmentId())
+                {
+                    firstCourseHasFirstAssignment = true;
+                }
+
+                if (currentAssignment.getAssignmentId()
+                        == secondAssignment.getAssignmentId())
+                {
+                    firstCourseHasSecondAssignment = true;
+                }
+            }
+
+            //Track which Assignment IDs were returned for course ID 3
+            boolean secondCourseHasFirstAssignment = false;
+            boolean secondCourseHasSecondAssignment = false;
+
+            for (Assignment currentAssignment : secondCourseAssignments)
+            {
+                if (currentAssignment.getAssignmentId()
+                        == assignment.getAssignmentId())
+                {
+                    secondCourseHasFirstAssignment = true;
+                }
+
+                if (currentAssignment.getAssignmentId()
+                        == secondAssignment.getAssignmentId())
+                {
+                    secondCourseHasSecondAssignment = true;
+                }
+            }
+
+            //Verify that each course only returned its own Assignment
+            assertTrue(firstCourseHasFirstAssignment);
+            assertFalse(firstCourseHasSecondAssignment);
+            assertFalse(secondCourseHasFirstAssignment);
+            assertTrue(secondCourseHasSecondAssignment);
+        }
+        finally
+        {
+            //Remove the second Assignment created only for this test
+            if (secondAssignment.getAssignmentId() > 0)
+            {
+                assignmentDao.deleteById(
+                        secondAssignment.getAssignmentId()
+                );
+            }
+        }
     }
 
     // Verifies that deleteById removes an Assignment

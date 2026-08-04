@@ -2,6 +2,7 @@ import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,6 +24,9 @@ public class AssignmentListController
     // Stores the primary Stage used for scene navigation.
     private Stage stage;
 
+    // Stores the ID of the course currently connected to this Assignment list.
+    private int activeCourseId;
+
     // Displays the assignments retrieved from the database.
     @FXML
     private TableView<Assignment> assignmentTable;
@@ -38,6 +42,7 @@ public class AssignmentListController
     // Displays the possible points for each Assignment.
     @FXML
     private TableColumn<Assignment, Integer> pointsColumn;
+
 
     /**
      * Prepares the Assignment table after the FXML file is loaded.
@@ -90,26 +95,66 @@ public class AssignmentListController
     }
 
     /**
-     * Retrieves every Assignment from the database and displays
+     * Stores the active course ID so new assignments can be connected
+     * to the course that the user selected.
+     *
+     * @param activeCourseId The ID of the course currently being viewed.
+     * @throws IllegalArgumentException If the course ID is not valid.
+     */
+    public void setActiveCourseId(int activeCourseId)
+    {
+        //course ID must be greater than zero before it can be stored
+        if (activeCourseId <= 0)
+        {
+            throw new IllegalArgumentException(
+                    "course ID must be greater than 0."
+            );
+        }
+
+        //store the course ID that was passed into the Assignment scene
+        this.activeCourseId = activeCourseId;
+    }
+
+    /**
+     * Retrieves the Assignments from the database and displays
      * them inside the TableView.
+     *
+     * If an active course was passed into the Assignment scene,
+     * only the Assignments connected to that course will be displayed.
      */
     private void loadAssignments()
     {
         try
         {
+            //create the AssignmentDao using the database connection
             AssignmentDao assignmentDao = new AssignmentDao(
                     DatabaseManager.getInstance().getConnection()
             );
 
-            List<Assignment> assignments =
-                    assignmentDao.findAll();
+            List<Assignment> assignments;
 
+            //check if the Assignment scene received an active course ID
+            if (activeCourseId > 0)
+            {
+                //only retrieve Assignments that belong to the active course
+                assignments =
+                        assignmentDao.findByCourseId(activeCourseId);
+            }
+            else
+            {
+                //retrieve every Assignment when no active course was passed in
+                assignments =
+                        assignmentDao.findAll();
+            }
+
+            //place the Assignments retrieved from the database into the table
             assignmentTable.setItems(
                     FXCollections.observableArrayList(assignments)
             );
         }
         catch (SQLException e)
         {
+            //display the database error inside the Assignment table
             assignmentTable.setPlaceholder(
                     new Label(
                             "Unable to load assignments: "
@@ -125,7 +170,26 @@ public class AssignmentListController
     @FXML
     private void handleAdd()
     {
-        // The Assignment form navigation will be added next.
+        //Stop if the Assignment list was opened without a selected course
+        if (activeCourseId <= 0)
+        {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Assignments");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Select a course before adding an assignment."
+            );
+            alert.showAndWait();
+            return;
+        }
+
+        //Open the Assignment form using the active course ID
+        stage.setScene(
+                SceneFactory.createAssignmentFormForAdd(
+                        stage,
+                        activeCourseId
+                )
+        );
     }
 
     /**
@@ -140,14 +204,22 @@ public class AssignmentListController
 
         if (selectedAssignment == null)
         {
-            assignmentTable.setPlaceholder(
-                    new Label(
-                            "Select an assignment before clicking Edit."
-                    )
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Assignments");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Select an assignment before clicking Edit."
             );
+            alert.showAndWait();
             return;
         }
 
-        // The selected Assignment will be passed to the form next.
+        //Open the Assignment form using the selected Assignment
+        stage.setScene(
+                SceneFactory.createAssignmentFormForEdit(
+                        stage,
+                        selectedAssignment
+                )
+        );
     }
 }
