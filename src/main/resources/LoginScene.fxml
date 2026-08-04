@@ -20,36 +20,57 @@
     <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Grade &amp; Assignment Tracker">
       <font>
          <Font size="11.0" />
-      </font></Label>
+      </font>
+      <VBox.margin>
+         <Insets bottom="-10.0" top="-10.0" />
+      </VBox.margin></Label>
 
-    <Label fx:id="loginMessageLabel" text="Please enter your username and password." />
-
-    <HBox alignment="BOTTOM_CENTER" prefHeight="50.0" prefWidth="600.0">
-        <Label maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Username:" />
-        <TextField fx:id="usernameField" maxWidth="220.0" minWidth="220.0" prefWidth="220.0" promptText="Username" />
+    <Label fx:id="loginMessageLabel" text="Please enter your username and password.">
+      <font>
+         <Font size="13.0" />
+      </font>
       <VBox.margin>
          <Insets />
+      </VBox.margin></Label>
+
+    <HBox alignment="BOTTOM_CENTER" prefHeight="50.0" prefWidth="600.0">
+        <Label maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Username:">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+        <TextField fx:id="usernameField" maxWidth="220.0" minWidth="220.0" prefWidth="220.0" promptText="Username" />
+      <VBox.margin>
+         <Insets top="-20.0" />
       </VBox.margin>
     </HBox>
 
-    <HBox alignment="TOP_CENTER" prefHeight="65.0" prefWidth="600.0">
-        <Label maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Password:" />
+    <HBox alignment="TOP_CENTER" prefHeight="40.0" prefWidth="600.0">
+        <Label maxWidth="100.0" minWidth="100.0" prefWidth="100.0" text="Password:">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
         <PasswordField fx:id="passwordField" maxWidth="220.0" minWidth="220.0" prefWidth="220.0" promptText="Password" />
       <VBox.margin>
          <Insets />
       </VBox.margin>
     </HBox>
 
-    <Button fx:id="loginButton" onAction="#handleLogin" text="Log in" />
+    <Button fx:id="loginButton" onAction="#handleLogin" text="Log in">
+      <VBox.margin>
+         <Insets top="-8.0" />
+      </VBox.margin></Button>
 
-    <Label text="New Member?">
+    <Label prefHeight="10.0" text="New Member?">
       <font>
-         <Font name="System Bold" size="18.0" />
+         <Font name="System Bold" size="14.0" />
       </font></Label>
 
-    <Button fx:id="registerButton" onAction="#handleRegister" text="Register" />
+    <Button fx:id="registerButton" onAction="#handleRegister" text="Register">
+      <VBox.margin>
+         <Insets bottom="-30.0" top="-10.0" />
+      </VBox.margin></Button>
    <padding>
-      <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+      <Insets bottom="50.0" left="30.0" right="30.0" top="30.0" />
    </padding>
 
 </VBox>

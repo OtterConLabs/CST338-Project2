@@ -6,7 +6,6 @@
  */
 public class AccountValidation {
   // Validates user account input before registration.
-
   public boolean areRegistrationFieldsValid(
       String username,
       String password,

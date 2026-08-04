@@ -70,7 +70,7 @@ public class SceneFactory {
             case COURSE_EDIT -> buildCourseEditScene(stage);
             case ENROLLMENT -> buildEnrollmentScene(stage);
 
-            // Jourdan
+            // Jordan
             case ASSIGNMENTS -> buildAssignmentsScene(stage);
             // Jit
             case GRADES -> buildGradesScene(stage);

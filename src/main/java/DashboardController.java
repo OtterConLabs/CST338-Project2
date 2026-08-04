@@ -1,3 +1,4 @@
+import java.util.Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -12,7 +13,6 @@ import javafx.scene.image.ImageView;
  * @since 7/24/2026
  */
 public class DashboardController {
-
   // Stores the primary Stage passed from SceneFactory.
   // The controller uses this Stage to switch between scenes.
   private Stage stage;
@@ -23,9 +23,8 @@ public class DashboardController {
   @FXML
   private void initialize() {
     Image logo = new Image(
-        getClass().getResourceAsStream(
-            "/images/ottercon-logo.png"
-        )
+        Objects.requireNonNull(getClass().getResourceAsStream(
+            "/images/ottercon-logo.png"))
     );
 
     dashboardLogoImageView.setImage(logo);
