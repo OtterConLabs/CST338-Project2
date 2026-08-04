@@ -136,7 +136,11 @@ private void createAssignmentsTable()
                         + e.getMessage()
         );
     }
-}
+}   
+    /*
+        @author Jit Tran
+        @since 08/05/2026
+    */
     private void createGradesTable() {
         try {
             GradeSchema.create(connection);
