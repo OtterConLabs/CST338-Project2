@@ -4,7 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.scene.control.TextArea;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +21,9 @@ public class AssignmentListController
 {
     // Stores the primary Stage used for scene navigation.
     private Stage stage;
+
+    // Stores the ID of the course currently connected to this Assignment list.
+    private int activeCourseId;
 
     // Displays the assignments retrieved from the database.
     @FXML
@@ -115,30 +118,70 @@ public class AssignmentListController
     }
 
     /**
-     * Retrieves every Assignment from the database and displays
+     * Stores the active course ID so new assignments can be connected
+     * to the course that the user selected.
+     *
+     * @param activeCourseId The ID of the course currently being viewed.
+     * @throws IllegalArgumentException If the course ID is not valid.
+     */
+    public void setActiveCourseId(int activeCourseId)
+    {
+        //Course ID must be greater than zero before it can be stored
+        if (activeCourseId <= 0)
+        {
+            throw new IllegalArgumentException(
+                    "Course ID must be greater than zero."
+            );
+        }
+
+        //Store the course ID that was passed into the Assignment scene
+        this.activeCourseId = activeCourseId;
+    }
+
+    /**
+     * Retrieves the Assignments from the database and displays
      * them inside the TableView.
+     *
+     * If an active course was passed into the Assignment scene,
+     * only the Assignments connected to that course will be displayed.
      */
     private void loadAssignments()
     {
         try
         {
+            //Create the AssignmentDao using the database connection
             AssignmentDao assignmentDao = new AssignmentDao(
                     DatabaseManager.getInstance().getConnection()
             );
 
-            List<Assignment> assignments =
-                    assignmentDao.findAll();
+            List<Assignment> assignments;
 
+            //Check if the Assignment scene received an active course ID
+            if (activeCourseId > 0)
+            {
+                //Only retrieve Assignments that belong to the active course
+                assignments =
+                        assignmentDao.findByCourseId(activeCourseId);
+            }
+            else
+            {
+                //Retrieve every Assignment when no active course was passed in
+                assignments =
+                        assignmentDao.findAll();
+            }
+
+            //Place the Assignments retrieved from the database into the table
             assignmentTable.setItems(
                     FXCollections.observableArrayList(assignments)
             );
 
-            // Remove the previous selection and description after reloading.
+            //Remove the previous selection and description after reloading
             assignmentTable.getSelectionModel().clearSelection();
             descriptionArea.clear();
         }
         catch (SQLException e)
         {
+            //Display the database error inside the Assignment table
             assignmentTable.setPlaceholder(
                     new Label(
                             "Unable to load assignments: "
@@ -154,10 +197,28 @@ public class AssignmentListController
     @FXML
     private void handleAdd()
     {
+        //Stop if the Assignment list was opened without a selected course
+        if (activeCourseId <= 0)
+        {
+            Alert alert = new Alert(
+                    Alert.AlertType.WARNING
+            );
+
+            alert.setTitle("Assignments");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Select a course before adding an assignment."
+            );
+
+            alert.showAndWait();
+            return;
+        }
+
+        //Open the Assignment form using the active course ID
         stage.setScene(
                 SceneFactory.createAssignmentFormForAdd(
                         stage,
-                        1
+                        activeCourseId
                 )
         );
     }
@@ -169,19 +230,28 @@ public class AssignmentListController
     @FXML
     private void handleEdit()
     {
+        //Get the Assignment selected from the table
         Assignment selectedAssignment =
                 assignmentTable.getSelectionModel().getSelectedItem();
 
+        //Stop if no Assignment was selected
         if (selectedAssignment == null)
         {
-            assignmentTable.setPlaceholder(
-                    new Label(
-                            "Select an assignment before clicking Edit."
-                    )
+            Alert alert = new Alert(
+                    Alert.AlertType.WARNING
             );
+
+            alert.setTitle("Assignments");
+            alert.setHeaderText(null);
+            alert.setContentText(
+                    "Select an assignment before clicking Edit."
+            );
+
+            alert.showAndWait();
             return;
         }
 
+        //Open the Assignment form using the selected Assignment
         stage.setScene(
                 SceneFactory.createAssignmentFormForEdit(
                         stage,
@@ -295,5 +365,4 @@ public class AssignmentListController
             alert.showAndWait();
         }
     }
-
 }

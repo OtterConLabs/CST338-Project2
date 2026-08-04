@@ -335,10 +335,11 @@ public class AssignmentFormController
     {
         if (stage != null)
         {
+            //Return to the Assignment list using the same course ID
             stage.setScene(
-                    SceneFactory.create(
-                            SceneType.ASSIGNMENTS,
-                            stage
+                    SceneFactory.createAssignmentsScene(
+                            stage,
+                            courseId
                     )
             );
         }
