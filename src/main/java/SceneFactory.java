@@ -49,7 +49,6 @@ public class SceneFactory {
 
             // Jourdan
             case ASSIGNMENTS -> buildAssignmentsScene(stage);
-
             // Jit
             case GRADES -> buildGradesScene(stage);
             case ATTENDANCE -> buildAttendanceScene(stage);
@@ -167,9 +166,57 @@ public class SceneFactory {
 
     }
 
-    // Loads the Assignment list scene from its FXML file
-    // and connects its controller.
+    /**
+     * Creates the Assignment list scene using the course that
+     * the user currently selected.
+     *
+     * @param stage The Stage used for scene navigation.
+     * @param activeCourseId The ID of the course currently being viewed.
+     * @return The completed Assignment list scene.
+     * @throws IllegalArgumentException If the course ID is not valid.
+     */
+    public static Scene createAssignmentsScene(
+            Stage stage,
+            int activeCourseId
+    )
+    {
+        //Course ID must be greater than zero before opening the Assignment scene
+        if (activeCourseId <= 0)
+        {
+            throw new IllegalArgumentException(
+                    "Course ID must be greater than zero."
+            );
+        }
+
+        //Build the Assignment scene using the selected course ID
+        return buildAssignmentsScene(
+                stage,
+                activeCourseId
+        );
+    }
+
+    // Loads the Assignment list scene without requiring a selected course.
     private static Scene buildAssignmentsScene(Stage stage)
+    {
+        //Zero means that no active course was passed into the scene
+        return buildAssignmentsScene(
+                stage,
+                0
+        );
+    }
+
+    /**
+     * Loads the Assignment list scene from its FXML file,
+     * connects its controller, and passes the active course ID.
+     *
+     * @param stage The Stage used for scene navigation.
+     * @param activeCourseId The ID of the course currently being viewed.
+     * @return The completed Assignment list scene.
+     */
+    private static Scene buildAssignmentsScene(
+            Stage stage,
+            int activeCourseId
+    )
     {
         try
         {
@@ -190,6 +237,13 @@ public class SceneFactory {
             AssignmentListController controller =
                     loader.getController();
 
+            //Pass the active course ID when a course was selected
+            if (activeCourseId > 0)
+            {
+                controller.setActiveCourseId(activeCourseId);
+            }
+
+            //Pass the Stage after the course ID so the correct Assignments are loaded
             controller.setStage(stage);
 
             return scene;
@@ -198,6 +252,92 @@ public class SceneFactory {
         {
             throw new RuntimeException(
                     "Failed to load AssignmentListScene.fxml",
+                    e
+            );
+        }
+    }
+
+    public static Scene createAssignmentFormForAdd(Stage stage, int courseId)
+    {
+        //Course ID must be greater than zero before opening Add mode
+        if (courseId <= 0)
+        {
+            throw new IllegalArgumentException(
+                    "Course ID must be greater than zero."
+            );
+        }
+
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource(
+                            "/AssignmentFormScene.fxml"
+                    )
+            );
+
+            Parent root = loader.load();
+
+            AssignmentFormController controller =
+                    loader.getController();
+
+            controller.setStage(stage);
+            controller.prepareForAdd(courseId);
+
+            return new Scene(
+                    root,
+                    SCENE_WIDTH,
+                    SCENE_HEIGHT
+            );
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(
+                    "Failed to load AssignmentFormScene.fxml",
+                    e
+            );
+        }
+    }
+
+    public static Scene createAssignmentFormForEdit(
+            Stage stage,
+            Assignment assignment
+    )
+
+    {
+        //Stop if no Assignment was supplied
+        if (assignment == null)
+        {
+            throw new IllegalArgumentException(
+                    "Assignment cannot be null."
+            );
+        }
+
+        try
+        {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource(
+                            "/AssignmentFormScene.fxml"
+                    )
+            );
+
+            Parent root = loader.load();
+
+            AssignmentFormController controller =
+                    loader.getController();
+
+            controller.setStage(stage);
+            controller.prepareForEdit(assignment);
+
+            return new Scene(
+                    root,
+                    SCENE_WIDTH,
+                    SCENE_HEIGHT
+            );
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(
+                    "Failed to load AssignmentFormScene.fxml",
                     e
             );
         }
