@@ -18,8 +18,8 @@ public final class GradeSchema {
             grade_id INTEGER PRIMARY KEY AUTOINCREMENT,
             assignment_id INTEGER NOT NULL,
             student_id INTEGER NOT NULL,
-            score_earned REAL NOT NULL
-                CHECK (score_earned >= 0),
+            score REAL NOT NULL
+                CHECK (score >= 0),
             feedback TEXT DEFAULT '',
             graded_at TEXT NOT NULL
                 DEFAULT (datetime('now')),
