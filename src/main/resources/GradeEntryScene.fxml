@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!--
+    OtterCon Labs Project2: Grades Slice 4
+    Author: Jit Tran
+    Since: 08/04/2026
+-->
+<VBox fx:id="gradeEntryRoot"
+      id="gradeEntryRoot"
+      alignment="TOP_CENTER"
+      prefHeight="400.0"
+      prefWidth="600.0"
+      spacing="8.0"
+      xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="GradeEntryController">
+
+    <padding>
+        <Insets bottom="20.0"
+                left="30.0"
+                right="30.0"
+                top="20.0" />
+    </padding>
+
+    <children>
+        <Label text="Grades &amp; Statistics">
+            <font>
+                <Font name="System Bold" size="18.0" />
+            </font>
+        </Label>
+
+        <Label text="Select an assignment to manage grades.">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+
+        <TableView fx:id="gradeTable"
+                   prefHeight="250.0"
+                   VBox.vgrow="ALWAYS">
+            <placeholder>
+                <Label text="No grades to display." />
+            </placeholder>
+
+            <columns>
+                <TableColumn fx:id="studentIDColumn"
+                             prefWidth="150.0"
+                             text="Student ID" />
+
+                <TableColumn fx:id="scoreColumn"
+                             prefWidth="100.0"
+                             text="Score" />
+
+                <TableColumn fx:id="feedbackColumn"
+                             prefWidth="250.0"
+                             text="Feedback" />
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER"
+              minWidth="100.0"
+              prefHeight="40.0"
+              prefWidth="100.0">
+            <children>
+                <Button fx:id="backButton"
+                        mnemonicParsing="false"
+                        onAction="#handleBack"
+                        prefWidth="120.0"
+                        text="Back to Dashboard" />
+            </children>
+        </HBox>
+    </children>
+</VBox>
