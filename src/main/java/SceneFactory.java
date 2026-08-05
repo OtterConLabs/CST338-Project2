@@ -344,8 +344,20 @@ public class SceneFactory {
     }
 
     private static Scene buildGradesScene(Stage stage) {
-        //TODO Jit:
-        return buildPlaceholderScene("Grades", stage);
+        try{
+            FXMLLoader loader = new FXMLLoader(SceneFactory.class.getResource("/GradeEntryScene.fxml"));
+
+            Parent root = loader.load();
+            Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
+
+            GradeEntryController controller = loader.getController();
+            controller.setStage(stage);
+
+            return scene;
+        } catch(IOException e){
+            throw new RuntimeException("GradeEntryScene.fxml load Failed", e);
+        }
+
     }
 
     private static Scene buildAttendanceScene(Stage stage) {
