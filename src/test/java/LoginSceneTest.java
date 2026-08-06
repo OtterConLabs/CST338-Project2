@@ -1,5 +1,8 @@
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +40,7 @@ class LoginSceneTest {
   private User testUser;
 
   /**
-   * Prepares the JavaFX stage and creates a known user before each test.
+   * Prepares the JavaFX stage and creates a unique test user before each test.
    *
    * @param stage the JavaFX stage provided by TestFX
    */
@@ -83,7 +86,9 @@ class LoginSceneTest {
       return;
     }
 
-    User savedUser = userDao.checkLogin(testUser.getUsername(), testUser.getPassword());
+    User savedUser = userDao.checkLogin(
+        testUser.getUsername(),
+        testUser.getPassword());
 
     if (savedUser != null) {
       assertTrue(
@@ -94,38 +99,53 @@ class LoginSceneTest {
   }
 
   /**
-   * Verifies that clicking Register opens the Registration scene.
+   * Verifies that activating Register opens the Registration scene.
    *
-   * @param robot the TestFX robot used to interact with the UI
+   * @param robot the TestFX robot used to locate and activate the Register button
    */
   @Test
-  void clickingRegister_opensRegistrationScene(FxRobot robot) {
-    robot.clickOn("#registerButton");
+  void activatingRegister_opensRegistrationScene(FxRobot robot) {
+    Button registerButton =
+        robot.lookup("#registerButton").queryAs(Button.class);
+
+    // Run the button action on the JavaFX Application Thread.
+    robot.interact(registerButton::fire);
 
     WaitForAsyncUtils.waitForFxEvents();
 
     assertNotNull(
         stage.getScene().lookup("#registrationRoot"),
-        "Registration scene should open after clicking Register"
+        "Registration scene should open after activating Register"
     );
   }
 
   /**
    * Verifies that valid credentials open the Dashboard scene.
    *
-   * @param robot the TestFX robot used to enter credentials and click Login
+   * @param robot the TestFX robot used to locate and interact with UI controls
    */
   @Test
   void validLogin_opensDashboardScene(FxRobot robot) {
-    robot.clickOn("#usernameField")
-        .write(testUser.getUsername());
+    TextField usernameField =
+        robot.lookup("#usernameField").queryAs(TextField.class);
 
-    robot.clickOn("#passwordField")
-        .write(testUser.getPassword());
+    PasswordField passwordField =
+        robot.lookup("#passwordField").queryAs(PasswordField.class);
 
-    robot.clickOn("#loginButton");
+    // Set the login credentials on the JavaFX Application Thread.
+    robot.interact(() -> {
+      usernameField.setText(testUser.getUsername());
+      passwordField.setText(testUser.getPassword());
+    });
 
-    // Wait for authentication and scene navigation to finish.
+    WaitForAsyncUtils.waitForFxEvents();
+
+    Button loginButton =
+        robot.lookup("#loginButton").queryAs(Button.class);
+
+    // Run the login action without depending on OS mouse focus.
+    robot.interact(loginButton::fire);
+
     WaitForAsyncUtils.waitForFxEvents();
 
     assertNotNull(
