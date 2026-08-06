@@ -30,7 +30,6 @@ import org.testfx.util.WaitForAsyncUtils;
 @ExtendWith(ApplicationExtension.class)
 class LoginSceneTest {
   // Test account credentials reused during setup, login, and cleanup.
-  private static final String TEST_USERNAME = "ui_test_user";
   private static final String TEST_PASSWORD = "ui_test_password";
 
   private Stage stage;
@@ -50,17 +49,16 @@ class LoginSceneTest {
     // Use the application's shared database connection.
     userDao = new UserDao();
 
-    // Remove leftover test data from an interrupted previous test run.
-    User existingUser = userDao.checkLogin(TEST_USERNAME, TEST_PASSWORD);
-    if (existingUser != null) {
-      userDao.deleteUser(existingUser);
-    }
-    // Create a predictable account for the valid-login test.
+    String uniqueId = Long.toString(System.nanoTime());
+    String testUsername = "ui_test_user_" + uniqueId;
+    String testEmail = testUsername + "@csumb.edu";
+
+    // Create a unique account for the valid-login test.
     testUser = new User(
-        TEST_USERNAME,
+        testUsername,
         "UI",
         "Test",
-        "ui_test_user@csumb.edu",
+        testEmail,
         TEST_PASSWORD,
         UserRole.STUDENT
     );
@@ -81,7 +79,11 @@ class LoginSceneTest {
   void tearDown() {
     SceneFactory.setLoggedInUser(null);
 
-    User savedUser = userDao.checkLogin(TEST_USERNAME, TEST_PASSWORD);
+    if (userDao == null || testUser == null) {
+      return;
+    }
+
+    User savedUser = userDao.checkLogin(testUser.getUsername(), testUser.getPassword());
 
     if (savedUser != null) {
       assertTrue(
