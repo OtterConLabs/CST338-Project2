@@ -13,8 +13,6 @@ import java.util.List;
  * @since 7/27/2026
  */
 public class UserDao {
-  //TODO YOKO
-
   private final Connection connection;
 
   public UserDao() {
