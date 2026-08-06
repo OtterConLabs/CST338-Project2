@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  * @author Brent Brewington
  * @since 7/30/2026
  */
-class CourseValidatorTest {
+class   CourseValidatorTest {
 
     private static final int TEACHER_ID = 1;
 
