@@ -27,7 +27,7 @@ public class UserDao {
   public UserDao(Connection connection) {
     if (connection == null) {
       throw new IllegalArgumentException(
-          "UserDao requires an open connection."
+          "UserDao requires a non-null connection."
       );
     }
     this.connection = connection;
