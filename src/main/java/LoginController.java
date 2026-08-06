@@ -5,6 +5,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import java.util.Objects;
 
 /**
  * Controls the Login screen, validates user input, and handles navigation
@@ -43,7 +44,10 @@ public class LoginController {
     @FXML
     public void initialize() {
         Image image = new Image(
-            getClass().getResourceAsStream("/images/ottercon-logo.png")
+            Objects.requireNonNull(
+                getClass().getResourceAsStream("/images/ottercon-logo.png"),
+                "OtterCon logo resource was not found"
+            )
         );
         logoImageView.setImage(image);
     }
