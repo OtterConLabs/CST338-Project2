@@ -31,16 +31,17 @@ class UserDaoTest {
 
     try (Statement stmt = connection.createStatement()) {
       stmt.execute("""
-          CREATE TABLE users (
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              username TEXT NOT NULL UNIQUE,
-              first_name TEXT NOT NULL,
-              last_name TEXT NOT NULL,
-              email TEXT NOT NULL UNIQUE,
-              password TEXT NOT NULL,
-              role TEXT NOT NULL,
-              created TEXT DEFAULT CURRENT_TIMESTAMP
-          )
+                 CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                    first_name TEXT NOT NULL,
+                    last_name TEXT NOT NULL,
+                    email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                    password TEXT NOT NULL,
+                    role TEXT NOT NULL
+                        CHECK (role IN ('STUDENT', 'TEACHER')),
+                    created TEXT DEFAULT (datetime('now'))
+                )
           """);
     }
 
