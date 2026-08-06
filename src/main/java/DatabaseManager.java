@@ -24,7 +24,8 @@ public class DatabaseManager {
         try {
             connection = DriverManager.getConnection(DB_URL);
             try (Statement stmt = connection.createStatement()) {
-                // Enables SQLite foreign key constraint enforcement
+
+                // Enable SQLite foreign key constraint enforcement
                 // for the shared application connection.
                 stmt.execute("PRAGMA foreign_keys = ON");
             }
