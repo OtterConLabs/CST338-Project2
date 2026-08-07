@@ -75,7 +75,7 @@ public class DatabaseManager {
         createAssignmentsTable();
 
         // Jit
-//        createGradesTable();
+        createGradesTable();
     }
 
     /**
@@ -150,10 +150,18 @@ private void createAssignmentsTable()
                         + e.getMessage()
         );
     }
-}
-//
-//    private void createGradesTable() {
-//        // Jit's SQL
-//    }
-//
+}   
+    /*
+        @author Jit Tran
+        @since 08/05/2026
+    */
+    private void createGradesTable() {
+        try {
+            GradeSchema.create(connection);
+            System.out.println("Grades table ready");
+        } catch(SQLException e){
+            System.out.println("createGradesTable failed: " + e.getMessage());
+        }
+    }
+
 }
