@@ -15,11 +15,15 @@ public class AccountValidation {
       UserRole role
   ) {
     return !username.isBlank()
-        && !password.isBlank()
+        && isPasswordValid(password)
         && !firstName.isBlank()
         && !lastName.isBlank()
         && !email.isBlank()
         && role != null;
+  }
+
+  private boolean isPasswordValid(String password) {
+    return password != null && password.length() >= 8;
   }
 
   public boolean areProfileFieldsValid(
@@ -30,7 +34,7 @@ public class AccountValidation {
       String email
   ) {
     return !username.isBlank()
-        && !password.isBlank()
+        && isPasswordValid(password)
         && !firstName.isBlank()
         && !lastName.isBlank()
         && !email.isBlank();
