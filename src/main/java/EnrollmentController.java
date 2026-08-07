@@ -133,9 +133,11 @@ public class EnrollmentController {
     }
 
     /**
-     * Handles Enroll. The duplicate-enrollment rule from Use Case 2 is enforced
-     * in EnrollmentDao, so a refused enrollment shows a message rather than
-     * throwing.
+     * Handles Enroll. Guards are checked in order: a student must be selected,
+     * the selected user must be a student, and they must not already be
+     * enrolled. Only after those pass is the insert attempted, so a -1 returned
+     * by enroll() now means a real failure rather than a duplicate, and the
+     * message reflects that distinction (addresses PR feedback on overloaded -1).
      */
     @FXML
     private void handleEnroll() {
@@ -150,6 +152,14 @@ public class EnrollmentController {
             return;
         }
 
+        // Distinguish the duplicate case up front so the -1 from enroll() below
+        // can be treated purely as an insert failure.
+        if (enrollmentDao.isEnrolled(course.getCourseId(), selected.getId())) {
+            enrollmentMessageLabel.setText(selected.getFirstName()
+                    + " is already enrolled in this course.");
+            return;
+        }
+
         int enrollmentId = enrollmentDao.enroll(
                 new Enrollment(course.getCourseId(), selected.getId()));
 
@@ -158,8 +168,8 @@ public class EnrollmentController {
             enrollmentMessageLabel.setText("Enrolled "
                     + selected.getFirstName() + " " + selected.getLastName() + ".");
         } else {
-            enrollmentMessageLabel.setText(selected.getFirstName()
-                    + " is already enrolled in this course.");
+            enrollmentMessageLabel.setText("Could not enroll "
+                    + selected.getFirstName() + ". Please try again.");
         }
     }
 

@@ -117,9 +117,14 @@ public class CourseListController {
      * Reloads every course from the database into the ObservableList so the
      * TableView always reflects what is actually stored.
      */
+//    private void refreshTable() {
+//        courses.setAll(courseDao.findAll());
+//        courseMessageLabel.setText(courses.size() + " course(s) loaded.");
+//    }
+
     private void refreshTable() {
-        courses.setAll(courseDao.findAll());
-        courseMessageLabel.setText(courses.size() + " course(s) loaded.");
+        User teacher = SceneFactory.getLoggedInUser();
+        courses.setAll(courseDao.findByTeacherId(teacher.getId()));
     }
 
     /** Handles Refresh and reloads the table from the database. */

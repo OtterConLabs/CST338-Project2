@@ -87,7 +87,8 @@ public class DatabaseManager {
             CourseSchema.create(connection);
             System.out.println("Courses and enrollment tables ready.");
         } catch (SQLException e) {
-            System.out.println("createCoursesTable failed: " + e.getMessage());
+            throw new RuntimeException(
+                    "Database initialization failed; tables were not created.", e);
         }
     }
 
