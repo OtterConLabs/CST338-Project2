@@ -78,8 +78,7 @@ public class UserDao {
    * @return the matching User, or null if the credentials are invalid
    */
   public User checkLogin(String username, String password) {
-    // this is for prepareStatement. later ask  a specific username, the want to get its password
-    // use * to receive all information
+    // Retrieve the account matching the supplied username.
     String sql = """
                 SELECT * FROM users WHERE username = ?
                 """;

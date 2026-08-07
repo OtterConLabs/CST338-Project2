@@ -80,6 +80,13 @@ public class ProfileController {
 
     AccountValidation accountValidation = new AccountValidation();
 
+    if (!accountValidation.isPasswordValid(password)) {
+      profileMessageLabel.setText(
+          "Password must be at least 8 characters."
+      );
+      return;
+    }
+
     if (!accountValidation.areProfileFieldsValid(username, password, firstName, lastName, email)) {
       profileMessageLabel.setText("Please complete all fields.");
       return;

@@ -43,9 +43,11 @@ Work is assigned to Brewsdawg, labeled (slice-2, testing, enhancement as appropr
 ---
 
 ## Code Review Log
-| PR       | Author     | Human reviewer(s) | AI review (link) | Outcome                                       |
-|----------|------------|-------------------|------------------|-----------------------------------------------|
-| #YOUR_PR | Yoko Mohr | REVIEWER_NAME | PR Link          | 3 accepted, 1 partially accepted, 1 rejected  |
+| PR  | Author | Human reviewer(s) | AI review (link) | Outcome                                       |
+|-----|---|--------------|------------------|-----------------------------------------------|
+| #40 | Jordan Browning  | Yoko Mohr | N/A          | Approved and merged  |
+| #50 | Jordan Browning  | Jit Tran | N/A          | Approved and merged  |
+| #PR | Yoko Mohr | REVIEWER_NAME | PR Link          | 3 accepted, 1 partially accepted, 1 rejected  |
 
 
 ---

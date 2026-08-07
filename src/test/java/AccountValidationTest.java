@@ -98,4 +98,17 @@ class AccountValidationTest {
     );
     assertFalse(result);
   }
+
+  @Test
+  void eightCharacterPasswordReturnsTrue() {
+    boolean result = accountValidation.areRegistrationFieldsValid(
+        "unit_test",
+        "12345678",
+        "Unit",
+        "Test",
+        "unit@test.edu",
+        UserRole.STUDENT
+    );
+    assertTrue(result);
+  }
 }

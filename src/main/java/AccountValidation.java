@@ -22,7 +22,7 @@ public class AccountValidation {
         && role != null;
   }
 
-  private boolean isPasswordValid(String password) {
+  public boolean isPasswordValid(String password) {
     return password != null && password.length() >= 8;
   }
 

@@ -89,7 +89,7 @@ public class SceneFactory {
             Parent root = loader.load();
             Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
 
-            // fx:controller="LoginController
+            // fx:controller="LoginController"
             // Retrieve the controller created by FXMLLoader.
             LoginController controller = loader.getController();
             // Pass the current Stage to the controller for scene navigation.

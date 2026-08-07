@@ -77,7 +77,7 @@ public class RegisterController {
 
         AccountValidation accountValidation = new AccountValidation();
 
-        if (password.length() < 8) {
+        if (!accountValidation.isPasswordValid(password)) {
             registerMessageLabel.setText(
                 "Password must be at least 8 characters."
             );
@@ -87,7 +87,6 @@ public class RegisterController {
 
         if (!accountValidation.areRegistrationFieldsValid(username,password,firstName,lastName,email,role)) {
             registerMessageLabel.setText("Please complete all fields.");
-            System.out.println("Please complete all fields.");
             registerMessageLabel.setStyle("-fx-text-fill: red;");
             return;
         }
