@@ -32,6 +32,29 @@ public class SceneFactory {
         return loggedInUser;
     }
 
+    // Stores the course the user picked on the Course List screen so the
+    // Edit and Enrollment scenes know which course they are working on.
+    private static Course selectedCourse;
+
+    /**
+     * Saves the course being edited or managed. Pass null to indicate that
+     * the Course Edit scene should create a new course rather than update one.
+     *
+     * @param course the selected course, or null for a new course
+     */
+    public static void setSelectedCourse(Course course) {
+        selectedCourse = course;
+    }
+
+    /**
+     * Returns the course being edited or managed.
+     *
+     * @return the selected course, or null if a new course is being added
+     */
+    public static Course getSelectedCourse() {
+        return selectedCourse;
+    }
+
     // Creates the requested scene based on the provided SceneType.
     public static Scene create(SceneType type, Stage stage) {
         return switch (type) {
@@ -150,20 +173,61 @@ public class SceneFactory {
         }
     }
 
-    private static Scene buildCourseEditScene(Stage stage) {
-        //TODO Brent: replace with CourseEditScene.fxml
-        return buildPlaceholderScene("Course Edit", stage);
-    }
-
+    // Loads the Course List scene from its FXML file and connects its controller.
     private static Scene buildCoursesScene(Stage stage) {
-        //TODO Brent: replace with CourseListScene.fxml
-        return buildPlaceholderScene("Course List", stage);
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource("/CourseListScene.fxml")
+            );
+            Parent root = loader.load();
+            Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
+
+            CourseListController controller = loader.getController();
+            controller.setStage(stage);
+
+            return scene;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load CourseListScene.fxml", e);
+        }
     }
 
-    private static Scene buildEnrollmentScene(Stage stage) {
-        //TODO Brent: replace with EnrollmentScene.fxml
-        return buildPlaceholderScene("Manage Enrollment", stage);
+    // Loads the Add/Edit Course scene from its FXML file and connects its controller.
+    private static Scene buildCourseEditScene(Stage stage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource("/CourseEditScene.fxml")
+            );
+            Parent root = loader.load();
+            Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
 
+            CourseEditController controller = loader.getController();
+            controller.setStage(stage);
+
+            return scene;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load CourseEditScene.fxml", e);
+        }
+    }
+
+    // Loads the Manage Enrollment scene from its FXML file and connects its controller.
+    private static Scene buildEnrollmentScene(Stage stage) {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    SceneFactory.class.getResource("/EnrollmentScene.fxml")
+            );
+            Parent root = loader.load();
+            Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
+
+            EnrollmentController controller = loader.getController();
+            controller.setStage(stage);
+
+            return scene;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load EnrollmentScene.fxml", e);
+        }
     }
 
     /**

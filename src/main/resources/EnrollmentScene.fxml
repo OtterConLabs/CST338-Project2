@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<!--
+    CST338 Project2 - Slice 2: Courses & Enrollment
+    Manage Enrollment screen. Available students on the left, enrolled students
+    on the right, transfer buttons in the middle. Both lists are backed by
+    ObservableLists so a transfer updates the screen immediately.
+    Author: Brent Brewington
+-->
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="EnrollmentController"
+      spacing="12.0">
+
+    <padding>
+        <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+    </padding>
+
+    <children>
+        <Label fx:id="courseLabel" text="Enrollment"
+               style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+        <HBox spacing="12.0" VBox.vgrow="ALWAYS">
+            <children>
+                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label text="Available Students"/>
+                        <ListView fx:id="availableList" VBox.vgrow="ALWAYS"/>
+                    </children>
+                </VBox>
+
+                <VBox spacing="10.0" alignment="CENTER">
+                    <children>
+                        <Button fx:id="enrollButton" text="Enroll &gt;"
+                                onAction="#handleEnroll" prefWidth="110.0"/>
+                        <Button fx:id="unenrollButton" text="&lt; Unenroll"
+                                onAction="#handleUnenroll" prefWidth="110.0"/>
+                    </children>
+                </VBox>
+
+                <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+                    <children>
+                        <Label text="Enrolled Students"/>
+                        <ListView fx:id="enrolledList" VBox.vgrow="ALWAYS"/>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+
+        <Label fx:id="enrollmentMessageLabel" wrapText="true"/>
+
+        <HBox spacing="10.0">
+            <children>
+                <Button fx:id="backButton" text="Back to Courses" onAction="#handleBack"/>
+            </children>
+        </HBox>
+    </children>
+</VBox>

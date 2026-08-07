@@ -69,13 +69,27 @@ public class DatabaseManager {
         createUsersTable();
 
         // Brent
-//        createCoursesTable();
+        createCoursesTable();
 
         // Jordan
         createAssignmentsTable();
 
         // Jit
 //        createGradesTable();
+    }
+
+    /**
+     * Creates the Slice 2 tables (courses and enrollment) and turns on
+     * foreign key enforcement, which SQLite leaves off by default.
+     */
+    private void createCoursesTable() {
+        try {
+            CourseSchema.create(connection);
+            System.out.println("Courses and enrollment tables ready.");
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Database initialization failed; tables were not created.", e);
+        }
     }
 
     /**
