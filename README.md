@@ -45,8 +45,8 @@ Work is assigned to Brewsdawg, labeled (slice-2, testing, enhancement as appropr
 ## Code Review Log
 | PR  | Author | Human reviewer(s) | AI review (link) | Outcome                                       |
 |-----|---|--------------|---------|-----------------------------------------------|
-| #40 | Jordan Browning  | Yoko Mohr | N/A     | Approved and merged  |
-| #50 | Jordan Browning  | Jit Tran | N/A     | Approved and merged  |
+| #40 | Jordan Browning | Yoko Mohr | https://github.com/OtterConLabs/CST338-Project2/pull/40#issuecomment-5226793413 | Approved and merged|
+| #50 | Jordan Browning | Jit Tran | https://github.com/OtterConLabs/CST338-Project2/pull/50#issuecomment-5227427547 | Approved and merged |
 | #56 | Yoko Mohr | REVIEWER_NAME |https://github.com/OtterConLabs/CST338-Project2/pull/56 | 3 accepted, 1 partially accepted, 1 rejected  |
 
 
@@ -55,7 +55,7 @@ Work is assigned to Brewsdawg, labeled (slice-2, testing, enhancement as appropr
 ## AI Usage Log
 
 - **AI-drafted tests:** \<link to TESTING.md / commit\> — per owner.
-- **AI code reviews:** \<PR link + adjudication note\> — per owner.
+- **AI code reviews:** Jordan Browning — [PR #40](https://github.com/OtterConLabs/CST338-Project2/pull/40#issuecomment-5226793413) AI finding accepted and linked to fixing commit; [PR #50](https://github.com/OtterConLabs/CST338-Project2/pull/50#issuecomment-5227427547) AI finding rejected after reviewing SceneFactory initialization.
 
 ---
 
