@@ -9,13 +9,19 @@ import java.util.List;
 /**
  * [CST338 Project2 - Slice 2: Courses &amp; Enrollment]
  * Handles all database work for the enrollment junction table: enroll a
- * student, unenroll a student, and list the enrolled and available students
- * for a course.
+ * student, unenroll a student, count and list the enrolled and available
+ * students for a course, and enforce the extra-credit seat limit.
  *
  * @author Brent Brewington
- * @since 7/30/2026
+ * @since 8/7/2026
  */
 public class EnrollmentDao {
+
+    /** Returned by enroll() when the course is already at its seat limit. */
+    public static final int RESULT_FULL = -2;
+
+    /** Returned by enroll() when the student is already enrolled, or on failure. */
+    public static final int RESULT_FAILED = -1;
 
     private final Connection connection;
 
@@ -26,7 +32,8 @@ public class EnrollmentDao {
 
     /**
      * Uses a caller-supplied connection so the tests can inject an in-memory
-     * database.
+     * database. Foreign keys are re-enabled here because the setting is per
+     * connection in SQLite, and the delete cascade relies on it.
      *
      * @param connection an open database connection
      * @throws IllegalArgumentException if the connection is null
@@ -36,25 +43,53 @@ public class EnrollmentDao {
             throw new IllegalArgumentException("EnrollmentDao requires an open connection.");
         }
         this.connection = connection;
+        try {
+            CourseSchema.enableForeignKeys(connection);
+        } catch (SQLException e) {
+            System.out.println("Could not enable foreign keys: " + e.getMessage());
+        }
     }
 
     /**
-     * Enrolls a student in a course. Duplicate enrollments are rejected before
-     * the insert runs, and the UNIQUE (course_id, student_id) constraint backs
-     * that rule up at the database level.
+     * Enrolls a student in a course with no seat limit. Duplicate enrollments
+     * are rejected before the insert runs, and the UNIQUE (course_id,
+     * student_id) constraint backs that rule up at the database level.
      *
      * @param enrollment the course/student pair to save
-     * @return the generated enrollment_id, or -1 if the student was already
-     *         enrolled or the insert failed
+     * @return the generated enrollment_id, or {@link #RESULT_FAILED} if the
+     *         student was already enrolled or the insert failed
      */
     public int enroll(Enrollment enrollment) {
+        return enroll(enrollment, Course.UNLIMITED);
+    }
+
+    /**
+     * Enrolls a student in a course, honoring the course seat limit. The order
+     * of the guards matters: duplicates are rejected first so a repeat click
+     * never counts against the limit, then the seat limit is checked, and only
+     * then is the insert attempted.
+     *
+     * @param enrollment the course/student pair to save
+     * @param capacity   the course seat limit, or {@link Course#UNLIMITED} (0)
+     *                   for no limit
+     * @return the generated enrollment_id on success,
+     *         {@link #RESULT_FULL} if the course is at capacity,
+     *         or {@link #RESULT_FAILED} if the student was already enrolled or
+     *         the insert failed
+     */
+    public int enroll(Enrollment enrollment, int capacity) {
         if (enrollment == null) {
             throw new IllegalArgumentException("Enrollment cannot be null.");
         }
 
         if (isEnrolled(enrollment.getCourseId(), enrollment.getStudentId())) {
             System.out.println("Student is already enrolled in this course.");
-            return -1;
+            return RESULT_FAILED;
+        }
+
+        if (isFull(enrollment.getCourseId(), capacity)) {
+            System.out.println("Course is at its seat limit.");
+            return RESULT_FULL;
         }
 
         String sql = """
@@ -69,7 +104,7 @@ public class EnrollmentDao {
             pstmt.setInt(2, enrollment.getStudentId());
 
             if (pstmt.executeUpdate() != 1) {
-                return -1;
+                return RESULT_FAILED;
             }
 
             try (ResultSet keys = pstmt.getGeneratedKeys()) {
@@ -79,10 +114,10 @@ public class EnrollmentDao {
                     return generatedId;
                 }
             }
-            return -1;
+            return RESULT_FAILED;
         } catch (SQLException e) {
             System.out.println("enroll failed: " + e.getMessage());
-            return -1;
+            return RESULT_FAILED;
         }
     }
 
@@ -139,6 +174,45 @@ public class EnrollmentDao {
             System.out.println("isEnrolled failed: " + e.getMessage());
             return false;
         }
+    }
+
+    /**
+     * Counts how many students are enrolled in a course. Used to enforce the
+     * extra-credit seat limit and to show seat usage in the UI.
+     *
+     * @param courseId the course to count
+     * @return the number of enrolled students, or 0 for an invalid course id
+     */
+    public int countEnrolled(int courseId) {
+        if (courseId <= 0) {
+            return 0;
+        }
+
+        String sql = "SELECT COUNT(*) FROM enrollment WHERE course_id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, courseId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("countEnrolled failed: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    /**
+     * True when a course has reached its seat limit. A capacity of zero means
+     * the course is unlimited and is therefore never full.
+     *
+     * @param courseId the course to check
+     * @param capacity the course seat limit, or {@link Course#UNLIMITED} (0)
+     * @return true if no more students can be enrolled
+     */
+    public boolean isFull(int courseId, int capacity) {
+        return CourseValidator.isFull(countEnrolled(courseId), capacity);
     }
 
     /**
