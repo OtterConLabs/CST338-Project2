@@ -3,6 +3,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import java.util.Objects;
 
 /**
  * Controls the Login screen, validates user input, and handles navigation
@@ -26,6 +29,9 @@ public class LoginController {
     @FXML
     private Label loginMessageLabel;
 
+    @FXML
+    private ImageView logoImageView;
+
     // Stores the primary Stage passed from SceneFactory.
     // The controller uses this Stage to switch between scenes.
     private Stage stage;
@@ -33,6 +39,17 @@ public class LoginController {
     // Stores the primary application Stage for scene navigation.
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    @FXML
+    public void initialize() {
+        Image image = new Image(
+            Objects.requireNonNull(
+                getClass().getResourceAsStream("/images/ottercon-logo.png"),
+                "OtterCon logo resource was not found"
+            )
+        );
+        logoImageView.setImage(image);
     }
 
     // Handles the Login button action.
@@ -49,6 +66,7 @@ public class LoginController {
             loginMessageLabel.setText(
                     "Please enter your username and password."
             );
+            loginMessageLabel.setStyle("-fx-text-fill: black;");
             return;
         }
         UserDao userDao = new UserDao();
@@ -66,6 +84,7 @@ public class LoginController {
             loginMessageLabel.setText(
                     "Incorrect username or password."
             );
+            loginMessageLabel.setStyle("-fx-text-fill: red;");
         }
     }
 

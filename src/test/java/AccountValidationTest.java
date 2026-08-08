@@ -86,5 +86,29 @@ class AccountValidationTest {
     assertFalse(result);
   }
 
+  @Test
+  void shortPasswordReturnsFalse() {
+    boolean result = accountValidation.areRegistrationFieldsValid(
+        "unit_test",
+        "short",
+        "Unit",
+        "Test",
+        "unit@test.edu",
+        UserRole.STUDENT
+    );
+    assertFalse(result);
+  }
 
+  @Test
+  void eightCharacterPasswordReturnsTrue() {
+    boolean result = accountValidation.areRegistrationFieldsValid(
+        "unit_test",
+        "12345678",
+        "Unit",
+        "Test",
+        "unit@test.edu",
+        UserRole.STUDENT
+    );
+    assertTrue(result);
+  }
 }

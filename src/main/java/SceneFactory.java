@@ -70,7 +70,7 @@ public class SceneFactory {
             case COURSE_EDIT -> buildCourseEditScene(stage);
             case ENROLLMENT -> buildEnrollmentScene(stage);
 
-            // Jourdan
+            // Jordan
             case ASSIGNMENTS -> buildAssignmentsScene(stage);
             // Jit
             case GRADES -> buildGradesScene(stage);
@@ -80,9 +80,8 @@ public class SceneFactory {
 
     // Loads the Login scene from its FXML file and connects its controller.
     private static Scene buildLoginScene(Stage stage) {
-        //TODO YOKO:
         try {
-            // Load the Login screen layout from the resources folder.
+            // Load the Login screen layout from the resources' folder.
             FXMLLoader loader = new FXMLLoader(
                 SceneFactory.class.getResource("/LoginScene.fxml")
             );
@@ -90,7 +89,7 @@ public class SceneFactory {
             Parent root = loader.load();
             Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
 
-            // fx:controller="LoginController
+            // fx:controller="LoginController"
             // Retrieve the controller created by FXMLLoader.
             LoginController controller = loader.getController();
             // Pass the current Stage to the controller for scene navigation.
@@ -131,7 +130,6 @@ public class SceneFactory {
 
     // Creates the Dashboard scene for the currently logged-in user.
     private static Scene buildDashboardScene(Stage stage) {
-        //TODO YOKO:
         try {
             FXMLLoader loader = new FXMLLoader(
                 SceneFactory.class.getResource("/DashboardScene.fxml")
@@ -153,7 +151,6 @@ public class SceneFactory {
     }
 
     private static Scene buildProfileScene(Stage stage) {
-        // TODO Yoko
         try {
             FXMLLoader loader = new FXMLLoader(
                 SceneFactory.class.getResource("/ProfileScene.fxml")

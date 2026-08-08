@@ -1,5 +1,5 @@
 /**
- * [CST338 create a user role ]
+ * Defines the available roles for user accounts.
  *
  * @author Yoko Mohr
  * @since 7/20/2026
