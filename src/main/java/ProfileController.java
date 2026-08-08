@@ -84,6 +84,7 @@ public class ProfileController {
       profileMessageLabel.setText(
           "Password must be at least 8 characters."
       );
+      profileMessageLabel.setStyle("-fx-text-fill: red;");
       return;
     }
 
@@ -112,10 +113,12 @@ public class ProfileController {
     // the updated account information.
     if (result) {
       profileMessageLabel.setText("Profile updated successfully.");
+      profileMessageLabel.setStyle("-fx-text-fill: black;");
       SceneFactory.setLoggedInUser(user);
     } else {
       profileMessageLabel.setText("The username or email may already be in use. "
           + "Please try again.");
+      profileMessageLabel.setStyle("-fx-text-fill: red;");
     }
   }
 
@@ -137,6 +140,7 @@ public class ProfileController {
       );
     } else {
       profileMessageLabel.setText("Unable to delete the user profile.");
+      profileMessageLabel.setStyle("-fx-text-fill: red;");
     }
   }
 
