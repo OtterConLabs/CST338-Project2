@@ -8,12 +8,15 @@ import java.util.List;
  * or a JavaFX window.
  *
  * @author Brent Brewington
- * @since 7/30/2026
+ * @since 8/7/2026
  */
 public final class CourseValidator {
 
     /** Course codes look like CST338: two to four letters followed by three or four digits. */
     private static final String COURSE_CODE_PATTERN = "[A-Za-z]{2,4}\\d{3,4}";
+
+    /** A blank capacity field means "no limit", stored as 0. */
+    public static final int UNLIMITED_CAPACITY = 0;
 
     /** Utility class: no instances. */
     private CourseValidator() {
@@ -50,6 +53,53 @@ public final class CourseValidator {
     }
 
     /**
+     * Validates the form including the extra-credit capacity field. The
+     * capacity text is optional: a blank value means the course has no seat
+     * limit. When it is filled in it must be a whole number that is zero or
+     * greater.
+     *
+     * @param courseCode   the code entered on the form
+     * @param courseName   the title entered on the form
+     * @param teacherId    users.id of the selected teacher, or 0 if none is selected
+     * @param capacityText the raw capacity text from the form, may be blank
+     * @return the error messages found, or an empty list if the form is valid
+     */
+    public static List<String> validate(String courseCode, String courseName,
+                                        int teacherId, String capacityText) {
+        List<String> errors = validate(courseCode, courseName, teacherId);
+
+        if (!isBlank(capacityText)) {
+            try {
+                int capacity = Integer.parseInt(capacityText.trim());
+                if (capacity < 0) {
+                    errors.add("Capacity cannot be negative.");
+                }
+            } catch (NumberFormatException e) {
+                errors.add("Capacity must be a whole number.");
+            }
+        }
+
+        return errors;
+    }
+
+    /**
+     * Turns the capacity text from the form into the integer the model stores.
+     * A blank field becomes {@link #UNLIMITED_CAPACITY}. Call this only after
+     * {@link #validate(String, String, int, String)} has passed, so the parse
+     * is known to succeed.
+     *
+     * @param capacityText the raw capacity text from the form, may be blank
+     * @return the capacity to store, or 0 for unlimited
+     * @throws NumberFormatException if the text is present but not a number
+     */
+    public static int parseCapacity(String capacityText) {
+        if (isBlank(capacityText)) {
+            return UNLIMITED_CAPACITY;
+        }
+        return Integer.parseInt(capacityText.trim());
+    }
+
+    /**
      * Convenience check used by the controller before it calls the DAO.
      *
      * @param courseCode the code entered on the form
@@ -59,6 +109,18 @@ public final class CourseValidator {
      */
     public static boolean isValid(String courseCode, String courseName, int teacherId) {
         return validate(courseCode, courseName, teacherId).isEmpty();
+    }
+
+    /**
+     * True when a course is at or over its seat limit. A capacity of zero
+     * means the course is unlimited and is therefore never full.
+     *
+     * @param enrolledCount how many students are already enrolled
+     * @param capacity      the course seat limit, or 0 for unlimited
+     * @return true if no more students can be enrolled
+     */
+    public static boolean isFull(int enrolledCount, int capacity) {
+        return capacity > UNLIMITED_CAPACITY && enrolledCount >= capacity;
     }
 
     /**

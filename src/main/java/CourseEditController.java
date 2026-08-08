@@ -16,10 +16,11 @@ import javafx.stage.Stage;
  * and when it does not the form starts empty and saves an insert.
  *
  * <p>All form rules live in CourseValidator, so this controller only moves
- * values between the screen and the DAO.</p>
+ * values between the screen and the DAO. The capacity field is the
+ * extra-credit seat limit; leaving it blank means the course is unlimited.</p>
  *
  * @author Brent Brewington
- * @since 8/6/2026
+ * @since 8/7/2026
  */
 public class CourseEditController {
 
@@ -38,6 +39,10 @@ public class CourseEditController {
     // Optional description.
     @FXML
     private TextArea descriptionArea;
+
+    // Optional seat limit. Blank means unlimited.
+    @FXML
+    private TextField capacityField;
 
     // Teacher owning the course. Only users with the TEACHER role appear here.
     @FXML
@@ -138,6 +143,13 @@ public class CourseEditController {
         nameField.setText(course.getCourseName());
         descriptionArea.setText(course.getDescription());
 
+        // A blank capacity box is clearer than a literal 0 for "unlimited".
+        if (capacityField != null) {
+            capacityField.setText(course.hasCapacityLimit()
+                    ? String.valueOf(course.getCapacity())
+                    : "");
+        }
+
         for (User teacher : teachers) {
             if (teacher.getId() == course.getTeacherId()) {
                 teacherCombo.getSelectionModel().select(teacher);
@@ -155,25 +167,30 @@ public class CourseEditController {
     private void handleSave() {
         String code = codeField.getText();
         String name = nameField.getText();
+        String capacityText = (capacityField == null) ? "" : capacityField.getText();
         User selectedTeacher = teacherCombo.getSelectionModel().getSelectedItem();
         int teacherId = (selectedTeacher == null) ? 0 : selectedTeacher.getId();
 
-        List<String> errors = CourseValidator.validate(code, name, teacherId);
+        List<String> errors = CourseValidator.validate(code, name, teacherId, capacityText);
         if (!errors.isEmpty()) {
             // Keep the user on the form with their typed values intact.
             errorLabel.setText(CourseValidator.toMessage(errors));
             return;
         }
 
+        int capacity = CourseValidator.parseCapacity(capacityText);
+
         boolean saved;
         if (editingCourse == null) {
-            Course newCourse = new Course(code, name, descriptionArea.getText(), teacherId);
+            Course newCourse =
+                    new Course(code, name, descriptionArea.getText(), teacherId, capacity);
             saved = courseDao.insert(newCourse) > 0;
         } else {
             editingCourse.setCourseCode(code);
             editingCourse.setCourseName(name);
             editingCourse.setDescription(descriptionArea.getText());
             editingCourse.setTeacherId(teacherId);
+            editingCourse.setCapacity(capacity);
             saved = courseDao.update(editingCourse);
         }
 
