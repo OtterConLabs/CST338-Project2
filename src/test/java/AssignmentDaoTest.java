@@ -270,4 +270,13 @@ class AssignmentDaoTest
                 retrievedAssignment.getPointsPossible()
         );
     }
+
+    // Verifies that deleteById returns false when given an invalid Assignment ID.
+    @Test
+    void deleteByIdInvalidId() throws SQLException
+    {
+        boolean deleted = assignmentDao.deleteById(0);
+
+        assertFalse(deleted);
+    }
 }
