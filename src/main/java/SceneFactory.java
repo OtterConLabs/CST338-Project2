@@ -71,7 +71,8 @@ public class SceneFactory {
             case ENROLLMENT -> buildEnrollmentScene(stage);
 
             // Jordan
-            case ASSIGNMENTS -> buildAssignmentsScene(stage);
+            case ASSIGNMENTS -> createAssignmentsScene(stage);
+
             // Jit
             case GRADES -> buildGradesScene(stage);
             case ATTENDANCE -> buildAttendanceScene(stage);
@@ -83,7 +84,7 @@ public class SceneFactory {
         try {
             // Load the Login screen layout from the resources' folder.
             FXMLLoader loader = new FXMLLoader(
-                SceneFactory.class.getResource("/LoginScene.fxml")
+                    SceneFactory.class.getResource("/LoginScene.fxml")
             );
             // Build a Scene using the root node created from the FXML file.
             Parent root = loader.load();
@@ -99,7 +100,7 @@ public class SceneFactory {
 
         } catch (IOException e) {
             throw new RuntimeException(
-                // Preserve the original exception as the cause.
+                    // Preserve the original exception as the cause.
                     "Failed to load LoginScene.fxml",
                     e // create a new exception based on the old one.
             );
@@ -132,7 +133,7 @@ public class SceneFactory {
     private static Scene buildDashboardScene(Stage stage) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                SceneFactory.class.getResource("/DashboardScene.fxml")
+                    SceneFactory.class.getResource("/DashboardScene.fxml")
             );
             Parent root = loader.load();
             Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
@@ -144,8 +145,8 @@ public class SceneFactory {
 
         } catch (IOException e) {
             throw new RuntimeException(
-                "Failed to load DashboardScene.fxml",
-                e
+                    "Failed to load DashboardScene.fxml",
+                    e
             );
         }
     }
@@ -153,7 +154,7 @@ public class SceneFactory {
     private static Scene buildProfileScene(Stage stage) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                SceneFactory.class.getResource("/ProfileScene.fxml")
+                    SceneFactory.class.getResource("/ProfileScene.fxml")
             );
             Parent root = loader.load();
             Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
@@ -164,8 +165,8 @@ public class SceneFactory {
 
         } catch (IOException e) {
             throw new RuntimeException(
-                "Failed to load ProfileScene.fxml",
-                e
+                    "Failed to load ProfileScene.fxml",
+                    e
             );
         }
     }
@@ -256,10 +257,15 @@ public class SceneFactory {
         );
     }
 
-    // Loads the Assignment list scene without requiring a selected course.
-    private static Scene buildAssignmentsScene(Stage stage)
+    /**
+     * Creates the standalone Assignment list scene.
+     * Zero means the list should display Assignments from every Course.
+     *
+     * @param stage The Stage used for scene navigation.
+     * @return The completed Assignment list scene.
+     */
+    public static Scene createAssignmentsScene(Stage stage)
     {
-        //Zero means that no active course was passed into the scene
         return buildAssignmentsScene(
                 stage,
                 0
@@ -318,9 +324,35 @@ public class SceneFactory {
         }
     }
 
-    public static Scene createAssignmentFormForAdd(Stage stage, int courseId)
+    /**
+     * Opens the Add Assignment form without requiring a Course
+     * to be selected before the form opens.
+     *
+     * @param stage The Stage used for scene navigation.
+     * @return The completed Assignment form scene.
+     */
+    public static Scene createAssignmentFormForAdd(Stage stage)
     {
-        //Course ID must be greater than zero before opening Add mode
+        return buildAssignmentFormForAdd(
+                stage,
+                0
+        );
+    }
+
+    /**
+     * Opens the Add Assignment form and selects the provided Course.
+     *
+     * @param stage The Stage used for scene navigation.
+     * @param courseId The Course ID that should be selected.
+     * @return The completed Assignment form scene.
+     * @throws IllegalArgumentException If the Course ID is not valid.
+     */
+    public static Scene createAssignmentFormForAdd(
+            Stage stage,
+            int courseId
+    )
+    {
+        //Course ID must be greater than zero when a Course is supplied
         if (courseId <= 0)
         {
             throw new IllegalArgumentException(
@@ -328,6 +360,25 @@ public class SceneFactory {
             );
         }
 
+        return buildAssignmentFormForAdd(
+                stage,
+                courseId
+        );
+    }
+
+    /**
+     * Loads the Add Assignment form and optionally selects a Course.
+     *
+     * @param stage The Stage used for scene navigation.
+     * @param courseId The Course ID to select, or zero when the user
+     * will select a Course inside the form.
+     * @return The completed Assignment form scene.
+     */
+    private static Scene buildAssignmentFormForAdd(
+            Stage stage,
+            int courseId
+    )
+    {
         try
         {
             FXMLLoader loader = new FXMLLoader(
@@ -363,13 +414,32 @@ public class SceneFactory {
             Stage stage,
             Assignment assignment
     )
+    {
+        return createAssignmentFormForEdit(
+                stage,
+                assignment,
+                0
+        );
+    }
 
+    public static Scene createAssignmentFormForEdit(
+            Stage stage,
+            Assignment assignment,
+            int activeCourseId
+    )
     {
         //Stop if no Assignment was supplied
         if (assignment == null)
         {
             throw new IllegalArgumentException(
                     "Assignment cannot be null."
+            );
+        }
+
+        if (activeCourseId < 0)
+        {
+            throw new IllegalArgumentException(
+                    "Course ID cannot be negative."
             );
         }
 
@@ -387,7 +457,10 @@ public class SceneFactory {
                     loader.getController();
 
             controller.setStage(stage);
-            controller.prepareForEdit(assignment);
+            controller.prepareForEdit(
+                    assignment,
+                    activeCourseId
+            );
 
             return new Scene(
                     root,
