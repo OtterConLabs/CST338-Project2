@@ -7,7 +7,9 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -23,11 +25,19 @@ public class AssignmentListController
     private Stage stage;
 
     // Stores the ID of the course currently connected to this Assignment list.
+    // Zero means the list is displaying Assignments from every Course.
     private int activeCourseId;
+
+    // Stores each Course ID with the Course code displayed in the table.
+    private final Map<Integer, String> courseCodes = new HashMap<>();
 
     // Displays the assignments retrieved from the database.
     @FXML
     private TableView<Assignment> assignmentTable;
+
+    // Displays the Course code connected to each Assignment.
+    @FXML
+    private TableColumn<Assignment, String> courseColumn;
 
     // Displays the title of each Assignment.
     @FXML
@@ -52,6 +62,17 @@ public class AssignmentListController
     @FXML
     private void initialize()
     {
+        // Tells the Course column to display the code of the Course
+        // connected to the Assignment.
+        courseColumn.setCellValueFactory(
+                assignment ->
+                        new ReadOnlyStringWrapper(
+                                getCourseCode(
+                                        assignment.getValue().getCourseId()
+                                )
+                        )
+        );
+
         // Tells the Title column to display the Assignment title.
         titleColumn.setCellValueFactory(
                 assignment ->
@@ -118,11 +139,11 @@ public class AssignmentListController
     }
 
     /**
-     * Stores the active course ID so new assignments can be connected
-     * to the course that the user selected.
+     * Stores the active course ID so the Assignment list can display
+     * only Assignments connected to one Course.
      *
-     * @param activeCourseId The ID of the course currently being viewed.
-     * @throws IllegalArgumentException If the course ID is not valid.
+     * @param activeCourseId The ID of the Course currently being viewed.
+     * @throws IllegalArgumentException If the Course ID is not valid.
      */
     public void setActiveCourseId(int activeCourseId)
     {
@@ -134,7 +155,7 @@ public class AssignmentListController
             );
         }
 
-        //Store the course ID that was passed into the Assignment scene
+        //Store the Course ID that was passed into the Assignment scene
         this.activeCourseId = activeCourseId;
     }
 
@@ -142,13 +163,16 @@ public class AssignmentListController
      * Retrieves the Assignments from the database and displays
      * them inside the TableView.
      *
-     * If an active course was passed into the Assignment scene,
-     * only the Assignments connected to that course will be displayed.
+     * If an active Course was passed into the Assignment scene,
+     * only the Assignments connected to that Course will be displayed.
      */
     private void loadAssignments()
     {
         try
         {
+            //Load the Course codes before displaying the Assignments
+            loadCourseCodes();
+
             //Create the AssignmentDao using the database connection
             AssignmentDao assignmentDao = new AssignmentDao(
                     DatabaseManager.getInstance().getConnection()
@@ -156,16 +180,16 @@ public class AssignmentListController
 
             List<Assignment> assignments;
 
-            //Check if the Assignment scene received an active course ID
+            //Check if the Assignment scene received an active Course ID
             if (activeCourseId > 0)
             {
-                //Only retrieve Assignments that belong to the active course
+                //Only retrieve Assignments that belong to the active Course
                 assignments =
                         assignmentDao.findByCourseId(activeCourseId);
             }
             else
             {
-                //Retrieve every Assignment when no active course was passed in
+                //Retrieve every Assignment when no active Course was passed in
                 assignments =
                         assignmentDao.findAll();
             }
@@ -192,34 +216,62 @@ public class AssignmentListController
     }
 
     /**
+     * Loads every Course ID and Course code used by the Assignment table.
+     */
+    private void loadCourseCodes()
+    {
+        //Remove any Course information left from the previous table load
+        courseCodes.clear();
+
+        //Retrieve the Courses using the shared database connection
+        CourseDao courseDao = new CourseDao();
+
+        for (Course course : courseDao.findAll())
+        {
+            courseCodes.put(
+                    course.getCourseId(),
+                    course.getCourseCode()
+            );
+        }
+    }
+
+    /**
+     * Returns the Course code connected to an Assignment.
+     * A fallback value is displayed if the Course cannot be found.
+     *
+     * @param courseId The ID stored by the Assignment.
+     * @return The matching Course code.
+     */
+    private String getCourseCode(int courseId)
+    {
+        return courseCodes.getOrDefault(
+                courseId,
+                "Course " + courseId
+        );
+    }
+
+    /**
      * Handles the Add button action and opens the Assignment form.
      */
     @FXML
     private void handleAdd()
     {
-        //Stop if the Assignment list was opened without a selected course
-        if (activeCourseId <= 0)
+        //Preselect the Course when this list was opened for one Course
+        if (activeCourseId > 0)
         {
-            Alert alert = new Alert(
-                    Alert.AlertType.WARNING
+            stage.setScene(
+                    SceneFactory.createAssignmentFormForAdd(
+                            stage,
+                            activeCourseId
+                    )
             );
-
-            alert.setTitle("Assignments");
-            alert.setHeaderText(null);
-            alert.setContentText(
-                    "Select a course before adding an assignment."
-            );
-
-            alert.showAndWait();
             return;
         }
 
-        //Open the Assignment form using the active course ID
+        //Open the form without a preselected Course
+        //The user will choose a Course inside the form
         stage.setScene(
-                SceneFactory.createAssignmentFormForAdd(
-                        stage,
-                        activeCourseId
-                )
+                SceneFactory.createAssignmentFormForAdd(stage)
         );
     }
 
@@ -252,10 +304,27 @@ public class AssignmentListController
         }
 
         //Open the Assignment form using the selected Assignment
+        //and remember how the previous list was filtered
         stage.setScene(
                 SceneFactory.createAssignmentFormForEdit(
                         stage,
-                        selectedAssignment
+                        selectedAssignment,
+                        activeCourseId
+                )
+        );
+    }
+
+    /**
+     * Handles the Back button action and returns to the Dashboard.
+     */
+    @FXML
+    private void handleBack()
+    {
+        //Return to the Dashboard using the primary application Stage
+        stage.setScene(
+                SceneFactory.create(
+                        SceneType.DASHBOARD,
+                        stage
                 )
         );
     }
