@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
 
 import static org.testfx.api.FxAssert.verifyThat;
 import static org.testfx.matcher.base.NodeMatchers.isVisible;
@@ -32,6 +33,8 @@ class AssignmentListSceneTest extends ApplicationTest
     {
         clickOn("Add");
 
+        WaitForAsyncUtils.waitForFxEvents();
+
         verifyThat("#formTitleLabel", isVisible());
     }
 
@@ -40,9 +43,13 @@ class AssignmentListSceneTest extends ApplicationTest
     {
         clickOn("Add");
 
+        WaitForAsyncUtils.waitForFxEvents();
+
         verifyThat("#formTitleLabel", isVisible());
 
         clickOn("Cancel");
+
+        WaitForAsyncUtils.waitForFxEvents();
 
         verifyThat("#assignmentTable", isVisible());
     }

@@ -21,49 +21,46 @@ import java.util.Optional;
  */
 public class AssignmentListController
 {
+    // Zero means the Assignment list is not filtered to one Course.
+    private static final int NO_COURSE_ID = 0;
+
     // Stores the primary Stage used for scene navigation.
     private Stage stage;
 
     // Stores the ID of the course currently connected to this Assignment list.
-    // Zero means the list is displaying Assignments from every Course.
-    private int activeCourseId;
+    // NO_COURSE_ID means the list is displaying Assignments from every Course.
+    private int activeCourseId = NO_COURSE_ID;
+
+    // Provides Course data used by the Assignment list.
+    private CourseDao courseDao = new CourseDao();
 
     // Stores each Course ID with the Course code displayed in the table.
     private final Map<Integer, String> courseCodes = new HashMap<>();
 
-    // Displays the assignments retrieved from the database.
     @FXML
     private TableView<Assignment> assignmentTable;
 
-    // Displays the Course code connected to each Assignment.
     @FXML
     private TableColumn<Assignment, String> courseColumn;
 
-    // Displays the title of each Assignment.
     @FXML
     private TableColumn<Assignment, String> titleColumn;
 
-    // Displays the due date of each Assignment.
     @FXML
     private TableColumn<Assignment, LocalDate> dueDateColumn;
 
-    // Displays the possible points for each Assignment.
     @FXML
     private TableColumn<Assignment, Integer> pointsColumn;
 
-    // Displays the description of the Assignment selected from the table.
     @FXML
     private TextArea descriptionArea;
 
-    /**
-     * Prepares the Assignment table and description area after
-     * the FXML file is loaded.
-     */
+    @FXML
+    private Button backToCoursesButton;
+
     @FXML
     private void initialize()
     {
-        // Tells the Course column to display the code of the Course
-        // connected to the Assignment.
         courseColumn.setCellValueFactory(
                 assignment ->
                         new ReadOnlyStringWrapper(
@@ -73,7 +70,6 @@ public class AssignmentListController
                         )
         );
 
-        // Tells the Title column to display the Assignment title.
         titleColumn.setCellValueFactory(
                 assignment ->
                         new ReadOnlyStringWrapper(
@@ -81,7 +77,6 @@ public class AssignmentListController
                         )
         );
 
-        // Tells the Due Date column to display the Assignment due date.
         dueDateColumn.setCellValueFactory(
                 assignment ->
                         new ReadOnlyObjectWrapper<>(
@@ -89,7 +84,6 @@ public class AssignmentListController
                         )
         );
 
-        // Tells the Points column to display the Assignment points possible.
         pointsColumn.setCellValueFactory(
                 assignment ->
                         new ReadOnlyObjectWrapper<>(
@@ -97,41 +91,35 @@ public class AssignmentListController
                         )
         );
 
-        // Displays a message when there are no assignments in the table.
         assignmentTable.setPlaceholder(
                 new Label(
                         "No assignments yet — click Add to create one"
                 )
         );
 
-        // Watches the Assignment selected from the table and displays
-        // its description underneath the table.
         assignmentTable.getSelectionModel()
                 .selectedItemProperty()
                 .addListener(
                         (observable, oldAssignment, newAssignment) ->
                         {
-                            // Remove the description when no Assignment is selected.
                             if (newAssignment == null)
                             {
                                 descriptionArea.clear();
                                 return;
                             }
 
-                            // Display the selected Assignment description.
                             descriptionArea.setText(
                                     newAssignment.getDescription()
                             );
                         }
                 );
+
+        // Only show Back to Courses when Assignments was opened
+        // from a selected Course.
+        backToCoursesButton.setVisible(false);
+        backToCoursesButton.setManaged(false);
     }
 
-    /**
-     * Stores the primary application Stage and loads the assignments
-     * from the database.
-     *
-     * @param stage The Stage used for scene navigation.
-     */
     public void setStage(Stage stage)
     {
         this.stage = stage;
@@ -139,73 +127,75 @@ public class AssignmentListController
     }
 
     /**
-     * Stores the active course ID so the Assignment list can display
-     * only Assignments connected to one Course.
+     * Replaces the CourseDao used by this controller.
+     * This allows tests to provide a different CourseDao.
      *
-     * @param activeCourseId The ID of the Course currently being viewed.
-     * @throws IllegalArgumentException If the Course ID is not valid.
+     * @param courseDao The CourseDao used to retrieve Courses.
+     * @throws IllegalArgumentException If the CourseDao is null.
      */
+    public void setCourseDao(CourseDao courseDao)
+    {
+        if (courseDao == null)
+        {
+            throw new IllegalArgumentException("CourseDao cannot be null.");
+        }
+
+        this.courseDao = courseDao;
+    }
+
     public void setActiveCourseId(int activeCourseId)
     {
-        //Course ID must be greater than zero before it can be stored
-        if (activeCourseId <= 0)
+        // This method receives an actual Course, so zero is not a valid Course ID.
+        if (activeCourseId <= NO_COURSE_ID)
         {
             throw new IllegalArgumentException(
                     "Course ID must be greater than zero."
             );
         }
 
-        //Store the Course ID that was passed into the Assignment scene
         this.activeCourseId = activeCourseId;
+
+        // The Assignment list was opened from Courses,
+        // so allow the user to return to the Course list.
+        if (backToCoursesButton != null)
+        {
+            backToCoursesButton.setVisible(true);
+            backToCoursesButton.setManaged(true);
+        }
     }
 
-    /**
-     * Retrieves the Assignments from the database and displays
-     * them inside the TableView.
-     *
-     * If an active Course was passed into the Assignment scene,
-     * only the Assignments connected to that Course will be displayed.
-     */
     private void loadAssignments()
     {
         try
         {
-            //Load the Course codes before displaying the Assignments
             loadCourseCodes();
 
-            //Create the AssignmentDao using the database connection
             AssignmentDao assignmentDao = new AssignmentDao(
                     DatabaseManager.getInstance().getConnection()
             );
 
             List<Assignment> assignments;
 
-            //Check if the Assignment scene received an active Course ID
-            if (activeCourseId > 0)
+            if (activeCourseId > NO_COURSE_ID)
             {
-                //Only retrieve Assignments that belong to the active Course
                 assignments =
                         assignmentDao.findByCourseId(activeCourseId);
             }
             else
             {
-                //Retrieve every Assignment when no active Course was passed in
                 assignments =
                         assignmentDao.findAll();
             }
 
-            //Place the Assignments retrieved from the database into the table
             assignmentTable.setItems(
                     FXCollections.observableArrayList(assignments)
             );
 
-            //Remove the previous selection and description after reloading
             assignmentTable.getSelectionModel().clearSelection();
             descriptionArea.clear();
         }
         catch (SQLException e)
         {
-            //Display the database error inside the Assignment table
             assignmentTable.setPlaceholder(
                     new Label(
                             "Unable to load assignments: "
@@ -215,16 +205,9 @@ public class AssignmentListController
         }
     }
 
-    /**
-     * Loads every Course ID and Course code used by the Assignment table.
-     */
     private void loadCourseCodes()
     {
-        //Remove any Course information left from the previous table load
         courseCodes.clear();
-
-        //Retrieve the Courses using the shared database connection
-        CourseDao courseDao = new CourseDao();
 
         for (Course course : courseDao.findAll())
         {
@@ -235,13 +218,6 @@ public class AssignmentListController
         }
     }
 
-    /**
-     * Returns the Course code connected to an Assignment.
-     * A fallback value is displayed if the Course cannot be found.
-     *
-     * @param courseId The ID stored by the Assignment.
-     * @return The matching Course code.
-     */
     private String getCourseCode(int courseId)
     {
         return courseCodes.getOrDefault(
@@ -250,14 +226,10 @@ public class AssignmentListController
         );
     }
 
-    /**
-     * Handles the Add button action and opens the Assignment form.
-     */
     @FXML
     private void handleAdd()
     {
-        //Preselect the Course when this list was opened for one Course
-        if (activeCourseId > 0)
+        if (activeCourseId > NO_COURSE_ID)
         {
             stage.setScene(
                     SceneFactory.createAssignmentFormForAdd(
@@ -268,25 +240,17 @@ public class AssignmentListController
             return;
         }
 
-        //Open the form without a preselected Course
-        //The user will choose a Course inside the form
         stage.setScene(
                 SceneFactory.createAssignmentFormForAdd(stage)
         );
     }
 
-    /**
-     * Handles the Edit button action using the Assignment selected
-     * from the table.
-     */
     @FXML
     private void handleEdit()
     {
-        //Get the Assignment selected from the table
         Assignment selectedAssignment =
                 assignmentTable.getSelectionModel().getSelectedItem();
 
-        //Stop if no Assignment was selected
         if (selectedAssignment == null)
         {
             Alert alert = new Alert(
@@ -303,8 +267,6 @@ public class AssignmentListController
             return;
         }
 
-        //Open the Assignment form using the selected Assignment
-        //and remember how the previous list was filtered
         stage.setScene(
                 SceneFactory.createAssignmentFormForEdit(
                         stage,
@@ -315,12 +277,23 @@ public class AssignmentListController
     }
 
     /**
-     * Handles the Back button action and returns to the Dashboard.
+     * Returns to the Course list when Assignments was opened
+     * from a selected Course.
      */
+    @FXML
+    private void handleBackToCourses()
+    {
+        stage.setScene(
+                SceneFactory.create(
+                        SceneType.COURSES,
+                        stage
+                )
+        );
+    }
+
     @FXML
     private void handleBack()
     {
-        //Return to the Dashboard using the primary application Stage
         stage.setScene(
                 SceneFactory.create(
                         SceneType.DASHBOARD,
@@ -329,18 +302,12 @@ public class AssignmentListController
         );
     }
 
-    /**
-     * Handles the Delete button action using the Assignment selected
-     * from the table.
-     */
     @FXML
     private void handleDelete()
     {
-        //Get the Assignment selected from the table
         Assignment selectedAssignment =
                 assignmentTable.getSelectionModel().getSelectedItem();
 
-        //Stop if no Assignment was selected
         if (selectedAssignment == null)
         {
             Alert alert = new Alert(
@@ -357,7 +324,6 @@ public class AssignmentListController
             return;
         }
 
-        //Ask the user to confirm before deleting the Assignment
         Alert confirmation = new Alert(
                 Alert.AlertType.CONFIRMATION
         );
@@ -366,6 +332,7 @@ public class AssignmentListController
         confirmation.setHeaderText(
                 "Delete " + selectedAssignment.getTitle() + "?"
         );
+
         confirmation.setContentText(
                 "This assignment will be permanently deleted."
         );
@@ -373,7 +340,6 @@ public class AssignmentListController
         Optional<ButtonType> result =
                 confirmation.showAndWait();
 
-        //Stop if the user closes the alert or selects Cancel
         if (result.isEmpty()
                 || result.get() != ButtonType.OK)
         {
@@ -382,7 +348,6 @@ public class AssignmentListController
 
         try
         {
-            //Connect the DAO to the shared database connection
             AssignmentDao assignmentDao =
                     new AssignmentDao(
                             DatabaseManager
@@ -390,13 +355,11 @@ public class AssignmentListController
                                     .getConnection()
                     );
 
-            //Delete the selected Assignment using its ID
             boolean deleted =
                     assignmentDao.deleteById(
                             selectedAssignment.getAssignmentId()
                     );
 
-            //Refresh the table after the Assignment is deleted
             if (deleted)
             {
                 loadAssignments();
@@ -418,7 +381,6 @@ public class AssignmentListController
         }
         catch (SQLException e)
         {
-            //Display the database error without closing the application
             Alert alert = new Alert(
                     Alert.AlertType.ERROR
             );
@@ -427,6 +389,7 @@ public class AssignmentListController
             alert.setHeaderText(
                     "Unable to delete the assignment."
             );
+
             alert.setContentText(
                     e.getMessage()
             );

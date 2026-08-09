@@ -53,6 +53,8 @@
                 <Button fx:id="deleteButton" text="Delete" onAction="#handleDelete"/>
                 <Button fx:id="manageEnrollmentButton" text="Manage Enrollment"
                         onAction="#handleManageEnrollment"/>
+                <Button fx:id="assignmentsButton" text="Assignments"
+                        onAction="#handleAssignments"/>
                 <Button fx:id="refreshButton" text="Refresh" onAction="#handleRefresh"/>
                 <Button fx:id="backButton" text="Back" onAction="#handleBack"/>
             </children>

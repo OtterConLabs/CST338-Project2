@@ -65,6 +65,9 @@ public class CourseListController {
     @FXML
     private Button manageEnrollmentButton;
 
+    @FXML
+    private Button assignmentsButton;
+
     // Shows status and validation messages without a pop-up.
     @FXML
     private Label courseMessageLabel;
@@ -149,7 +152,8 @@ public class CourseListController {
                 .bind(courseTable.getSelectionModel().selectedItemProperty().isNull());
         manageEnrollmentButton.disableProperty()
                 .bind(courseTable.getSelectionModel().selectedItemProperty().isNull());
-
+        assignmentsButton.disableProperty()
+                .bind(courseTable.getSelectionModel().selectedItemProperty().isNull());
         if (courseDao == null) {
             courseDao = new CourseDao();
         }
@@ -277,6 +281,32 @@ public class CourseListController {
         }
         SceneFactory.setSelectedCourse(selected);
         stage.setScene(SceneFactory.create(SceneType.ENROLLMENT, stage));
+    }
+
+    /**
+     * Handles Assignments and opens the Assignment list
+     * for the selected Course.
+     */
+    @FXML
+    private void handleAssignments()
+    {
+        Course selected =
+                courseTable.getSelectionModel().getSelectedItem();
+
+        if (selected == null)
+        {
+            courseMessageLabel.setText(
+                    "Select a course to view assignments."
+            );
+            return;
+        }
+
+        stage.setScene(
+                SceneFactory.createAssignmentsScene(
+                        stage,
+                        selected.getCourseId()
+                )
+        );
     }
 
     /** Handles Back and returns to the Dashboard. */

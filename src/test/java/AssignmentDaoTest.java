@@ -1,6 +1,10 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Tests the insert, retrieval, query, and delete operations
+ * Tests the insert, retrieval, query, update, and delete operations
  * performed by AssignmentDao.
  *
  * @author Jordan Browning
@@ -19,19 +23,35 @@ import org.junit.jupiter.api.Test;
  */
 class AssignmentDaoTest
 {
+    private Connection connection;
     private AssignmentDao assignmentDao;
     private Assignment assignment;
 
-    // Creates a new AssignmentDao and test Assignment before each test.
+    // Stores the database IDs created for each test so they can be removed afterward.
+    private int testTeacherId;
+    private int testCourseId;
+
+    /**
+     * Creates a real Teacher and Course before each test.
+     * Assignments now use a foreign key to courses, so the Course must
+     * exist before the Assignment can be inserted.
+     *
+     * @throws SQLException If the test database cannot be prepared.
+     */
     @BeforeEach
-    void setUp()
+    void setUp() throws SQLException
     {
-        assignmentDao = new AssignmentDao(
-                DatabaseManager.getInstance().getConnection()
-        );
+        connection =
+                DatabaseManager.getInstance().getConnection();
+
+        assignmentDao =
+                new AssignmentDao(connection);
+
+        testTeacherId = createTestTeacher();
+        testCourseId = createTestCourse(testTeacherId);
 
         assignment = new Assignment(
-                1,
+                testCourseId,
                 "Unit Test Assignment",
                 "Assignment created for testing",
                 LocalDate.of(2026, 8, 15),
@@ -39,15 +59,46 @@ class AssignmentDaoTest
         );
     }
 
-    // Removes the test Assignment from the database after each test.
+    /**
+     * Removes the records created by each test.
+     * The Assignment is removed first because it belongs to the Course,
+     * and the Course is removed before its Teacher.
+     *
+     * @throws SQLException If the test records cannot be removed.
+     */
     @AfterEach
     void tearDown() throws SQLException
     {
-        if (assignment.getAssignmentId() > 0)
+        if (assignment != null
+                && assignment.getAssignmentId() > 0)
         {
             assignmentDao.deleteById(
                     assignment.getAssignmentId()
             );
+        }
+
+        if (testCourseId > 0)
+        {
+            try (PreparedStatement statement =
+                         connection.prepareStatement(
+                                 "DELETE FROM courses WHERE course_id = ?"
+                         ))
+            {
+                statement.setInt(1, testCourseId);
+                statement.executeUpdate();
+            }
+        }
+
+        if (testTeacherId > 0)
+        {
+            try (PreparedStatement statement =
+                         connection.prepareStatement(
+                                 "DELETE FROM users WHERE id = ?"
+                         ))
+            {
+                statement.setInt(1, testTeacherId);
+                statement.executeUpdate();
+            }
         }
     }
 
@@ -58,15 +109,148 @@ class AssignmentDaoTest
         DatabaseManager.getInstance().close();
     }
 
+    /**
+     * Creates a Teacher row used by the Course created for the current test.
+     *
+     * @return The generated Teacher user ID.
+     * @throws SQLException If the Teacher cannot be inserted.
+     */
+    private int createTestTeacher() throws SQLException
+    {
+        String uniqueValue =
+                Long.toString(System.nanoTime());
+
+        String sql = """
+                INSERT INTO users (
+                    username,
+                    first_name,
+                    last_name,
+                    email,
+                    password,
+                    role
+                )
+                VALUES (?, ?, ?, ?, ?, 'TEACHER')
+                """;
+
+        try (PreparedStatement statement =
+                     connection.prepareStatement(
+                             sql,
+                             Statement.RETURN_GENERATED_KEYS
+                     ))
+        {
+            statement.setString(
+                    1,
+                    "assignment_test_teacher_" + uniqueValue
+            );
+            statement.setString(
+                    2,
+                    "Assignment"
+            );
+            statement.setString(
+                    3,
+                    "Tester"
+            );
+            statement.setString(
+                    4,
+                    "assignment_test_" + uniqueValue + "@example.com"
+            );
+            statement.setString(
+                    5,
+                    "TestPassword1!"
+            );
+
+            statement.executeUpdate();
+
+            try (ResultSet keys =
+                         statement.getGeneratedKeys())
+            {
+                if (keys.next())
+                {
+                    return keys.getInt(1);
+                }
+            }
+        }
+
+        throw new SQLException(
+                "Unable to create the Teacher used by AssignmentDaoTest."
+        );
+    }
+
+    /**
+     * Creates the Course that the current test Assignment belongs to.
+     *
+     * @param teacherId The Teacher who owns the test Course.
+     * @return The generated Course ID.
+     * @throws SQLException If the Course cannot be inserted.
+     */
+    private int createTestCourse(int teacherId)
+            throws SQLException
+    {
+        String uniqueValue =
+                Long.toString(System.nanoTime());
+
+        String sql = """
+                INSERT INTO courses (
+                    course_code,
+                    course_name,
+                    description,
+                    teacher_id
+                )
+                VALUES (?, ?, ?, ?)
+                """;
+
+        try (PreparedStatement statement =
+                     connection.prepareStatement(
+                             sql,
+                             Statement.RETURN_GENERATED_KEYS
+                     ))
+        {
+            statement.setString(
+                    1,
+                    "TEST" + uniqueValue
+            );
+            statement.setString(
+                    2,
+                    "Assignment DAO Test Course"
+            );
+            statement.setString(
+                    3,
+                    "Course created for AssignmentDaoTest"
+            );
+            statement.setInt(
+                    4,
+                    teacherId
+            );
+
+            statement.executeUpdate();
+
+            try (ResultSet keys =
+                         statement.getGeneratedKeys())
+            {
+                if (keys.next())
+                {
+                    return keys.getInt(1);
+                }
+            }
+        }
+
+        throw new SQLException(
+                "Unable to create the Course used by AssignmentDaoTest."
+        );
+    }
+
     // Verifies that insert successfully adds an Assignment
     // and returns a generated database ID.
     @Test
     void insertAssignment() throws SQLException
     {
-        int generatedId = assignmentDao.insert(assignment);
+        int generatedId =
+                assignmentDao.insert(assignment);
 
         assertTrue(generatedId > 0);
-        assertTrue(assignment.getAssignmentId() > 0);
+        assertTrue(
+                assignment.getAssignmentId() > 0
+        );
     }
 
     // Verifies that findById returns the correct Assignment
@@ -74,20 +258,21 @@ class AssignmentDaoTest
     @Test
     void findById() throws SQLException
     {
-        // Insert the test Assignment and receive its generated ID
-        int generatedId = assignmentDao.insert(assignment);
+        int generatedId =
+                assignmentDao.insert(assignment);
 
-        // Search the database using the generated assignment ID
         Optional<Assignment> foundAssignment =
-                assignmentDao.findById(generatedId);
+                assignmentDao.findById(
+                        generatedId
+                );
 
-        // Verify that an Assignment was returned
-        assertTrue(foundAssignment.isPresent());
+        assertTrue(
+                foundAssignment.isPresent()
+        );
 
-        // Get the Assignment stored inside the Optional
-        Assignment retrievedAssignment = foundAssignment.get();
+        Assignment retrievedAssignment =
+                foundAssignment.get();
 
-        // Verify that the retrieved database values match the test Assignment
         assertEquals(
                 assignment.getAssignmentId(),
                 retrievedAssignment.getAssignmentId()
@@ -124,20 +309,16 @@ class AssignmentDaoTest
     @Test
     void findAll() throws SQLException
     {
-        // Insert the test Assignment
         assignmentDao.insert(assignment);
 
-        // Retrieve every Assignment from the database
-        List<Assignment> assignments = assignmentDao.findAll();
+        List<Assignment> assignments =
+                assignmentDao.findAll();
 
-        // Verify that the returned list exists and contains information
         assertNotNull(assignments);
         assertFalse(assignments.isEmpty());
 
-        // Tracks whether the test Assignment was found
         boolean wasAssignmentFound = false;
 
-        // Search the returned list for the generated assignment ID
         for (Assignment currentAssignment : assignments)
         {
             if (currentAssignment.getAssignmentId()
@@ -148,32 +329,26 @@ class AssignmentDaoTest
             }
         }
 
-        // Verify that the inserted Assignment was found
         assertTrue(wasAssignmentFound);
     }
 
     // Verifies that findByCourseId returns an Assignment
-    // belonging to the matching course.
+    // belonging to the matching Course.
     @Test
     void findByCourseId() throws SQLException
     {
-        // Insert the test Assignment using its course ID
         assignmentDao.insert(assignment);
 
-        // Retrieve all Assignments connected to the same course
         List<Assignment> courseAssignments =
                 assignmentDao.findByCourseId(
                         assignment.getCourseId()
                 );
 
-        // Verify that the returned list exists and contains information
         assertNotNull(courseAssignments);
         assertFalse(courseAssignments.isEmpty());
 
-        // Tracks whether the test Assignment was found
         boolean wasAssignmentFound = false;
 
-        // Search the course list for the generated assignment ID
         for (Assignment currentAssignment : courseAssignments)
         {
             if (currentAssignment.getAssignmentId()
@@ -184,7 +359,6 @@ class AssignmentDaoTest
             }
         }
 
-        // Verify that the matching Assignment was returned
         assertTrue(wasAssignmentFound);
     }
 
@@ -193,25 +367,36 @@ class AssignmentDaoTest
     @Test
     void deleteById() throws SQLException
     {
-        // Insert the test Assignment
-        int generatedId = assignmentDao.insert(assignment);
+        int generatedId =
+                assignmentDao.insert(assignment);
 
-        // Delete the Assignment using its generated ID
         boolean deleted =
-                assignmentDao.deleteById(generatedId);
+                assignmentDao.deleteById(
+                        generatedId
+                );
 
-        // Verify that one Assignment was deleted
         assertTrue(deleted);
 
-        // Search for the deleted Assignment
         Optional<Assignment> deletedAssignment =
-                assignmentDao.findById(generatedId);
+                assignmentDao.findById(
+                        generatedId
+                );
 
-        // A deleted Assignment should no longer be returned
-        assertTrue(deletedAssignment.isEmpty());
+        assertTrue(
+                deletedAssignment.isEmpty()
+        );
 
-        // Prevent tearDown from attempting to delete it again
         assignment.setAssignmentId(0);
+    }
+
+    // Verifies that deleteById returns false for an invalid ID.
+    @Test
+    void deleteByIdInvalidId() throws SQLException
+    {
+        boolean deleted =
+                assignmentDao.deleteById(0);
+
+        assertFalse(deleted);
     }
 
     // Verifies that update saves the modified Assignment information
@@ -219,37 +404,36 @@ class AssignmentDaoTest
     @Test
     void updateAssignment() throws SQLException
     {
-        //Insert the test Assignment so it receives a database ID
         assignmentDao.insert(assignment);
 
-        //Change the Assignment information
-        assignment.setTitle("Updated Unit Test Assignment");
-        assignment.setDescription("Updated description for testing");
+        assignment.setTitle(
+                "Updated Unit Test Assignment"
+        );
+        assignment.setDescription(
+                "Updated description for testing"
+        );
         assignment.setDueDate(
                 LocalDate.of(2026, 8, 20)
         );
         assignment.setPointsPossible(150);
 
-        //Update the matching database row
-        boolean updated = assignmentDao.update(assignment);
+        boolean updated =
+                assignmentDao.update(assignment);
 
-        //Verify that one Assignment was updated
         assertTrue(updated);
 
-        //Retrieve the updated Assignment using its database ID
         Optional<Assignment> foundAssignment =
                 assignmentDao.findById(
                         assignment.getAssignmentId()
                 );
 
-        //Verify that the Assignment still exists
-        assertTrue(foundAssignment.isPresent());
+        assertTrue(
+                foundAssignment.isPresent()
+        );
 
-        //Get the updated Assignment from the Optional
         Assignment retrievedAssignment =
                 foundAssignment.get();
 
-        //Verify that the updated values were saved
         assertEquals(
                 assignment.getTitle(),
                 retrievedAssignment.getTitle()
@@ -269,14 +453,5 @@ class AssignmentDaoTest
                 assignment.getPointsPossible(),
                 retrievedAssignment.getPointsPossible()
         );
-    }
-
-    // Verifies that deleteById returns false when given an invalid Assignment ID.
-    @Test
-    void deleteByIdInvalidId() throws SQLException
-    {
-        boolean deleted = assignmentDao.deleteById(0);
-
-        assertFalse(deleted);
     }
 }
