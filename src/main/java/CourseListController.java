@@ -196,13 +196,12 @@ public class CourseListController {
     }
 
     /**
-     * Reloads every course for the logged-in teacher into the master list so
-     * the TableView always reflects what is actually stored, then reapplies
-     * the current search filter.
+     * Reloads every course from every teacher into the master list so the
+     * TableView shows the full catalog, then reapplies the current search
+     * filter. Teachers can browse all courses, not just their own.
      */
     private void refreshTable() {
-        User teacher = SceneFactory.getLoggedInUser();
-        courses.setAll(courseDao.findByTeacherId(teacher.getId()));
+        courses.setAll(courseDao.findAll());
         applyFilter(searchField == null ? "" : searchField.getText());
     }
 
