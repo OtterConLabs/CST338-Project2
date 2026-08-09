@@ -17,7 +17,7 @@ import java.util.Optional;
  * lets the unit tests point the same code at an in-memory database.</p>
  *
  * @author Brent Brewington
- * @since 7/30/2026
+ * @since 8/7/2026
  */
 public class CourseDao {
 
@@ -32,6 +32,11 @@ public class CourseDao {
      * Uses a caller-supplied connection, which is how the tests inject an
      * in-memory database.
      *
+     * <p>Foreign keys are re-enabled here because the setting is per
+     * connection in SQLite. A connection handed to this DAO by a test, or a
+     * second connection opened elsewhere, would otherwise ignore the
+     * ON DELETE rules that the enrollment cascade depends on.</p>
+     *
      * @param connection an open database connection
      * @throws IllegalArgumentException if the connection is null
      */
@@ -40,6 +45,11 @@ public class CourseDao {
             throw new IllegalArgumentException("CourseDao requires an open connection.");
         }
         this.connection = connection;
+        try {
+            CourseSchema.enableForeignKeys(connection);
+        } catch (SQLException e) {
+            System.out.println("Could not enable foreign keys: " + e.getMessage());
+        }
     }
 
     /**
@@ -56,9 +66,10 @@ public class CourseDao {
                     course_code,
                     course_name,
                     description,
-                    teacher_id
+                    teacher_id,
+                    capacity
                 )
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
         try (PreparedStatement pstmt =
@@ -68,6 +79,7 @@ public class CourseDao {
             pstmt.setString(2, course.getCourseName());
             pstmt.setString(3, course.getDescription());
             pstmt.setInt(4, course.getTeacherId());
+            pstmt.setInt(5, course.getCapacity());
 
             if (pstmt.executeUpdate() != 1) {
                 return -1;
@@ -184,7 +196,8 @@ public class CourseDao {
                 SET course_code = ?,
                     course_name = ?,
                     description = ?,
-                    teacher_id = ?
+                    teacher_id = ?,
+                    capacity = ?
                 WHERE course_id = ?
                 """;
 
@@ -193,7 +206,8 @@ public class CourseDao {
             pstmt.setString(2, course.getCourseName());
             pstmt.setString(3, course.getDescription());
             pstmt.setInt(4, course.getTeacherId());
-            pstmt.setInt(5, course.getCourseId());
+            pstmt.setInt(5, course.getCapacity());
+            pstmt.setInt(6, course.getCourseId());
 
             return pstmt.executeUpdate() == 1;
         } catch (SQLException e) {
@@ -236,6 +250,7 @@ public class CourseDao {
                    c.course_name,
                    c.description,
                    c.teacher_id,
+                   c.capacity,
                    c.created,
                    u.first_name,
                    u.last_name
@@ -256,6 +271,7 @@ public class CourseDao {
                 rs.getString("course_name"),
                 rs.getString("description"),
                 rs.getInt("teacher_id"),
+                rs.getInt("capacity"),
                 rs.getString("created")
         );
 

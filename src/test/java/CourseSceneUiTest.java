@@ -126,15 +126,27 @@ class CourseSceneUiTest {
         courseDao.insert(course);
 
         enrollmentDao = new EnrollmentDao(connection);
+
+        // The Back button navigates to the Course List scene, whose controller
+        // now scopes its table to the logged-in teacher via
+        // SceneFactory.getLoggedInUser(). Without a user set here, that scene's
+        // refreshTable() hits a NullPointerException on teacher.getId() and the
+        // scene never loads, so seed a logged-in teacher for the transition.
+        SceneFactory.setLoggedInUser(new User(
+                teacherId, "mlarkin", "Morgan", "Larkin",
+                "mlarkin@otterconlabs.edu", "pass123",
+                UserRole.TEACHER, null));
     }
 
     /**
-     * Closes the test database.
+     * Closes the test database and clears the shared logged-in user so state
+     * does not leak into other tests.
      *
      * @throws SQLException if the connection cannot be closed
      */
     @AfterEach
     void tearDown() throws SQLException {
+        SceneFactory.setLoggedInUser(null);
         if (connection != null && !connection.isClosed()) {
             connection.close();
         }

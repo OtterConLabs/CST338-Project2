@@ -15,6 +15,7 @@
     CST338 Project2 - Slice 2: Courses & Enrollment
     Add/Edit Course form. The same scene serves both cases; the title label
     switches based on whether a course was selected for editing.
+    Capacity is the extra-credit seat limit; blank means unlimited.
     Author: Brent Brewington
 -->
 <VBox xmlns="http://javafx.com/javafx"
@@ -57,6 +58,12 @@
                        GridPane.rowIndex="3" GridPane.columnIndex="0"/>
                 <TextArea fx:id="descriptionArea" prefRowCount="3" wrapText="true"
                           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                <Label text="Capacity:"
+                       GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <TextField fx:id="capacityField"
+                           promptText="Leave blank for unlimited"
+                           GridPane.rowIndex="4" GridPane.columnIndex="1"/>
             </children>
         </GridPane>
 

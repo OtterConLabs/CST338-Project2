@@ -1,14 +1,17 @@
 import static org.junit.jupiter.api.Assertions.*;
-
+import java.sql.Statement;
 import java.util.List;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
- *  Tests the insert, login, retrieval, update, and delete operations
- *  performed by UserDao.
+ * Tests the insert, login, retrieval, update, and delete operations
+ * performed by UserDao using a fresh in-memory SQLite database
+ * for each test.
  *
  * @author Yoko Mohr
  * @since 7/30/2026
@@ -16,13 +19,33 @@ import org.junit.jupiter.api.Test;
 
 class UserDaoTest {
 
+  private Connection connection;
   private UserDao userDao;
   private User user;
 
-  // Creates a new UserDao and test User before each test.
+  // Creates a fresh in-memory database, users table, UserDao,
+  // and test User before each test.
   @BeforeEach
-  void setUp() {
-    userDao = new UserDao();
+  void setUp() throws SQLException {
+    connection = DriverManager.getConnection("jdbc:sqlite::memory:");
+
+    try (Statement stmt = connection.createStatement()) {
+      stmt.execute("""
+                 CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                    first_name TEXT NOT NULL,
+                    last_name TEXT NOT NULL,
+                    email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+                    password TEXT NOT NULL,
+                    role TEXT NOT NULL
+                        CHECK (role IN ('STUDENT', 'TEACHER')),
+                    created TEXT DEFAULT (datetime('now'))
+                )
+          """);
+    }
+
+    userDao = new UserDao(connection);
 
     user = new User(
         "unit_test",
@@ -34,24 +57,11 @@ class UserDaoTest {
     );
   }
 
-  // Removes any test User remaining in the database after each test.
-  // The method checks both the original and updated login credentials.
+  // Closes the in-memory database connection after each test.
+  // Closing the connection also removes all test data created during the test.
   @AfterEach
-  void tearDown() {
-    // First check whether the update test changed the login credentials.
-    User savedUser = userDao.checkLogin("updated_username", "updated_password");
-    // If the updated User was not found, look for the original User.
-    if (savedUser == null) {
-      savedUser = userDao.checkLogin(user.getUsername(), user.getPassword());
-    }
-    // Delete the test User only when it exists.
-    if (savedUser != null) {
-      userDao.deleteUser(savedUser);
-    }
-  }
-  @AfterAll
-  static void close() {
-    DatabaseManager.getInstance().close();
+  void tearDown() throws SQLException {
+    connection.close();
   }
 
   // Verifies that insertUser successfully adds a User to the database.

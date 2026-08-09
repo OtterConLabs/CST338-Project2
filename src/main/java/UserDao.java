@@ -13,13 +13,22 @@ import java.util.List;
  * @since 7/27/2026
  */
 public class UserDao {
-  //TODO YOKO
-
   private final Connection connection;
 
   public UserDao() {
     this.connection =
         DatabaseManager.getInstance().getConnection();
+  }
+
+  // Uses a caller-provided database connection.
+  // This allows tests to use an in-memory database.
+  public UserDao(Connection connection) {
+    if (connection == null) {
+      throw new IllegalArgumentException(
+          "UserDao requires a non-null connection."
+      );
+    }
+    this.connection = connection;
   }
 
   /**
@@ -69,8 +78,7 @@ public class UserDao {
    * @return the matching User, or null if the credentials are invalid
    */
   public User checkLogin(String username, String password) {
-    // this is for prepareStatement. later ask  a specific username, the want to get its password
-    // use * to receive all information
+    // Retrieve the account matching the supplied username.
     String sql = """
                 SELECT * FROM users WHERE username = ?
                 """;

@@ -8,13 +8,13 @@
 
 ## Team & Slice Ownership
 
-| Slice | Owner | GitHub username | Issues | Branch(es) | PR(s) | Enhancement chosen | Status |
-|---|---|---|---|---|---|---|---|
-| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8, #14, #30, #37, #41 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud, yoko/FXML-dashboard-setup, yoko/test-UserDao | #4, #12, #15, #19, #20, #31, #39, #42 | Notifications / alerts on app events | in-progress |
-| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg | #48 | brent/course-dao, brent/course-list-scene, brent/enrollment-scene | #21, #44, #47, #54 | TableView / ListView populated with live data | in-progress |
-| 3 — Assignments | Jordan Browning | jbrowning-otter | #13, #16, #17 | jordan/assignment-dao, jordan/assignment-list-scene, jordan/assignment-form-scene | #43, #45 | Data Binding using ObservableList | in-progress |
-| 4 — Grades | Jit Tran | jtcsumb | #24, #25, #26 | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics | | Data binding using ObservableList and JavaFX properties | planned |
-| 5 — Attendance | Jit Tran | jtcsumb | #27, #28, #29 | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report | | Notifications for overwrite confirmation, saves, and CSV export results | planned |
+| Slice | Owner | GitHub username | Issues | Branch(es)                                                                                                                                                       | PR(s)                                           | Enhancement chosen | Status |
+|---|---|---|---|------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|---|---|
+| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8, #14, #30, #37, #41 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud, yoko/FXML-dashboard-setup, yoko/test-UserDao,yoko/account-feature | #4, #12, #15, #19, #20, #31, #39, #42, #46, #56 | Notifications / alerts on app events | in-progress |
+| 2 — Courses & Enrollment | Brent Brewington | Brewsdawg | #48 | brent/course-dao, brent/course-list-scene, brent/enrollment-scene                                                                                                | #21, #44, #47, #54                              | TableView / ListView populated with live data | in-progress |
+| 3 — Assignments | Jordan Browning | jbrowning-otter | #13, #16, #17 | jordan/assignment-dao, jordan/assignment-list-scene, jordan/assignment-form-scene                                                                                | #43, #45                                        | Data Binding using ObservableList | in-progress |
+| 4 — Grades | Jit Tran | jtcsumb | #24, #25, #26 | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics                                                                                           |                                                 | Data binding using ObservableList and JavaFX properties | planned |
+| 5 — Attendance | Jit Tran | jtcsumb | #27, #28, #29 | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report                                                                                     |                                                 | Notifications for overwrite confirmation, saves, and CSV export results | planned |
 
 *Status values: planned · in-progress · complete*
 
@@ -43,10 +43,12 @@ Work is assigned to Brewsdawg, labeled (slice-2, testing, enhancement as appropr
 ---
 
 ## Code Review Log
+| PR  | Author | Human reviewer(s) | AI review (link) | Outcome                                       |
+|-----|---|--------------|---------|-----------------------------------------------|
+| #40 | Jordan Browning  | Yoko Mohr | N/A     | Approved and merged  |
+| #50 | Jordan Browning  | Jit Tran | N/A     | Approved and merged  |
+| #56 | Yoko Mohr | REVIEWER_NAME |https://github.com/OtterConLabs/CST338-Project2/pull/56 | 3 accepted, 1 partially accepted, 1 rejected  |
 
-| PR | Author | Human reviewer(s) | AI review (link) | Outcome |
-|---|---|---|---|---|
-| #40 | Jordan Browning | Yoko Mohr | N/A | Approved and merged |
 
 ---
 

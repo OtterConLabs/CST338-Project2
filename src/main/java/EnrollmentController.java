@@ -14,10 +14,12 @@ import javafx.stage.Stage;
  * immediately. This is the live-data enhancement applied to the slice.
  *
  * <p>The course being managed is supplied by SceneFactory, the same way the
- * logged-in user is shared across scenes.</p>
+ * logged-in user is shared across scenes. When the course has a seat limit
+ * (the extra-credit capacity feature) the Enroll button is blocked once the
+ * course is full and the reason is shown inline.</p>
  *
  * @author Brent Brewington
- * @since 8/6/2026
+ * @since 8/7/2026
  */
 public class EnrollmentController {
 
@@ -115,14 +117,12 @@ public class EnrollmentController {
             return;
         }
 
-        courseLabel.setText("Enrollment for "
-                + course.getCourseCode() + " - " + course.getCourseName());
         refreshLists();
     }
 
     /**
      * Reloads both rosters from the database so the screen always matches what
-     * is actually stored.
+     * is actually stored, and refreshes the header with the live seat count.
      */
     private void refreshLists() {
         if (enrollmentDao == null || course == null) {
@@ -130,12 +130,27 @@ public class EnrollmentController {
         }
         available.setAll(enrollmentDao.findAvailableStudents(course.getCourseId()));
         enrolled.setAll(enrollmentDao.findEnrolledStudents(course.getCourseId()));
+        updateCourseHeader();
     }
 
     /**
-     * Handles Enroll. The duplicate-enrollment rule from Use Case 2 is enforced
-     * in EnrollmentDao, so a refused enrollment shows a message rather than
-     * throwing.
+     * Updates the header to show the course and, when the course has a seat
+     * limit, how many seats are used.
+     */
+    private void updateCourseHeader() {
+        String header = "Enrollment for "
+                + course.getCourseCode() + " - " + course.getCourseName();
+        if (course.hasCapacityLimit()) {
+            header += "  (" + enrolled.size() + " / " + course.getCapacity() + " seats)";
+        }
+        courseLabel.setText(header);
+    }
+
+    /**
+     * Handles Enroll. Guards are checked in order: a student must be selected,
+     * the selected user must be a student, they must not already be enrolled,
+     * and the course must not be full. Passing the course capacity to the DAO
+     * enforces the same seat limit at the database layer as a backstop.
      */
     @FXML
     private void handleEnroll() {
@@ -150,16 +165,35 @@ public class EnrollmentController {
             return;
         }
 
-        int enrollmentId = enrollmentDao.enroll(
-                new Enrollment(course.getCourseId(), selected.getId()));
+        // Distinguish the duplicate case up front.
+        if (enrollmentDao.isEnrolled(course.getCourseId(), selected.getId())) {
+            enrollmentMessageLabel.setText(selected.getFirstName()
+                    + " is already enrolled in this course.");
+            return;
+        }
 
-        if (enrollmentId > 0) {
+        // Extra-credit seat limit: block enrollment once the course is full.
+        if (enrollmentDao.isFull(course.getCourseId(), course.getCapacity())) {
+            enrollmentMessageLabel.setText(course.getCourseCode()
+                    + " is full (" + course.getCapacity() + " seats). Remove a student first.");
+            return;
+        }
+
+        int result = enrollmentDao.enroll(
+                new Enrollment(course.getCourseId(), selected.getId()),
+                course.getCapacity());
+
+        if (result > 0) {
             refreshLists();
             enrollmentMessageLabel.setText("Enrolled "
                     + selected.getFirstName() + " " + selected.getLastName() + ".");
+        } else if (result == EnrollmentDao.RESULT_FULL) {
+            refreshLists();
+            enrollmentMessageLabel.setText(course.getCourseCode()
+                    + " is full (" + course.getCapacity() + " seats).");
         } else {
-            enrollmentMessageLabel.setText(selected.getFirstName()
-                    + " is already enrolled in this course.");
+            enrollmentMessageLabel.setText("Could not enroll "
+                    + selected.getFirstName() + ". Please try again.");
         }
     }
 

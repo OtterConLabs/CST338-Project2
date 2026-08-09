@@ -1,7 +1,6 @@
 import java.sql.*;
 
 /**
- * [CST338 Create DatabaseManager]
  * Manages the shared SQLite database connection and creates
  * the application's database tables.
  *
@@ -24,6 +23,12 @@ public class DatabaseManager {
     private DatabaseManager() {
         try {
             connection = DriverManager.getConnection(DB_URL);
+            try (Statement stmt = connection.createStatement()) {
+
+                // Enable SQLite foreign key constraint enforcement
+                // for the shared application connection.
+                stmt.execute("PRAGMA foreign_keys = ON");
+            }
             System.out.println("Database connected.");
             createTables();
         } catch (SQLException e) {
@@ -45,7 +50,6 @@ public class DatabaseManager {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
-                instance = null;
             }
         } catch (SQLException e) {
             System.out.println("Failed to close: " + e.getMessage());
@@ -75,7 +79,7 @@ public class DatabaseManager {
         createAssignmentsTable();
 
         // Jit
-//        createGradesTable();
+        createGradesTable();
     }
 
     /**
@@ -87,7 +91,8 @@ public class DatabaseManager {
             CourseSchema.create(connection);
             System.out.println("Courses and enrollment tables ready.");
         } catch (SQLException e) {
-            System.out.println("createCoursesTable failed: " + e.getMessage());
+            throw new RuntimeException(
+                    "Database initialization failed; tables were not created.", e);
         }
     }
 
@@ -149,10 +154,18 @@ private void createAssignmentsTable()
                         + e.getMessage()
         );
     }
-}
-//
-//    private void createGradesTable() {
-//        // Jit's SQL
-//    }
-//
+}   
+    /*
+        @author Jit Tran
+        @since 08/05/2026
+    */
+    private void createGradesTable() {
+        try {
+            GradeSchema.create(connection);
+            System.out.println("Grades table ready");
+        } catch(SQLException e){
+            System.out.println("createGradesTable failed: " + e.getMessage());
+        }
+    }
+
 }
