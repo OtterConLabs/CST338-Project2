@@ -206,6 +206,37 @@ class CourseDaoTest {
                 () -> new Course("", "Software Design", "", larkinId));
     }
 
+    /**
+     * Locks in the post user-testing spec change: findAll() must return
+     * courses from every teacher, not just one. The two seeded teachers each
+     * own a course; findAll() should return both.
+     */
+    @Test
+    @DisplayName("findAll returns courses from every teacher, not just one")
+    void findAll_returnsCoursesFromMultipleTeachers() {
+        // Arrange: one course for each of the two seeded teachers.
+        courseDao.insert(new Course("CST300", "Major ProSeminar", "", larkinId));
+        courseDao.insert(new Course("CST338", "Software Design", "", hallowayId));
+
+        // Act
+        List<Course> all = courseDao.findAll();
+
+        // Assert: both courses come back, owned by different teachers.
+        assertEquals(2, all.size());
+        boolean hasLarkin = false;
+        boolean hasHalloway = false;
+        for (Course c : all) {
+            if (c.getTeacherId() == larkinId) {
+                hasLarkin = true;
+            }
+            if (c.getTeacherId() == hallowayId) {
+                hasHalloway = true;
+            }
+        }
+        assertTrue(hasLarkin, "findAll should include the first teacher's course");
+        assertTrue(hasHalloway, "findAll should include the second teacher's course");
+    }
+
     @Test
     @DisplayName("Negative case: findByTeacherId rejects an invalid teacher ID")
     void findByTeacherId_invalidId_throws() {
