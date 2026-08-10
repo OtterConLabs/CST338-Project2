@@ -8,18 +8,15 @@
 
 ## Team & Slice Ownership
 
-| Slice | Owner | GitHub username | Issues | Branch(es)                                                                                                                                                       | PR(s)                                           | Enhancement chosen | Status |
-|---|---|---|---|------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|---|---|
-| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8, #14, #30, #37, #41 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud, yoko/FXML-dashboard-setup, yoko/test-UserDao,yoko/account-feature | #4, #12, #15, #19, #20, #31, #39, #42, #46, #56 | Notifications / alerts on app events | in-progress |
+| Slice | Owner | GitHub username | Issues | Branch(es)                                                                                                                                                       | PR(s)                                           | Enhancement chosen | Status      |
+|---|---|---|---|------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------|---|-------------|
+| 1 — Accounts | Yoko Mohr | yokocsumb | #2, #3, #5, #6, #8, #14, #30, #37, #41 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud, yoko/FXML-dashboard-setup, yoko/test-UserDao,yoko/account-feature | #4, #12, #15, #19, #20, #31, #39, #42, #46, #56 | Profile editing with password validation | complete    |
 | 2 — Courses & Enrollment | Brent Brewington | Brewsdawg | #48 | brent/course-dao, brent/course-list-scene, brent/enrollment-scene                                                                                                | #21, #44, #47, #54                              | TableView / ListView populated with live data | in-progress |
-| 3 — Assignments | Jordan Browning | jbrowning-otter | #13, #16, #17 | jordan/assignment-dao, jordan/assignment-list-scene, jordan/assignment-form-scene                                                                                | #43, #45, #59                                        | Data Binding using ObservableList | Completed |
-| 4 — Grades | Jit Tran | jtcsumb | #24, #25, #26 | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics                                                                                           |                                                 | Data binding using ObservableList and JavaFX properties | planned |
-| 5 — Attendance | Jit Tran | jtcsumb | #27, #28, #29 | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report                                                                                     |                                                 | Notifications for overwrite confirmation, saves, and CSV export results | planned |
+| 3 — Assignments | Jordan Browning | jbrowning-otter | #13, #16, #17 | jordan/assignment-dao, jordan/assignment-list-scene, jordan/assignment-form-scene                                                                                | #43, #45, #59                                        | Data Binding using ObservableList | Completed   |
+| 4 — Grades | Jit Tran | jtcsumb | #24, #25, #26 | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics                                                                                           |                                                 | Data binding using ObservableList and JavaFX properties | planned     |
+| 5 — Attendance | Jit Tran | jtcsumb | #27, #28, #29 | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report                                                                                     |                                                 | Notifications for overwrite confirmation, saves, and CSV export results | planned     |
 
 *Status values: planned · in-progress · complete*
-
-Shared application setup: Yoko created the initial JavaFX application framework, shared SceneFactory navigation, and shared DatabaseManager/SQLite setup. Each slice was later integrated into these shared components.
-
 ### Slice 2 — Courses & Enrollment (detail)
 
 - **Issue:** #48
@@ -77,8 +74,8 @@ Work is assigned to Brewsdawg, labeled (slice-2, testing, enhancement as appropr
   - [PR #40 adjudication](https://github.com/OtterConLabs/CST338-Project2/pull/40#issuecomment-5226793413) — AI findings were reviewed and adjudicated before the PR was approved and merged.
   - [PR #50 adjudication](https://github.com/OtterConLabs/CST338-Project2/pull/50#issuecomment-5227427547) — AI findings were reviewed and adjudicated before the PR was finalized.
 ---
-- **Yoko — AI-drafted test:** `LoginSceneTest` was initially drafted with ChatGPT and then revised for test isolation and more reliable TestFX interaction.
-- **Yoko — AI code review:** PR #56 https://github.com/OtterConLabs/CST338-Project2/pull/56 — all findings were adjudicated in the PR; 3 accepted, 1 partially accepted, and 1 rejected.
+- **Yoko - AI-drafted test:** `LoginSceneTest` was initially drafted with ChatGPT and then revised for test isolation and more reliable TestFX interaction.
+- **Yoko - AI code review:** PR #56 https://github.com/OtterConLabs/CST338-Project2/pull/56 - all findings were adjudicated in the PR; 3 accepted, 1 partially accepted, and 1 rejected.
 
 ---
 ## Extra Credit Log
