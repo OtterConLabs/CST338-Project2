@@ -6,6 +6,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * [CST338 P2 SceneFactory]
@@ -50,7 +51,7 @@ public class SceneFactory {
             // Jourdan
             case ASSIGNMENTS -> buildAssignmentsScene(stage);
             // Jit
-            case GRADES -> buildGradesScene(stage);
+            case GRADES -> buildGradeEntryScene(stage);
             case ATTENDANCE -> buildAttendanceScene(stage);
         };
     }
@@ -343,21 +344,30 @@ public class SceneFactory {
         }
     }
 
-    private static Scene buildGradesScene(Stage stage) {
-        try{
-            FXMLLoader loader = new FXMLLoader(SceneFactory.class.getResource("/GradeEntryScene.fxml"));
-
+    private static Scene buildGradeEntryScene(Stage stage) {
+        URL resource = SceneFactory.class.getResource("/GradeEntryScene.fxml");
+    
+        if (resource == null) {
+            throw new IllegalStateException(
+                    "GradeEntryScene.fxml not found"
+            );
+        }
+    
+        try {
+            FXMLLoader loader = new FXMLLoader(resource);
+    
             Parent root = loader.load();
             Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
-
+    
             GradeEntryController controller = loader.getController();
             controller.setStage(stage);
-
+    
             return scene;
-        } catch(IOException e){
-            throw new RuntimeException("GradeEntryScene.fxml load Failed", e);
+        } catch (IOException e){
+            throw new RuntimeException(
+                    "Load failed: GradeEntryScene.fxml", e
+            );
         }
-
     }
 
     private static Scene buildAttendanceScene(Stage stage) {
