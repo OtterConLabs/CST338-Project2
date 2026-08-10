@@ -38,7 +38,7 @@
             </font>
         </Label>
 
-        <Label text="Select an assignment to manage grades.">
+        <Label text="Grade records will appear in this table.">
             <font>
                 <Font size="14.0" />
             </font>
