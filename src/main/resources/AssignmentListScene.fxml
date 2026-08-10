@@ -89,9 +89,14 @@
                                 onAction="#handleEdit"
                                 text="Edit" />
 
+                        <Button fx:id="backToCoursesButton"
+                                mnemonicParsing="false"
+                                onAction="#handleBackToCourses"
+                                text="Back to Courses" />
+
                         <Button mnemonicParsing="false"
                                 onAction="#handleBack"
-                                text="Back" />
+                                text="Back to Dashboard" />
                     </children>
                 </HBox>
             </children>

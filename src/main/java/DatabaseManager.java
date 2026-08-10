@@ -131,16 +131,19 @@ public class DatabaseManager {
 private void createAssignmentsTable()
 {
     String sql = """
-            CREATE TABLE IF NOT EXISTS assignments (
-                assignment_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                course_id INTEGER NOT NULL,
-                title TEXT NOT NULL,
-                description TEXT,
-                due_date TEXT NOT NULL,
-                points_possible INTEGER NOT NULL
-                    CHECK (points_possible >= 0)
-            )
-            """;
+        CREATE TABLE IF NOT EXISTS assignments (
+            assignment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            course_id INTEGER NOT NULL,
+            title TEXT NOT NULL,
+            description TEXT,
+            due_date TEXT NOT NULL,
+            points_possible INTEGER NOT NULL
+                CHECK (points_possible >= 0),
+            FOREIGN KEY (course_id)
+                REFERENCES courses(course_id)
+                ON DELETE CASCADE
+        )
+        """;
 
     try (Statement stmt = connection.createStatement())
     {
