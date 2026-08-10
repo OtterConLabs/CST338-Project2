@@ -124,10 +124,6 @@ public class DatabaseManager {
         }
     }
 
-//    private void createCoursesTable() {
-//        // Brent's SQL
-//    }
-//
 private void createAssignmentsTable()
 {
     String sql = """

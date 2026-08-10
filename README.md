@@ -18,6 +18,8 @@
 
 *Status values: planned · in-progress · complete*
 
+Shared application setup: Yoko created the initial JavaFX application framework, shared SceneFactory navigation, and shared DatabaseManager/SQLite setup. Each slice was later integrated into these shared components.
+
 ### Slice 2 — Courses & Enrollment (detail)
 
 - **Issue:** #48
@@ -48,7 +50,7 @@ Work is assigned to Brewsdawg, labeled (slice-2, testing, enhancement as appropr
 | --- | --- | --- | --- | --- |
 | #40 | Jordan Browning | Yoko Mohr | [Adjudication link](https://github.com/OtterConLabs/CST338-Project2/pull/40#issuecomment-5226793413) | AI findings adjudicated; approved and merged |
 | #50 | Jordan Browning | Jit Tran | [Adjudication link](https://github.com/OtterConLabs/CST338-Project2/pull/50#issuecomment-5227427547) | AI findings adjudicated; rejected |
-| #56 | Yoko Mohr | REVIEWER_NAME | https://github.com/OtterConLabs/CST338-Project2/pull/56 | 3 accepted, 1 partially accepted, 1 rejected |
+| #56 | Yoko Mohr | Brent Brewington | https://github.com/OtterConLabs/CST338-Project2/pull/56 | 3 accepted, 1 partially accepted, 1 rejected |
 | #54 | Brent Brewington | Jordan Browning | N/A | Changes requested, feedback addressed, then approved/merged |
 | #51 | Jit Tran | Jordan Browning | N/A | Reviewed and approved/merged |
 | #46 | Yoko Mohr | Jordan Browning | N/A | Reviewed and approved/merged |
@@ -75,7 +77,10 @@ Work is assigned to Brewsdawg, labeled (slice-2, testing, enhancement as appropr
   - [PR #40 adjudication](https://github.com/OtterConLabs/CST338-Project2/pull/40#issuecomment-5226793413) — AI findings were reviewed and adjudicated before the PR was approved and merged.
   - [PR #50 adjudication](https://github.com/OtterConLabs/CST338-Project2/pull/50#issuecomment-5227427547) — AI findings were reviewed and adjudicated before the PR was finalized.
 ---
+- **Yoko — AI-drafted test:** `LoginSceneTest` was initially drafted with ChatGPT and then revised for test isolation and more reliable TestFX interaction.
+- **Yoko — AI code review:** PR #56 https://github.com/OtterConLabs/CST338-Project2/pull/56 — all findings were adjudicated in the PR; 3 accepted, 1 partially accepted, and 1 rejected.
 
+---
 ## Extra Credit Log
 
 | Item | Who | Evidence (Issue/PR) |
@@ -89,6 +94,9 @@ Work is assigned to Brewsdawg, labeled (slice-2, testing, enhancement as appropr
 ```bash
 ./gradlew run        # launch the app
 ./gradlew test       # run the test suite
+
+Accounts Slice Tests - Yoko
+./gradlew.bat test --tests "UserDaoTest" --tests "AccountValidationTest" --tests "LoginSceneTest" --rerun-tasks
 ```
 
-**Requirements:** JDK \<version\>, JavaFX \<version\>. Any setup notes go here.
+**Requirements:** JDK 25, JavaFX 25.0.4, Gradle Wrapper
