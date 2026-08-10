@@ -16,6 +16,11 @@ public class GradeEntryController {
 
     @FXML
     private void handleBack(){
+        if(stage == null){
+            throw new IllegalStateException(
+                "Stage not set."
+            );
+        }
         stage.setScene(
                 SceneFactory.create(SceneType.DASHBOARD, stage)
         );
