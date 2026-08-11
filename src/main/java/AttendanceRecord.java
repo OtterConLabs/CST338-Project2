@@ -8,9 +8,9 @@ import java.util.Objects;
  * @since 08/10/2026
  */
 public class AttendanceRecord {
-    private int attendanceId;
-    private int courseId;
-    private int studentId;
+    private int attendanceID;
+    private int courseID;
+    private int studentID;
     private int recordedBy;
 
     private LocalDate attendanceDate;
@@ -23,8 +23,8 @@ public class AttendanceRecord {
      * Creates a new attendance record
      */
     public AttendanceRecord(
-            int courseId,
-            int studentId,
+            int courseID,
+            int studentID,
             int recordedBy,
 
             LocalDate attendanceDate,
@@ -32,9 +32,9 @@ public class AttendanceRecord {
             
             String notes
     ) {
-        this.attendanceId = 0;
-        setCourseId(courseId);
-        setStudentId(studentId);
+        this.attendanceID = 0;
+        setCourseID(courseID);
+        setStudentID(studentID);
         setRecordedBy(recordedBy);
 
         setAttendanceDate(attendanceDate);
@@ -48,9 +48,9 @@ public class AttendanceRecord {
      * Creates an attendance record read from the database.
      */
     public AttendanceRecord(
-            int attendanceId,
-            int courseId,
-            int studentId,
+            int attendanceID,
+            int courseID,
+            int studentID,
             int recordedBy,
 
             LocalDate attendanceDate,
@@ -59,9 +59,9 @@ public class AttendanceRecord {
             String notes,
             String updatedAt
     ){
-        setAttendanceId(attendanceId);
-        setCourseId(courseId);
-        setStudentId(studentId);
+        setAttendanceID(attendanceID);
+        setCourseID(courseID);
+        setStudentID(studentID);
         setRecordedBy(recordedBy);
 
         setAttendanceDate(attendanceDate);
@@ -71,34 +71,34 @@ public class AttendanceRecord {
         this.updatedAt = updatedAt;
     }
 
-    public void setAttendanceId(int attendanceId){
-        if (attendanceId < 0){
+    public void setAttendanceID(int attendanceID){
+        if (attendanceID < 0){
             throw new IllegalArgumentException(
                     "Attendance ID must be positive integer"
             );
         }
 
-        this.attendanceId = attendanceId;
+        this.attendanceID = attendanceID;
     }
 
-    public void setCourseId(int courseId){
-        if (courseId <= 0){
+    public void setCourseID(int courseID){
+        if (courseID <= 0){
             throw new IllegalArgumentException(
                     "Course ID must be positive integer"
             );
         }
 
-        this.courseId = courseId;
+        this.courseID = courseID;
     }
 
-    public void setStudentId(int studentId){
-        if (studentId <= 0){
+    public void setStudentID(int studentID){
+        if (studentID <= 0){
             throw new IllegalArgumentException(
                     "Student ID must be positive integer"
             );
         }
 
-        this.studentId = studentId;
+        this.studentID = studentID;
     }
 
     public void setRecordedBy(int recordedBy) {
@@ -139,16 +139,16 @@ public class AttendanceRecord {
         }
     }
 
-    public int getAttendanceId() {
-        return attendanceId;
+    public int getAttendanceID() {
+        return attendanceID;
     }
 
-    public int getCourseId() {
-        return courseId;
+    public int getCourseID() {
+        return courseID;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public int getStudentID() {
+        return studentID;
     }
 
     public int getRecordedBy() {
@@ -177,9 +177,9 @@ public class AttendanceRecord {
             return false;
         }
 
-        return getAttendanceId() == record.getAttendanceId()
-                && getCourseId() == record.getCourseId()
-                && getStudentId() == record.getStudentId()
+        return getAttendanceID() == record.getAttendanceID()
+                && getCourseID() == record.getCourseID()
+                && getStudentID() == record.getStudentID()
                 && getRecordedBy() == record.getRecordedBy()
                 && Objects.equals(
                         getAttendanceDate(),
@@ -196,9 +196,9 @@ public class AttendanceRecord {
     @Override
     public int hashCode() {
         return Objects.hash(
-                getAttendanceId(),
-                getCourseId(),
-                getStudentId(),
+                getAttendanceID(),
+                getCourseID(),
+                getStudentID(),
                 getRecordedBy(),
                 getAttendanceDate(),
                 getStatus(),
@@ -210,9 +210,9 @@ public class AttendanceRecord {
     @Override
     public String toString() {
         return "AttendanceRecord{"
-                + "attendanceId=" + attendanceId
-                + ", courseId=" + courseId
-                + ", studentId=" + studentId
+                + "attendanceID=" + attendanceID
+                + ", courseID=" + courseID
+                + ", studentID=" + studentID
                 + ", recordedBy=" + recordedBy
                 + ", attendanceDate=" + attendanceDate
                 + ", status=" + status
