@@ -78,10 +78,12 @@ public class Grade {
     }
 
     public void setScore(double score){
-        if(score < 0){
-            throw new IllegalArgumentException("Score cannot be negative");
+        if(score < 0 || Double.isNaN(score) || Double.isInfinite(score)){
+            throw new IllegalArgumentException(
+                    "Score must be a valid number zero or greater"
+            );
         }
-
+    
         this.score = score;
     }
 
