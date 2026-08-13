@@ -124,7 +124,7 @@ class GradeDaoTest{
                 gradeDao.findByAssignmentAndStudent(7, 14);
     
         assertTrue(result.isPresent());
-        
+
         assertEquals(7, result.get().getAssignmentID());
         assertEquals(14, result.get().getStudentID());
         assertEquals(92.5, result.get().getScore(), 0.001);
@@ -136,5 +136,60 @@ class GradeDaoTest{
                 gradeDao.findByAssignmentAndStudent(19, 28);
     
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void missingGradeID() throws SQLException{
+        assertTrue(gradeDao.findByID(527).isEmpty());
+        assertFalse(gradeDao.deleteByID(527));
+    }
+
+    @Test
+    void invalidGradeID() throws SQLException{
+        assertTrue(gradeDao.findByID(-19).isEmpty());
+        assertFalse(gradeDao.deleteByID(-64));
+    }
+
+    @Test
+    void unsavedGradeCannotUpdate(){
+        Grade grade = new Grade(19, 28, 67.5, "");
+    
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> gradeDao.update(grade)
+        );
+    }
+
+    @Test
+    void missingStudentCannotInsert(){
+        Grade grade = new Grade(19, 713, 74.5, "");
+    
+        assertThrows(
+                SQLException.class,
+                () -> gradeDao.insert(grade)
+        );
+    }
+
+    @Test
+    void missingAssignmentCannotInsert(){
+        Grade grade = new Grade(642, 28, 96.5, "");
+    
+        assertThrows(
+                SQLException.class,
+                () -> gradeDao.insert(grade)
+        );
+    }
+
+    @Test
+    void invalidAssignmentAndStudentLookup(){
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> gradeDao.findByAssignmentAndStudent(-12, 28)
+        );
+    
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> gradeDao.findByAssignmentAndStudent(19, -27)
+        );
     }
 }
