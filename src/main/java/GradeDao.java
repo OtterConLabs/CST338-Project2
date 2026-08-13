@@ -27,15 +27,15 @@ public class GradeDao {
         requireGrade(grade);
 
         String sql = """
-                INSERT INTO grades (
-                    assignment_id,
-                    student_id,
-                    score,
-                    feedback
-                )
+                     INSERT INTO grades (
+                        assignment_id,
+                        student_id,
+                        score,
+                        feedback
+                     )
                 
-                VALUES (?, ?, ?, ?)
-                """;
+                     VALUES (?, ?, ?, ?)
+                     """;
         
         try(PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             statement.setInt(1, grade.getAssignmentID());
@@ -134,6 +134,43 @@ public class GradeDao {
             }
         }
 
+        public Optional<Grade> findByAssignmentAndStudent(
+                int assignmentID,
+                int studentID
+        ) throws SQLException{
+            if(assignmentID <= 0 || studentID <= 0){
+                throw new IllegalArgumentException(
+                        "Assignment and Student IDs must be positive integers"
+                );
+            }
+
+            String sql = """
+                         SELECT
+                            grade_id,
+                            assignment_id,
+                            student_id,
+                            score,
+                            feedback,
+                            graded_at,
+                            updated_at
+                         FROM grades
+                         WHERE assignment_id = ? AND student_id = ?
+                         """;
+
+            try(PreparedStatement statement = connection.prepareStatement(sql)){
+                statement.setInt(1, assignmentID);
+                statement.setInt(2, studentID);
+
+                try(ResultSet resultSet = statement.executeQuery()){
+                    if(resultSet.next()){
+                        return Optional.of(mapGrade(resultSet));
+                    }
+
+                    return Optional.empty();
+                }
+            }
+        }
+
             public boolean update(Grade grade) throws SQLException{
                 requireGrade(grade);
 
@@ -142,17 +179,19 @@ public class GradeDao {
                 }
 
                 String sql = """
-                        UPDATE grades
-                        SET
-                            score = ?,
-                            feedback = ?,
-                            updated_at = datetime('now')
-                        WHERE grade_id = ?
-                        """;
+                             UPDATE grades
+                             SET
+                                score = ?,
+                                feedback = ?,
+                                updated_at = datetime('now')
+                             WHERE grade_id = ?
+                             """;
                 
                 try(PreparedStatement statement = connection.prepareStatement(sql)){
                     statement.setDouble(1, grade.getScore());
+                    
                     statement.setString(2, grade.getFeedback());
+                   
                     statement.setInt(3, grade.getGradeID());
 
                     return statement.executeUpdate() == 1;
@@ -165,9 +204,9 @@ public class GradeDao {
                 }
 
                 String sql = """
-                        DELETE FROM grades
-                        WHERE grade_id = ?
-                        """;
+                             DELETE FROM grades
+                             WHERE grade_id = ?
+                             """;
                 
                 try(PreparedStatement statement = connection.prepareStatement(sql)){
                     statement.setInt(1, gradeID);

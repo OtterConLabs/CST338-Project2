@@ -114,4 +114,27 @@ class GradeDaoTest{
         assertTrue(gradeDao.deleteByID(gradeID));
         assertTrue(gradeDao.findByID(gradeID).isEmpty());
     }
+
+    @Test
+    void findGradeByAssignmentAndStudent() throws SQLException{
+        gradeDao.insert(new Grade(7, 14, 92.5, "Good"));
+        gradeDao.insert(new Grade(7, 28, 81.0, ""));
+    
+        Optional<Grade> result =
+                gradeDao.findByAssignmentAndStudent(7, 14);
+    
+        assertTrue(result.isPresent());
+        
+        assertEquals(7, result.get().getAssignmentID());
+        assertEquals(14, result.get().getStudentID());
+        assertEquals(92.5, result.get().getScore(), 0.001);
+    }
+    
+    @Test
+    void missingGradeByAssignmentAndStudent() throws SQLException{
+        Optional<Grade> result =
+                gradeDao.findByAssignmentAndStudent(19, 28);
+    
+        assertTrue(result.isEmpty());
+    }
 }
