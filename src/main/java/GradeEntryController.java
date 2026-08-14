@@ -508,13 +508,18 @@ public class GradeEntryController{
 
             row.setGrade(null);
 
+            gradeTable.refresh();
+            gradeTable.getSelectionModel().clearSelection();
+            
             scoreField.clear();
             feedbackField.clear();
-
+            
             deleteButton.setDisable(true);
-
+            
             gradeMessageLabel.setText(
-                "Deleted grade for " + studentName
+                "Deleted grade for "
+                + studentName
+                + ". Student remains in roster."
             );
 
         }catch(SQLException e){
