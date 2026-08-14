@@ -14,8 +14,8 @@
 | 1 — Accounts             | Yoko Mohr        | yokocsumb       | #2, #3, #5, #6, #8, #14, #30, #37, #41 | yoko/javafx_app, yoko/SQLite_database_structure, yoko/database-singleton, yoko/login-fxml, yoko/account-fxml-crud, yoko/FXML-dashboard-setup, yoko/test-UserDao,yoko/account-feature       | #4, #12, #15, #19, #20, #31, #39, #42, #46, #56 | Profile editing with password validation                                | complete  |
 | 2 — Courses & Enrollment | Brent Brewington | Brewsdawg       | #48                                    | bbrewington/project2-updates, bbrewington/Course-User-Updates, bbrewington/Course-and-Enrollment-Enhancements, bbrewington/Course-Enrollment-Complete, bbrewington/SceneType-Course-edit | #21, #44, #47, #55, #57, #60, #61               | TableView / ListView populated with live data                           | complete  |
 | 3 — Assignments          | Jordan Browning  | jbrowning-otter | #13, #16, #17                          | jordan/assignment-dao, jordan/assignment-list-scene, jordan/assignment-form-scene                                                                                                          | #43, #45, #59                                   | Data Binding using ObservableList                                       | Completed |
-| 4 — Grades               | Jit Tran         | jtcsumb         | #24, #25, #26                          | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics                                                                                                                     |                                                 | Data binding using ObservableList and JavaFX properties                 | planned   |
-| 5 — Attendance           | Jit Tran         | jtcsumb         | #27, #28, #29                          | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report                                                                                                               |                                                 | Notifications for overwrite confirmation, saves, and CSV export results | planned   |
+| 4 — Grades               | Jit Tran         | jtcsumb         | #24, #25, #26                          | jtcsumb/grade-dao, jtcsumb/grade-entry-scene, jtcsumb/grade-statistics                                                                                                                     |                                                 | Data binding using ObservableList and JavaFX properties                 | complete   | #51, #52, #69, #70, #72, #73
+| 5 — Attendance           | Jit Tran         | jtcsumb         | #27, #28, #29                          | jtcsumb/attendance-dao, jtcsumb/attendance-roster, jtcsumb/attendance-report                                                                                                               |                                                 | Notifications for overwrite confirmation, saves | complete   | #71, #74
 
 *Status values: planned · in-progress · complete*
 
@@ -40,7 +40,7 @@ Work is assigned to Brewsdawg, labeled (slice-2, testing, enhancement as appropr
 | 2 — Courses & Enrollment | Course sections, Enrollment waitlists, Course capacity limits        |
 | 3 — Assignments          | Due-date reminders, File attachments, Weighted assignment categories |
 | 4 — Grades & Statistics  | Weighted-category grade calculations, GPA calculation                |
-| 5 — Attendance & Reports | Calendar view, Email notifications                                   |
+| 5 — Attendance & Reports | Calendar view, Email notifications, CSV export results                                   |
 
 ---
 
