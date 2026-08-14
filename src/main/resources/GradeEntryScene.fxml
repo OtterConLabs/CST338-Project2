@@ -2,9 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -34,18 +36,39 @@
     <children>
         <Label text="Grades &amp; Statistics">
             <font>
-                <Font name="System Bold" size="18.0" />
+                <Font name="System Bold"
+                      size="18.0" />
             </font>
         </Label>
 
-        <Label text="Grade records will appear in this table.">
+        <HBox alignment="CENTER_LEFT"
+              spacing="8.0">
+            <children>
+                <Label text="Course:" />
+
+                <ComboBox fx:id="courseComboBox"
+                          maxWidth="1.7976931348623157E308"
+                          promptText="Select a course"
+                          HBox.hgrow="ALWAYS" />
+
+                <Label text="Assignment:" />
+
+                <ComboBox fx:id="assignmentComboBox"
+                          maxWidth="1.7976931348623157E308"
+                          promptText="Select an assignment"
+                          HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+
+        <Label fx:id="gradeMessageLabel"
+               text="Grade records will appear in this table."
+               wrapText="true">
             <font>
                 <Font size="14.0" />
             </font>
         </Label>
 
         <TableView fx:id="gradeTable"
-                   prefHeight="250.0"
                    VBox.vgrow="ALWAYS">
             <placeholder>
                 <Label text="No grades to display." />
@@ -53,24 +76,60 @@
 
             <columns>
                 <TableColumn fx:id="studentIDColumn"
-                             prefWidth="150.0"
+                             prefWidth="100.0"
                              text="Student ID" />
+
+                <TableColumn fx:id="studentNameColumn"
+                             prefWidth="150.0"
+                             text="Student Name" />
 
                 <TableColumn fx:id="scoreColumn"
                              prefWidth="100.0"
                              text="Score" />
 
                 <TableColumn fx:id="feedbackColumn"
-                             prefWidth="250.0"
+                             prefWidth="150.0"
                              text="Feedback" />
             </columns>
         </TableView>
 
+        <HBox alignment="CENTER_LEFT"
+              spacing="8.0">
+            <children>
+                <Label text="Score:" />
+
+                <TextField fx:id="scoreField"
+                           prefWidth="100.0"
+                           promptText="Enter score" />
+
+                <Label text="Feedback:" />
+
+                <TextField fx:id="feedbackField"
+                           maxWidth="1.7976931348623157E308"
+                           promptText="Optional feedback"
+                           HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+
         <HBox alignment="CENTER"
               minWidth="100.0"
               prefHeight="40.0"
-              prefWidth="100.0">
+              prefWidth="100.0"
+              spacing="10.0">
             <children>
+                <Button fx:id="saveButton"
+                        defaultButton="true"
+                        mnemonicParsing="false"
+                        onAction="#handleSave"
+                        prefWidth="100.0"
+                        text="Save Grade" />
+
+                <Button fx:id="deleteButton"
+                        mnemonicParsing="false"
+                        onAction="#handleDelete"
+                        prefWidth="100.0"
+                        text="Delete Grade" />
+
                 <Button fx:id="backButton"
                         mnemonicParsing="false"
                         onAction="#handleBack"
