@@ -478,6 +478,56 @@ public class SceneFactory {
         }
     }
 
+    public static Scene createGradeStatisticsScene(
+            Stage stage,
+            Assignment assignment
+    ) {
+        if (assignment == null) {
+            throw new IllegalArgumentException(
+                "Assignment cannot be null"
+            );
+        }
+    
+        if (assignment.getAssignmentId() <= 0) {
+            throw new IllegalArgumentException(
+                "Assignment must be saved before viewing statistics"
+            );
+        }
+    
+        URL resource = SceneFactory.class.getResource(
+                "/StatisticsScene.fxml"
+        );
+    
+        if (resource == null) {
+            throw new IllegalStateException(
+                "StatisticsScene.fxml not found"
+            );
+        }
+    
+        try {
+            FXMLLoader loader = new FXMLLoader(resource);
+    
+            Parent root = loader.load();
+    
+            StatisticsController controller =
+                loader.getController();
+    
+            controller.setStage(stage);
+            controller.prepareForAssignment(assignment);
+    
+            return new Scene(
+                root,
+                SCENE_WIDTH,
+                SCENE_HEIGHT
+            );
+    
+        } catch (IOException e) {
+            throw new RuntimeException(
+                "Load failed: StatisticsScene.fxml", e
+            );
+        }
+    }
+
     private static Scene buildGradeEntryScene(Stage stage) {
         URL resource = SceneFactory.class.getResource("/GradeEntryScene.fxml");
     

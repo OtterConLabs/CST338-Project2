@@ -530,6 +530,26 @@ public class GradeEntryController{
     }
 
     @FXML
+    private void handleStatistics(){
+        Assignment assignment = assignmentComboBox.getValue();
+    
+        if(assignment == null){
+            gradeMessageLabel.setText("Select an assignment");
+    
+            return;
+        }
+    
+        if(stage == null){
+            throw new IllegalStateException("Stage not set");
+        }
+    
+        stage.setScene(
+            SceneFactory.createGradeStatisticsScene(stage, assignment)
+
+        );
+    }
+
+    @FXML
     private void handleBack(){
         if(stage == null){
             throw new IllegalStateException(
