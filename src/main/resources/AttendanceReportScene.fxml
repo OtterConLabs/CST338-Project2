@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="attendanceReportRoot"
+      id="attendanceReportRoot"
+      alignment="TOP_CENTER"
+      prefHeight="400.0"
+      prefWidth="600.0"
+      spacing="8.0"
+      xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="AttendanceReportController">
+
+    <padding>
+        <Insets bottom="20.0"
+                left="30.0"
+                right="30.0"
+                top="20.0" />
+    </padding>
+
+    <children>
+        <Label text="Attendance Report">
+            <font>
+                <Font name="System Bold"
+                      size="18.0" />
+            </font>
+        </Label>
+
+        <HBox alignment="CENTER_LEFT"
+              spacing="8.0">
+            <children>
+                <Label text="Course:" />
+
+                <ComboBox fx:id="courseComboBox"
+                          maxWidth="1.7976931348623157E308"
+                          promptText="Select a course"
+                          HBox.hgrow="ALWAYS" />
+
+                <Label text="Student:" />
+
+                <ComboBox fx:id="studentComboBox"
+                          prefWidth="120.0"
+                          promptText="All students" />
+
+                <Label text="Status:" />
+
+                <ComboBox fx:id="statusComboBox"
+                          prefWidth="95.0"
+                          promptText="All" />
+            </children>
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT"
+              spacing="8.0">
+            <children>
+                <Label text="From:" />
+
+                <DatePicker fx:id="startDatePicker"
+                            prefWidth="120.0"
+                            promptText="Start date" />
+
+                <Label text="To:" />
+
+                <DatePicker fx:id="endDatePicker"
+                            prefWidth="120.0"
+                            promptText="End date" />
+
+                <Button mnemonicParsing="false"
+                        onAction="#handleApplyFilters"
+                        prefWidth="100.0"
+                        text="Apply Filters" />
+
+                <Button mnemonicParsing="false"
+                        onAction="#handleClear"
+                        prefWidth="65.0"
+                        text="Clear" />
+            </children>
+        </HBox>
+
+        <HBox alignment="CENTER"
+              spacing="8.0">
+            <children>
+                <Label text="Present:" />
+                <Label fx:id="presentCountLabel" text="0" />
+
+                <Label text="Absent:" />
+                <Label fx:id="absentCountLabel" text="0" />
+
+                <Label text="Late:" />
+                <Label fx:id="lateCountLabel" text="0" />
+
+                <Label text="Excused:" />
+                <Label fx:id="excusedCountLabel" text="0" />
+
+                <Label text="Rate:" />
+                <Label fx:id="attendanceRateLabel" text="N/A" />
+            </children>
+        </HBox>
+
+        <Label fx:id="reportMessageLabel"
+               text="Set optional filters, then apply filters."
+               wrapText="true">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+
+        <TableView fx:id="reportTable"
+                   VBox.vgrow="ALWAYS">
+            <placeholder>
+                <Label text="No attendance records match these filters." />
+            </placeholder>
+
+            <columns>
+                <TableColumn fx:id="dateColumn"
+                             prefWidth="75.0"
+                             text="Date" />
+
+                <TableColumn fx:id="studentColumn"
+                             prefWidth="135.0"
+                             text="Student" />
+
+                <TableColumn fx:id="statusColumn"
+                             prefWidth="85.0"
+                             text="Status" />
+
+                <TableColumn fx:id="notesColumn"
+                             prefWidth="135.0"
+                             text="Notes" />
+
+                <TableColumn fx:id="recordedByColumn"
+                             prefWidth="105.0"
+                             text="Recorded By" />
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER"
+              prefHeight="40.0"
+              spacing="10.0">
+            <children>
+                <Button mnemonicParsing="false"
+                        onAction="#handleBack"
+                        prefWidth="150.0"
+                        text="Back to Attendance" />
+            </children>
+        </HBox>
+    </children>
+</VBox>

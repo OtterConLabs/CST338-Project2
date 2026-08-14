@@ -169,6 +169,122 @@ public class AttendanceDao {
         return records;
     }
 
+    public List<AttendanceReportRow> findReport(
+        int courseID,
+
+        Integer studentID,
+
+        LocalDate startDate,
+        LocalDate endDate,
+
+        AttendanceStatus status
+    ) throws SQLException{
+        if(courseID <= 0){
+            throw new IllegalArgumentException(
+                "Course ID must be a positive integer"
+            );
+        }
+
+        if(studentID != null && studentID <= 0){
+            throw new IllegalArgumentException(
+                "Student ID must be a positive integer"
+            );
+        }
+
+        StringBuilder sql = new StringBuilder(
+            """
+            SELECT
+                a.attendance_id,
+                a.course_id,
+                a.student_id,
+                a.recorded_by,
+                a.attendance_date,
+                a.status,
+                a.notes,
+                a.updated_at,
+                student_user.first_name || ' '
+                    || student_user.last_name AS student_name,
+                recorder_user.first_name || ' '
+                    || recorder_user.last_name AS recorded_by_name
+            FROM attendance a
+            JOIN users student_user
+                ON student_user.id = a.student_id
+            JOIN users recorder_user
+                ON recorder_user.id = a.recorded_by
+            WHERE a.course_id = ?
+            """);
+
+        if(studentID != null){
+            sql.append(" AND a.student_id = ?");
+        }
+
+        if(startDate != null){
+            sql.append(" AND a.attendance_date >= ?");
+        }
+
+        if(endDate != null){
+            sql.append(" AND a.attendance_date <= ?");
+        }
+
+        if(status != null){
+            sql.append(" AND a.status = ?");
+        }
+
+        sql.append(
+            """
+            ORDER BY
+                a.attendance_date,
+                student_user.last_name,
+                student_user.first_name
+            """);
+
+        List<AttendanceReportRow> reportRows = new ArrayList<>();
+
+        try(PreparedStatement statement =
+            connection.prepareStatement(sql.toString())){
+                int parameterIndex = 1;
+                statement.setInt(parameterIndex++, courseID);
+
+                if(studentID != null){
+                    statement.setInt(
+                    parameterIndex++,
+                    studentID
+                );
+                }
+
+                if(startDate != null){
+                    statement.setString(
+                        parameterIndex++,
+                        startDate.toString()
+                    );
+                }
+
+                if(endDate != null){
+                    statement.setString(
+                        parameterIndex++,
+                        endDate.toString()
+                );
+                }
+
+                if(status != null){
+                    statement.setString(
+                        parameterIndex,
+                        status.name()
+                    );
+                }
+
+                try(ResultSet resultSet = statement.executeQuery()){
+                    while(resultSet.next()){
+                        reportRows.add(
+                            mapReportRow(resultSet)
+                    );
+                }
+            }
+        }
+
+        return reportRows;
+    }
+
     public boolean update(
             AttendanceRecord record
     ) throws SQLException{
@@ -239,6 +355,16 @@ public class AttendanceDao {
         );
     }
 
+    private AttendanceReportRow mapReportRow(
+        ResultSet resultSet
+    ) throws SQLException{
+        return new AttendanceReportRow(
+            mapAttendance(resultSet),
+            resultSet.getString("student_name"),
+            resultSet.getString("recorded_by_name")
+        );
+    }
+    
     private void requireAttendance(
             AttendanceRecord record
     ){

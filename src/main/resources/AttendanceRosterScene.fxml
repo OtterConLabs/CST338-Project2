@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!--
+    OtterCon Labs Project2: Attendance Slice 5
+    Author: Jit Tran
+    Since: 08/14/2026
+-->
+<VBox fx:id="attendanceRosterRoot"
+      id="attendanceRosterRoot"
+      alignment="TOP_CENTER"
+      prefHeight="400.0"
+      prefWidth="600.0"
+      spacing="8.0"
+      xmlns="http://javafx.com/javafx/25"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="AttendanceRosterController">
+
+    <padding>
+        <Insets bottom="20.0"
+                left="30.0"
+                right="30.0"
+                top="20.0" />
+    </padding>
+
+    <children>
+        <Label text="Attendance &amp; Reports">
+            <font>
+                <Font name="System Bold"
+                      size="18.0" />
+            </font>
+        </Label>
+
+        <HBox alignment="CENTER_LEFT"
+              spacing="8.0">
+            <children>
+                <Label text="Course:" />
+
+                <ComboBox fx:id="courseComboBox"
+                          maxWidth="1.7976931348623157E308"
+                          promptText="Select a course"
+                          HBox.hgrow="ALWAYS" />
+
+                <Label text="Date:" />
+
+                <DatePicker fx:id="attendanceDatePicker"
+                            promptText="Select a date" />
+            </children>
+        </HBox>
+
+        <HBox alignment="CENTER"
+              spacing="10.0">
+            <children>
+                <Button fx:id="loadRosterButton"
+                        mnemonicParsing="false"
+                        onAction="#handleLoadRoster"
+                        prefWidth="100.0"
+                        text="Load Roster" />
+
+                <Button fx:id="markAllPresentButton"
+                        mnemonicParsing="false"
+                        onAction="#handleMarkAllPresent"
+                        prefWidth="110.0"
+                        text="Mark All Present" />
+
+                <Button fx:id="applyButton"
+                        mnemonicParsing="false"
+                        onAction="#handleApply"
+                        prefWidth="105.0"
+                        text="Apply Changes" />
+
+                <Button mnemonicParsing="false"
+                        onAction="#handleReset"
+                        prefWidth="75.0"
+                        text="Reset" />
+            </children>
+        </HBox>
+
+        <Label fx:id="attendanceMessageLabel"
+               text="Select a course and date, then load a roster."
+               wrapText="true">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
+
+        <TableView fx:id="attendanceTable"
+                   VBox.vgrow="ALWAYS">
+            <placeholder>
+                <Label text="No students to display." />
+            </placeholder>
+
+            <columns>
+                <TableColumn fx:id="studentIDColumn"
+                             prefWidth="90.0"
+                             text="Student ID" />
+
+                <TableColumn fx:id="studentNameColumn"
+                             prefWidth="150.0"
+                             text="Student Name" />
+
+                <TableColumn fx:id="statusColumn"
+                             prefWidth="110.0"
+                             text="Status" />
+
+                <TableColumn fx:id="notesColumn"
+                             prefWidth="150.0"
+                             text="Notes" />
+            </columns>
+        </TableView>
+
+        <HBox alignment="CENTER_LEFT"
+              spacing="8.0">
+            <children>
+                <Label text="Status:" />
+
+                <ComboBox fx:id="statusComboBox"
+                          prefWidth="120.0"
+                          promptText="Select status" />
+
+                <Label text="Notes:" />
+
+                <TextField fx:id="notesField"
+                           maxWidth="1.7976931348623157E308"
+                           promptText="Optional notes"
+                           HBox.hgrow="ALWAYS" />
+            </children>
+        </HBox>
+
+        <HBox alignment="CENTER"
+              prefHeight="40.0"
+              spacing="10.0">
+            <children>
+                <Button fx:id="saveButton"
+                        defaultButton="true"
+                        mnemonicParsing="false"
+                        onAction="#handleSave"
+                        prefWidth="130.0"
+                        text="Save Attendance" />
+
+                <Button fx:id="deleteButton"
+                        mnemonicParsing="false"
+                        onAction="#handleDelete"
+                        prefWidth="120.0"
+                        text="Delete Record" />
+                
+                <Button mnemonicParsing="false"
+                        onAction="#handleViewReport"
+                        prefWidth="105.0"
+                        text="View Report" />
+
+                <Button fx:id="backButton"
+                        mnemonicParsing="false"
+                        onAction="#handleBack"
+                        prefWidth="140.0"
+                        text="Back to Dashboard" />
+            </children>
+        </HBox>
+    </children>
+</VBox>
