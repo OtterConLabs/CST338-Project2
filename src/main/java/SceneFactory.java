@@ -504,22 +504,61 @@ public class SceneFactory {
         }
     }
 
-    private static Scene buildAttendanceScene(Stage stage) {
-        //TODO Jit:
-        return buildPlaceholderScene("Attendance", stage);
+    public static Scene createAttendanceReportScene(Stage stage){
+        URL resource = SceneFactory.class.getResource(
+            "/AttendanceReportScene.fxml"
+        );
+    
+        if(resource == null){
+            throw new IllegalStateException(
+                "AttendanceReportScene.fxml not found"
+            );
+        }
+    
+        try{
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent root = loader.load();
+            Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
+    
+            AttendanceReportController controller =
+                loader.getController();
+            controller.setStage(stage);
+    
+            return scene;
+        }catch(IOException e){
+            throw new RuntimeException(
+                "Load failed: AttendanceReportScene.fxml", e);
+        }
     }
 
-    private static Scene buildPlaceholderScene(String sceneTitle, Stage stage) {
-        Label label = new Label(sceneTitle);
-        Button backButton = new Button("Back to Dashboard");
-
-        backButton.setOnAction(event ->
-                stage.setScene(create(SceneType.DASHBOARD, stage))
+    private static Scene buildAttendanceScene(Stage stage) {
+        URL resource = SceneFactory.class.getResource(
+                "/AttendanceRosterScene.fxml"
         );
-
-        VBox layout = new VBox(16, label, backButton);
-        layout.setAlignment(Pos.CENTER);
-
-        return new Scene(layout, SCENE_WIDTH, SCENE_HEIGHT);
+    
+        if(resource == null){
+            throw new IllegalStateException(
+                "AttendanceRosterScene.fxml not found"
+            );
+        }
+    
+        try{
+            FXMLLoader loader = new FXMLLoader(resource);
+    
+            Parent root = loader.load();
+            Scene scene = new Scene(root, SCENE_WIDTH, SCENE_HEIGHT);
+    
+            AttendanceRosterController controller =
+                loader.getController();
+    
+            controller.setStage(stage);
+    
+            return scene;
+    
+        }catch(IOException e){
+            throw new RuntimeException(
+                "Load failed: AttendanceRosterScene.fxml", e
+            );
+        }
     }
 }

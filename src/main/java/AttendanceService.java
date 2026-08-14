@@ -150,8 +150,145 @@ public class AttendanceService{
         return attendance;
     }
 
+    public List<AttendanceReportRow> getAttendanceReport(
+        Course course,
+        User teacher,
+        Integer studentID,
+        LocalDate startDate,
+        LocalDate endDate,
+        AttendanceStatus status
+    ) throws SQLException{
+        if(course == null){
+            throw new IllegalArgumentException(
+                "Select a course"
+            );
+        }
+
+        if(teacher == null){
+            throw new IllegalArgumentException(
+                "Log in as a teacher to view attendance reports"
+            );
+        }
+
+        if(course.getCourseId() <= 0){
+            throw new IllegalArgumentException(
+                "Course must be saved before viewing reports"
+            );
+        }
+
+        if(teacher.getId() <= 0){
+            throw new IllegalArgumentException(
+                "Teacher must be saved before viewing reports"
+            );
+        }
+
+        if(teacher.getRole() != UserRole.TEACHER){
+            throw new IllegalArgumentException(
+                "Only teachers can view attendance reports"
+            );
+        }
+
+        if(course.getTeacherId() != teacher.getId()){
+            throw new IllegalArgumentException(
+                "You can only view reports for courses you teach"
+            );
+        }
+
+        if(studentID != null && studentID <= 0){
+            throw new IllegalArgumentException(
+                "Student ID must be positive integer"
+            );
+        }
+
+        validateDateRange(startDate, endDate);
+
+        return attendanceDao.findReport(
+            course.getCourseId(),
+            studentID,
+            startDate,
+            endDate,
+            status
+        );
+    }
+
+    public void validateDateRange(
+        LocalDate startDate,
+        LocalDate endDate
+    ){
+        if(startDate != null
+            && endDate != null
+            && startDate.isAfter(endDate)){
+        throw new IllegalArgumentException(
+            "Start date cannot be after end date"
+        );
+        }
+    }
+
+    public AttendanceSummary calculateAttendanceSummary(
+        List<AttendanceReportRow> reportRows
+    ){
+        if(reportRows == null){
+            throw new IllegalArgumentException(
+                "Attendance report rows cannot be null"
+            );
+        }
+
+        int presentCount = 0;
+        int absentCount = 0;
+        int lateCount = 0;
+        int excusedCount = 0;
+
+        for(AttendanceReportRow row : reportRows){
+            if(row == null){
+                throw new IllegalArgumentException(
+                    "Attendance report row cannot be null"
+                );
+            }
+
+            switch(row.getStatus()){
+                case PRESENT:
+                    presentCount++;
+                    break;
+
+                case ABSENT:
+                    absentCount++;
+                    break;
+
+                case LATE:
+                    lateCount++;
+                    break;
+
+                case EXCUSED:
+                    excusedCount++;
+                    break;
+            }
+        }
+
+        int denominator =
+                presentCount
+                + lateCount
+                + absentCount;
+
+        double attendanceRate = Double.NaN;
+
+        if(denominator > 0){
+            attendanceRate =
+                (presentCount + lateCount)
+                * 100.0
+                / denominator;
+        }
+
+        return new AttendanceSummary(
+            presentCount,
+            absentCount,
+            lateCount,
+            excusedCount,
+            attendanceRate
+        );
+    }
+
     public boolean deleteAttendance(
-            AttendanceRecord attendance
+        AttendanceRecord attendance
     ) throws SQLException{
         if(attendance == null || attendance.getAttendanceID() <= 0){
             return false;

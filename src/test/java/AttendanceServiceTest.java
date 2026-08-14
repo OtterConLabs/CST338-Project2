@@ -11,6 +11,7 @@ import java.sql.Statement;
 
 import java.time.LocalDate;
 
+import java.util.List;
 /**
  * Tests AttendanceService with SQLite database.
  *
@@ -320,6 +321,129 @@ class AttendanceServiceTest {
                 attendanceDao.findByID(
                         attendance.getAttendanceID()
                 ).isEmpty()
+        );
+    }
+
+    @Test
+    void attendanceSummaryCalculatesRate(){
+        List<AttendanceReportRow> reportRows = List.of(
+                reportRow(AttendanceStatus.PRESENT),
+                reportRow(AttendanceStatus.PRESENT),
+                reportRow(AttendanceStatus.LATE),
+                reportRow(AttendanceStatus.ABSENT),
+                reportRow(AttendanceStatus.EXCUSED)
+        );
+
+        AttendanceSummary summary =
+                attendanceService.calculateAttendanceSummary(
+                        reportRows
+                );
+
+        assertEquals(2, summary.getPresentCount());
+        assertEquals(1, summary.getLateCount());
+        assertEquals(1, summary.getAbsentCount());
+        assertEquals(1, summary.getExcusedCount());
+        assertTrue(summary.hasAttendanceRate());
+        assertEquals(
+                75.0,
+                summary.getAttendanceRate(),
+                0.001
+        );
+    }
+
+    @Test
+    void onlyExcusedRecordsHaveNoAttendanceRate(){
+        List<AttendanceReportRow> reportRows = List.of(
+                reportRow(AttendanceStatus.EXCUSED),
+                reportRow(AttendanceStatus.EXCUSED)
+        );
+
+        AttendanceSummary summary =
+                attendanceService.calculateAttendanceSummary(
+                        reportRows
+                );
+
+        assertEquals(2, summary.getExcusedCount());
+        assertFalse(summary.hasAttendanceRate());
+        assertEquals("N/A", summary.getAttendanceRateText());
+    }
+
+    @Test
+    void emptyRecordsHaveNoAttendanceRate(){
+        AttendanceSummary summary =
+                attendanceService.calculateAttendanceSummary(
+                        List.of()
+                );
+
+        assertEquals(0, summary.getPresentCount());
+        assertEquals(0, summary.getAbsentCount());
+        assertEquals(0, summary.getLateCount());
+        assertEquals(0, summary.getExcusedCount());
+        assertFalse(summary.hasAttendanceRate());
+        assertEquals("N/A", summary.getAttendanceRateText());
+    }
+
+    @Test
+    void reportWithMissingCourseIsRejected(){
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> attendanceService.getAttendanceReport(
+                        null,
+                        teacher,
+                        null,
+                        null,
+                        null,
+                        null
+                )
+        );
+    }
+
+    @Test
+    void reportWithDateRangeInWrongOrderIsRejected(){
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> attendanceService.getAttendanceReport(
+                        course,
+                        teacher,
+                        null,
+                        LocalDate.of(2026, 8, 15),
+                        LocalDate.of(2026, 8, 14),
+                        null
+                )
+        );
+    }
+
+    @Test
+    void reportForCourseNotOwnedByTeacherIsRejected(){
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> attendanceService.getAttendanceReport(
+                        course,
+                        otherTeacher,
+                        null,
+                        null,
+                        null,
+                        null
+                )
+        );
+    }
+
+    private AttendanceReportRow reportRow(
+            AttendanceStatus status
+    ){
+        AttendanceRecord attendance = new AttendanceRecord(
+                12,
+                47,
+                1,
+                attendanceDate,
+                status,
+                ""
+        );
+
+        return new AttendanceReportRow(
+                attendance,
+                "Jordan Student",
+                "Brent Teacher"
         );
     }
 }

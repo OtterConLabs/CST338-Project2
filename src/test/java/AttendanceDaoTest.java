@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 
 import java.util.Optional;
+import java.util.List;
 
 /**
  * Tests AttendanceDao with SQLite database
@@ -179,6 +180,185 @@ class AttendanceDaoTest {
                     attendanceDao.findByID(
                             attendanceID
                     ).isEmpty()
+            );
+        }
+    }
+
+    @Test
+    void findReportFiltersAttendance() throws SQLException{
+        try(Connection connection = DriverManager.getConnection(
+                "jdbc:sqlite::memory:")){
+            try(Statement setup = connection.createStatement()){
+                setup.execute("PRAGMA foreign_keys = ON");
+
+                setup.execute("""
+                              CREATE TABLE users (
+                                  id INTEGER PRIMARY KEY,
+                                  first_name TEXT NOT NULL,
+                                  last_name TEXT NOT NULL
+                              )
+                              """);
+
+                setup.execute("""
+                              CREATE TABLE courses (
+                                  course_id INTEGER PRIMARY KEY
+                              )
+                              """);
+
+                setup.execute("""
+                              INSERT INTO users VALUES
+                              (1, 'Brent', 'Teacher'),
+                              (19, 'Jit', 'Student'),
+                              (47, 'Jordan', 'Student'),
+                              (83, 'Yoko', 'Student')
+                              """);
+
+                setup.execute("INSERT INTO courses VALUES (12)");
+                setup.execute("INSERT INTO courses VALUES (13)");
+            }
+
+            AttendanceSchema.create(connection);
+
+            AttendanceDao attendanceDao =
+                    new AttendanceDao(connection);
+
+            attendanceDao.insert(
+                    new AttendanceRecord(
+                            12,
+                            47,
+                            1,
+                            LocalDate.of(2026, 8, 10),
+                            AttendanceStatus.PRESENT,
+                            "On time"
+                    )
+            );
+
+            attendanceDao.insert(
+                    new AttendanceRecord(
+                            12,
+                            47,
+                            1,
+                            LocalDate.of(2026, 8, 11),
+                            AttendanceStatus.LATE,
+                            "Arrived late"
+                    )
+            );
+
+            attendanceDao.insert(
+                    new AttendanceRecord(
+                            12,
+                            83,
+                            1,
+                            LocalDate.of(2026, 8, 10),
+                            AttendanceStatus.ABSENT,
+                            "Sick"
+                    )
+            );
+
+            attendanceDao.insert(
+                    new AttendanceRecord(
+                            12,
+                            19,
+                            1,
+                            LocalDate.of(2026, 8, 12),
+                            AttendanceStatus.EXCUSED,
+                            "Approved absence"
+                    )
+            );
+
+            attendanceDao.insert(
+                    new AttendanceRecord(
+                            13,
+                            47,
+                            1,
+                            LocalDate.of(2026, 8, 10),
+                            AttendanceStatus.PRESENT,
+                            "Other course"
+                    )
+            );
+
+            assertEquals(
+                    4,
+                    attendanceDao.findReport(
+                            12,
+                            null,
+                            null,
+                            null,
+                            null
+                    ).size()
+            );
+
+            assertEquals(
+                    2,
+                    attendanceDao.findReport(
+                            12,
+                            47,
+                            null,
+                            null,
+                            null
+                    ).size()
+            );
+
+            assertEquals(
+                    1,
+                    attendanceDao.findReport(
+                            12,
+                            null,
+                            null,
+                            null,
+                            AttendanceStatus.ABSENT
+                    ).size()
+            );
+
+            assertEquals(
+                    2,
+                    attendanceDao.findReport(
+                            12,
+                            null,
+                            LocalDate.of(2026, 8, 11),
+                            LocalDate.of(2026, 8, 12),
+                            null
+                    ).size()
+            );
+
+            List<AttendanceReportRow> combinedFilter =
+                    attendanceDao.findReport(
+                            12,
+                            47,
+                            LocalDate.of(2026, 8, 11),
+                            LocalDate.of(2026, 8, 11),
+                            AttendanceStatus.LATE
+                    );
+
+            assertEquals(1, combinedFilter.size());
+            assertEquals(
+                    "Jordan Student",
+                    combinedFilter.get(0).getStudentName()
+            );
+            assertEquals(
+                    "Brent Teacher",
+                    combinedFilter.get(0).getRecordedByName()
+            );
+
+            assertTrue(
+                    attendanceDao.findReport(
+                            12,
+                            47,
+                            LocalDate.of(2026, 8, 12),
+                            LocalDate.of(2026, 8, 12),
+                            null
+                    ).isEmpty()
+            );
+
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> attendanceDao.findReport(
+                            0,
+                            null,
+                            null,
+                            null,
+                            null
+                    )
             );
         }
     }
