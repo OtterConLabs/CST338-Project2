@@ -1,5 +1,9 @@
 import java.sql.SQLException;
+
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Handles validation and saving for Grade Entry.
@@ -160,6 +164,121 @@ public class GradeService{
 
         return grade;
     }
+
+    public GradeStatistics calculateStatistics(
+        List<Grade> grades,
+
+        int pointsPossible,
+        int enrolledCount
+){
+    if(grades == null){
+        throw new IllegalArgumentException(
+            "Grades are required"
+        );
+    }
+
+    if(pointsPossible <= 0){
+        throw new IllegalArgumentException(
+            "Points possible must greater than zero"
+        );
+    }
+
+    if(enrolledCount < 0){
+        throw new IllegalArgumentException(
+                "Enrolled count must be greater than zero"
+        );
+    }
+
+    int gradedCount = grades.size();
+
+    int ungradedCount = Math.max(0, enrolledCount - gradedCount);
+
+    if(grades.isEmpty()){
+        return new GradeStatistics(
+            0,
+            ungradedCount,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        );
+    }
+
+    List<Double> percentages = new ArrayList<>();
+
+    double total = 0;
+
+    int below60Count = 0;
+    int sixtyToSixtyNineCount = 0;
+    int seventyToSeventyNineCount = 0;
+    int eightyToEightyNineCount = 0;
+    int ninetyToOneHundredCount = 0;
+
+    for(Grade grade : grades){
+        if(grade == null){
+            throw new IllegalArgumentException(
+                "Grade list cannot contain null"
+            );
+        }
+
+        double percentage = grade.getScore() / pointsPossible * 100.0;
+
+        percentages.add(percentage);
+        total += percentage;
+
+        if(percentage < 60){
+            below60Count++;
+        }else if(percentage < 70){
+            sixtyToSixtyNineCount++;
+        }else if(percentage < 80){
+            seventyToSeventyNineCount++;
+        }else if(percentage < 90){
+            eightyToEightyNineCount++;
+        }else{
+            ninetyToOneHundredCount++;
+        }
+    }
+
+    Collections.sort(percentages);
+
+    double mean = total / gradedCount;
+
+    int middle = gradedCount / 2;
+    double median;
+
+    if(gradedCount % 2 == 0){
+        median = (
+            percentages.get(middle - 1) + percentages.get(middle)
+        ) 
+        
+        / 2.0;
+    }else{
+        median = percentages.get(middle);
+    }
+
+    double minimum = percentages.get(0);
+
+    double maximum = percentages.get(percentages.size() - 1);
+
+    return new GradeStatistics(
+        gradedCount,
+        ungradedCount,
+        mean,
+        median,
+        minimum,
+        maximum,
+        below60Count,
+        sixtyToSixtyNineCount,
+        seventyToSeventyNineCount,
+        eightyToEightyNineCount,
+        ninetyToOneHundredCount
+    );
+}
 
     public boolean deleteGrade(Grade grade) throws SQLException{
         if(grade == null || grade.getGradeID() <= 0){
