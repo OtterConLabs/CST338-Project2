@@ -80,6 +80,9 @@ public class DatabaseManager {
 
         // Jit
         createGradesTable();
+
+        // Jit 
+        createAttendanceTable();
     }
 
     /**
@@ -154,9 +157,9 @@ private void createAssignmentsTable()
         );
     }
 }   
-    /*
-        @author Jit Tran
-        @since 08/05/2026
+    /**
+    * @author Jit Tran
+    * @since 08/05/2026
     */
     private void createGradesTable() {
         try {
@@ -164,6 +167,19 @@ private void createAssignmentsTable()
             System.out.println("Grades table ready");
         } catch(SQLException e){
             System.out.println("createGradesTable failed: " + e.getMessage());
+        }
+    }
+
+    /**
+    * @author Jit Tran
+    * @since 08/10/2026
+    */
+    private void createAttendanceTable() {
+        try {
+            AttendanceSchema.create(connection);
+            System.out.println("Attendance table ready");
+        } catch (SQLException e) {
+            System.out.println("createAttendanceTable failed: " + e.getMessage());
         }
     }
 
