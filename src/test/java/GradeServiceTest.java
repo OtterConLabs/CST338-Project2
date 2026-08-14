@@ -11,6 +11,8 @@ import java.sql.Statement;
 
 import java.time.LocalDate;
 
+import java.util.List;
+
 /**
  * Tests GradeService with SQLite database.
  *
@@ -304,6 +306,116 @@ class GradeServiceTest {
                 gradeDao.findByID(
                         grade.getGradeID()
                 ).isEmpty()
+        );
+    }
+
+    @Test
+    void emptyGradesReturnEmptyStatistics(){
+        GradeStatistics statistics =
+                gradeService.calculateStatistics(List.of(), 100, 4);
+
+        assertFalse(statistics.hasGrades());
+        assertEquals(0, statistics.getGradedCount());
+        assertEquals(4, statistics.getUngradedCount());
+    }
+
+    @Test
+    void statisticsUsePercentagesAndCountUngradedStudents(){
+        List<Grade> grades = List.of(
+                new Grade(36, 47, 55, ""),
+                new Grade(36, 83, 65, ""),
+                new Grade(36, 19, 75, ""),
+                new Grade(36, 64, 85, ""),
+                new Grade(36, 28, 95, "")
+        );
+
+        GradeStatistics statistics =
+                gradeService.calculateStatistics(
+                        grades,
+                        100,
+                        7
+                );
+
+        assertTrue(statistics.hasGrades());
+
+        assertEquals(5, statistics.getGradedCount());
+        assertEquals(2, statistics.getUngradedCount());
+        assertEquals(75.0, statistics.getMean(), 0.001);
+        assertEquals(75.0, statistics.getMedian(), 0.001);
+        assertEquals(55.0, statistics.getMinimum(), 0.001);
+        assertEquals(95.0, statistics.getMaximum(), 0.001);
+
+        assertEquals(1, statistics.getBelow60Count());
+        assertEquals(1, statistics.getSixtyToSixtyNineCount());
+        assertEquals(1, statistics.getSeventyToSeventyNineCount());
+        assertEquals(1, statistics.getEightyToEightyNineCount());
+        assertEquals(1, statistics.getNinetyToOneHundredCount());
+    }
+
+    @Test
+    void evenNumberOfGradesUsesMiddleTwoForMedian(){
+        List<Grade> grades = List.of(
+                new Grade(36, 47, 40, ""),
+                new Grade(36, 83, 60, ""),
+                new Grade(36, 19, 80, ""),
+                new Grade(36, 64, 100, "")
+        );
+
+        GradeStatistics statistics =
+                gradeService.calculateStatistics(
+                        grades,
+                        100,
+                        4
+                );
+
+        assertEquals(
+                70.0,
+                statistics.getMedian(),
+                0.001
+        );
+    }
+
+    @Test
+    void distributionUsesCorrectBoundaries(){
+        List<Grade> grades = List.of(
+                new Grade(36, 11, 59.9, ""),
+                new Grade(36, 12, 60, ""),
+                new Grade(36, 13, 69.9, ""),
+                new Grade(36, 14, 70, ""),
+                new Grade(36, 15, 79.9, ""),
+                new Grade(36, 16, 80, ""),
+                new Grade(36, 17, 89.9, ""),
+                new Grade(36, 18, 90, ""),
+                new Grade(36, 19, 100, "")
+        );
+
+        GradeStatistics statistics =
+                gradeService.calculateStatistics(
+                        grades,
+                        100,
+                        9
+                );
+
+        assertEquals(1, statistics.getBelow60Count());
+        assertEquals(2, statistics.getSixtyToSixtyNineCount());
+        assertEquals(2, statistics.getSeventyToSeventyNineCount());
+        assertEquals(2, statistics.getEightyToEightyNineCount());
+        assertEquals(2, statistics.getNinetyToOneHundredCount());
+    }
+
+    @Test
+    void zeroPointAssignmentCannotCalculateStatistics(){
+        List<Grade> grades = List.of(
+                new Grade(36, 47, 0, "")
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> gradeService.calculateStatistics(
+                        grades,
+                        0,
+                        1
+                )
         );
     }
 }

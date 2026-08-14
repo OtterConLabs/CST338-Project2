@@ -130,6 +130,12 @@
                         prefWidth="100.0"
                         text="Delete Grade" />
 
+                <Button fx:id="statisticsButton"
+                        mnemonicParsing="false"
+                        onAction="#handleStatistics"
+                        prefWidth="120.0"
+                        text="View Statistics" />
+
                 <Button fx:id="backButton"
                         mnemonicParsing="false"
                         onAction="#handleBack"
